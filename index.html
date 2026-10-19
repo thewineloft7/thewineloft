@@ -595,7 +595,12 @@
     <p class="sub">Tu perfil queda guardado en el celular o la computadora donde lo creaste, sin contraseña. Si lo creaste en este dispositivo, ya estás adentro.</p>
     <button type="button" class="btn wide" id="lgCreate">Crear mi perfil</button>
     <button type="button" class="btn btn--line wide" id="lgDemo">Probar con un perfil de ejemplo</button>
-    <p class="switch">¿Lo creaste en otro dispositivo? Abrí la página desde ahí.</p>
+    <p class="switch" id="lgSwitch">¿Lo creaste en otro dispositivo? Abrí la página desde ahí.</p>
+    <form id="lgTelForm" hidden novalidate style="margin-top:1.5rem">
+      <div class="field"><label for="lgTel">¿Ya tenés perfil? Entrá con tu WhatsApp</label><input id="lgTel" inputmode="tel" autocomplete="tel" placeholder="343 4123456"></div>
+      <p class="err" id="lgErr" role="alert"></p>
+      <button type="submit" class="btn btn--line wide" id="lgEnter">Entrar con mi WhatsApp</button>
+    </form>
   </div>
 </div>
 

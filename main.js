@@ -236,6 +236,36 @@
       if (p && p.catch) p.catch(function () {});
     } catch (e) { /* sin aviso, la página sigue */ }
   }
+  /* Planilla del club (Google, gratis): cada perfil y cada pedido quedan
+     anotados ahí, el dueño tilda «Pagado» y la página trae de vuelta las
+     cajas pagadas de cada socio, en cualquier celular. Sin link en
+     datos.js todo sigue como antes, guardado solo en el dispositivo. */
+  var PLANILLA = str(data.planilla);
+  var hayPlanilla = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(PLANILLA);
+  /* Mismo criterio que la planilla: 10 dígitos, sin 54, sin 9, sin 0 */
+  function telKey(t) {
+    var d = str(t).replace(/\D/g, "");
+    if (d.indexOf("549") === 0) d = d.slice(3);
+    else if (d.indexOf("54") === 0 && d.length > 10) d = d.slice(2);
+    d = d.replace(/^0+/, "");
+    /* 0343 15 4123456: se saca el 15 que va después de la característica */
+    if (d.length === 12) [3, 4, 2].some(function (n) { if (d.substr(n, 2) === "15") { d = d.slice(0, n) + d.slice(n + 2); return true; } return false; });
+    return d.length >= 10 ? d.slice(-10) : "";
+  }
+  function planillaEnviar(o) {
+    if (!hayPlanilla || !telKey(o.tel)) return;
+    try {
+      var p = fetch(PLANILLA, { method: "POST", mode: "no-cors", keepalive: true, body: JSON.stringify(o) });
+      if (p && p.catch) p.catch(function () {});
+    } catch (e) { /* sin planilla, la página sigue */ }
+  }
+  function planillaLeer(tel, cb) {
+    var k = telKey(tel);
+    if (!hayPlanilla || !k || !window.fetch) { cb(null); return; }
+    fetch(PLANILLA + "?tel=" + k).then(function (r) { return r.json(); })
+      .then(function (d) { cb(d && d.ok ? d : null); }, function () { cb(null); });
+  }
+
   function ahora() {
     try { return new Date().toLocaleString("es-AR", { timeZone: "America/Argentina/Buenos_Aires", dateStyle: "short", timeStyle: "short" }); }
     catch (e) { return new Date().toLocaleString(); }
@@ -683,7 +713,28 @@
       ]
     };
   }
-  function countMensual(u) { return u.history.reduce(function (a, h) { return a + (h.mensual !== false ? (h.n || 1) : 0); }, 0); }
+  /* Con planilla, solo suman las cajas que el club marcó como pagadas */
+  function countMensual(u) { return u.history.reduce(function (a, h) { return a + (h.mensual !== false && h.pagado !== false ? (h.n || 1) : 0); }, 0); }
+
+  /* Trae de la planilla los pedidos del socio. Los que se mandaron hace
+     poco y todavía no aparecen ahí quedan como «a confirmar». */
+  var syncAt = 0;
+  function sync(force) {
+    if (!hayPlanilla || !user || user.demo || !telKey(user.tel)) return;
+    if (!force && Date.now() - syncAt < 15000) return;
+    syncAt = Date.now();
+    var quien = user;
+    planillaLeer(quien.tel, function (d) {
+      if (!d || user !== quien) return;
+      var ids = {};
+      var hist = d.pedidos.map(function (h) { ids[h.id] = 1; return { m: h.m, c: h.c, price: h.price, mensual: h.mensual, n: h.n, pagado: h.pagado, id: h.id }; });
+      var recien = quien.history.filter(function (h) { return h.id && !ids[h.id] && h.pagado === false && Date.now() - (h.t || 0) < 3 * 864e5; });
+      quien.history = hist.concat(recien);
+      if (d.socio && d.socio.zona && !quien.zona) quien.zona = d.socio.zona;
+      save();
+      if (current === "perfil") renderPerfil(false);
+    });
+  }
   function inicial(n) { return ((str(n) || "?").charAt(0) || "?").toUpperCase(); }
   function avatarInto(el, u, name) {
     if (!el) return;
@@ -761,6 +812,7 @@
       e.preventDefault();
       var name = str($("#suName").value), tel = str($("#suTel").value), email = str($("#suEmail").value), err = $("#suErr");
       if (!name) { err.textContent = "Escribí tu nombre."; return; }
+      if (hayPlanilla && !telKey(tel)) { err.textContent = "Escribí tu WhatsApp con la característica (por ejemplo 343 4123456): con él entrás desde cualquier celular."; return; }
       if (email && !/^\S+@\S+\.\S+$/.test(email)) { err.textContent = "Revisá el email, parece incompleto."; return; }
       if (!$("#suAge").checked) { err.textContent = "Para crear tu perfil, confirmá que sos mayor de 18 años."; return; }
       err.textContent = "";
@@ -773,6 +825,8 @@
         "No quiere recibir": prefNombres(draft.prefs) || "nada (sin restricciones)",
         "Fecha": ahora()
       });
+      planillaEnviar({ accion: "perfil", tel: tel, nombre: name, email: email, zona: draft.zona, prefs: prefNombres(draft.prefs) || "" });
+      sync(true);
     });
     var sl = $("#suLogin");
     if (sl) sl.addEventListener("click", function () { openLogin(); });
@@ -783,7 +837,8 @@
     });
     /* Si los avisos están activos, el cliente lo sabe antes de crear su perfil */
     var dev = $(".su-device");
-    if (dev && hayAvisos) dev.textContent = str(dev.textContent) + " Tus datos nos llegan a nosotros, solo para coordinar tus cajas.";
+    if (dev && hayPlanilla) dev.textContent = "Tu perfil queda guardado en este celular o computadora y en el club: si cambiás de celular, entrás con tu WhatsApp. No hace falta contraseña.";
+    else if (dev && hayAvisos) dev.textContent = str(dev.textContent) + " Tus datos nos llegan a nosotros, solo para coordinar tus cajas.";
     paintPreview();
   }
 
@@ -821,7 +876,8 @@
     var duos = user.history.reduce(function (a, h) { return a + (h.mensual === false ? (h.n || 1) : 0); }, 0);
     $("#stCajas").textContent = c;
     $("#stDuos").textContent = duos;
-    $("#pNote").textContent = c >= GOAL ? "Tu regalo viaja con la próxima caja." : c === GOAL - 1 ? "La próxima caja trae regalo." : "Cada caja del mes suma una marca.";
+    $("#pNote").textContent = c >= GOAL ? "Tu regalo viaja con la próxima caja." : c === GOAL - 1 ? "La próxima caja trae regalo." :
+      hayPlanilla && !user.demo ? "Cada caja del mes suma una marca cuando confirmamos el pago." : "Cada caja del mes suma una marca.";
     var pm = $("#pMeter");
     if (animate) { renderMeter(pm, 0, false); setTimeout(function () { renderMeter(pm, c, true); }, 400); }
     else renderMeter(pm, c, false);
@@ -840,7 +896,7 @@
     $("#prefSaved").textContent = "";
     $("#pHist").innerHTML = user.history.length
       ? user.history.slice().reverse().map(function (h) {
-        return "<tr><td>" + esc(h.m) + "</td><td>" + esc(h.c) + '<span class="pill">' + (h.mensual === false ? "dúo" : "suma") +
+        return "<tr><td>" + esc(h.m) + "</td><td>" + esc(h.c) + '<span class="pill">' + (h.pagado === false ? "a confirmar" : h.mensual === false ? "dúo" : "suma") +
           "</span></td><td>" + (h.price ? money(h.price) : "—") + "</td></tr>";
       }).join("")
       : '<tr><td colspan="3">Todavía no hiciste pedidos. Tu primera caja ya suma.</td></tr>';
@@ -856,7 +912,7 @@
      marque y desmarque varias veces seguidas */
   var prefsTimer = null;
   function avisarPrefs() {
-    if (!user || user.demo || !hayAvisos) return;
+    if (!user || user.demo || (!hayAvisos && !hayPlanilla)) return;
     clearTimeout(prefsTimer);
     prefsTimer = setTimeout(function () {
       if (!user || user.demo) return;
@@ -865,6 +921,7 @@
         "No quiere recibir": prefNombres(user.prefs) || "nada (sin restricciones)",
         "Fecha": ahora()
       });
+      planillaEnviar({ accion: "perfil", tel: user.tel, nombre: user.name, zona: user.zona, prefs: prefNombres(user.prefs) || "" });
     }, 4000);
   }
 
@@ -872,6 +929,7 @@
     $("#signup").hidden = !!user;
     $("#dash").hidden = !user;
     if (user) renderDash(animate); else paintPreview();
+    if (animate) sync();
   }
 
   function initDash() {
@@ -964,6 +1022,33 @@
     $("#loginModal [data-close]").addEventListener("click", function () { closeLogin(); });
     $("#lgCreate").addEventListener("click", function () { closeLogin(true); openSignup(); });
     $("#lgDemo").addEventListener("click", function () { loggedIn(demoUser(), "Entraste con el perfil de ejemplo."); });
+    /* Con planilla, el perfil se recupera en cualquier celular con el WhatsApp */
+    var tf = $("#lgTelForm");
+    if (tf && hayPlanilla) {
+      tf.hidden = false;
+      $("#lgSwitch").hidden = true;
+      var sub = $("#loginModal .sub");
+      if (sub) sub.textContent = "Si ya creaste tu perfil, entrá con el WhatsApp que usaste. Si es tu primera vez, creá uno: no hace falta contraseña.";
+      tf.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var tel = str($("#lgTel").value), er = $("#lgErr"), bt = $("#lgEnter");
+        if (!telKey(tel)) { er.textContent = "Escribí tu WhatsApp con la característica, por ejemplo 343 4123456."; return; }
+        er.textContent = ""; bt.disabled = true; bt.textContent = "Buscando tu perfil…";
+        planillaLeer(tel, function (d) {
+          bt.disabled = false; bt.textContent = "Entrar con mi WhatsApp";
+          if (!d) { er.textContent = "No pudimos conectarnos. Probá de nuevo en un rato."; return; }
+          if (!d.socio) { er.textContent = "No encontramos un perfil con ese número. Revisalo o creá tu perfil."; return; }
+          var nombres = str(d.socio.prefs).split(/,\s*/);
+          var prefs = PREFS.filter(function (p) { return nombres.indexOf(p.l) !== -1; }).map(function (p) { return p.id; });
+          loggedIn({
+            name: d.socio.name, tel: tel, email: "", since: MES, prefs: prefs, zona: d.socio.zona || ZONAS[0] || "",
+            dir: "", loc: "", bg: "loft", photo: null,
+            history: d.pedidos.map(function (h) { return { m: h.m, c: h.c, price: h.price, mensual: h.mensual, n: h.n, pagado: h.pagado, id: h.id }; })
+          }, "Hola de nuevo, " + d.socio.name + ".");
+          $("#lgTel").value = "";
+        });
+      });
+    }
     $("#scrim").addEventListener("click", function () {
       if (!$("#loginModal").hidden) closeLogin(); else closeOrder();
     });
@@ -1182,7 +1267,8 @@
         (algunaCerrada ? '<p class="note">Hoy las reservas de las cajas están cerradas: abren del ' + esc(RESERVAS) + " de " + esc(estado.prox) + "." +
           (modoPrueba ? " Mientras el sitio está en preparación podés seguir para ver el recorrido." : "") + "</p>" : "") +
         (user && cajasN && !(algunaCerrada && !modoPrueba) ? '<p class="hand" style="margin-top:1.25rem">' +
-          (cajasN === 1 ? "Esta caja suma " + Math.min(countMensual(user) + 1, GOAL) + " de " + GOAL + " en tu perfil."
+          (hayPlanilla && !user.demo ? (cajasN === 1 ? "Cuando confirmemos el pago, esta caja suma en tu perfil." : "Cuando confirmemos el pago, estas " + cajasN + " cajas suman en tu perfil.") :
+          cajasN === 1 ? "Esta caja suma " + Math.min(countMensual(user) + 1, GOAL) + " de " + GOAL + " en tu perfil."
             : "Estas " + cajasN + " cajas suman: quedás en " + Math.min(countMensual(user) + cajasN, GOAL) + " de " + GOAL + " en tu perfil.") + "</p>" : "") +
         (!user && cajasN ? '<p class="note">¿Querés que ' + (cajasN === 1 ? "esta caja sume" : "estas cajas sumen") + ' para el regalo? <button type="button" class="linkish" id="loginHere">Creá tu perfil</button></p>' : "") +
         "</div>";
@@ -1402,12 +1488,22 @@
         "Fecha": ahora()
       });
     }
+    var pedidoId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    var renglones = items.map(function (it, n) {
+      var ci = combo(it.combo);
+      return { m: cap(MES), c: ci.nombre + (it.cant > 1 ? " × " + it.cant : "") + (it.regalo ? " (regalo)" : ""),
+        price: cuenta(it).total, mensual: ci.tipo === "caja", n: it.cant || 1, id: pedidoId + "-" + n };
+    });
+    var enPlanilla = hayPlanilla && (accion.tipo === "wa" || accion.tipo === "mp") && (!user || !user.demo);
+    if (enPlanilla) {
+      planillaEnviar({ accion: "pedido", id: pedidoId, tel: user ? user.tel || order.tel : order.tel, nombre: user ? user.name : order.nom,
+        items: renglones.map(function (r) { return { m: r.m, c: r.c, price: r.price, mensual: r.mensual, n: r.n }; }) });
+    }
     if (accion.tipo !== "avisame" && user) {
       var before = countMensual(user);
-      items.forEach(function (it) {
-        var ci = combo(it.combo);
-        user.history.push({ m: cap(MES), c: ci.nombre + (it.cant > 1 ? " × " + it.cant : "") + (it.regalo ? " (regalo)" : ""),
-          price: cuenta(it).total, mensual: ci.tipo === "caja", n: it.cant || 1 });
+      renglones.forEach(function (r) {
+        if (enPlanilla) { r.pagado = false; r.t = Date.now(); }
+        user.history.push(r);
       });
       save();
       gift = cajasN > 0 && before < GOAL && countMensual(user) >= GOAL;
@@ -1902,6 +1998,7 @@
     safe(initSignup, "alta de perfil");
     safe(initDash, "panel del perfil");
     safe(initLogin, "ingresar");
+    safe(function () { sync(true); }, "planilla");
     safe(refreshNav, "encabezado");
     safe(initNav, "navegación");
     safe(initReveal, "apariciones");

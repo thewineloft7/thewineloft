@@ -1,0 +1,76 @@
+THE WINE LOFT · CÓMO CONECTAR LA PLANILLA DEL CLUB
+===================================================
+
+Para qué sirve
+--------------
+Cada perfil nuevo y cada pedido que hacen desde la página caen solos en una
+planilla de Google tuya. Cuando un cliente te paga, tildás «Pagado» en su
+fila. Esa caja le suma en «Mi perfil», y cuando llega a 5 le aparece el
+regalo. Funciona en cualquier celular: si el cliente cambia de teléfono,
+entra con su número de WhatsApp y ve todo de nuevo.
+
+Es gratis. Lo hacés una sola vez y tarda unos 10 minutos.
+
+
+PASO 1 · Crear la planilla
+--------------------------
+1. Entrá a https://sheets.new con tu Gmail del club.
+2. Ponele de nombre «The Wine Loft · Club» (arriba a la izquierda).
+
+
+PASO 2 · Pegar el código
+------------------------
+1. En la planilla, menú Extensiones → Apps Script. Se abre otra pestaña.
+2. Borrá todo lo que aparece escrito ahí.
+3. Abrí el archivo planilla/Codigo.gs de esta carpeta, copiá TODO y pegalo.
+4. Tocá el ícono del disquete (Guardar).
+
+
+PASO 3 · Publicarlo
+-------------------
+1. Arriba a la derecha: Implementar → Nueva implementación.
+2. En el engranaje de «Seleccionar tipo», elegí «Aplicación web».
+3. Completá así:
+     Descripción:          Página del club
+     Ejecutar como:        Yo (tu mail)
+     Quién tiene acceso:   Cualquier persona
+4. Tocá Implementar.
+5. Google te va a pedir permiso: Autorizar acceso → elegí tu cuenta.
+   Si aparece «Google no verificó esta app»: tocá «Configuración avanzada»
+   → «Ir a ... (no seguro)» → Permitir. Es normal: la app es tuya y nadie
+   más la usa.
+6. Copiá la «URL de la aplicación web». Termina en /exec.
+
+
+PASO 4 · Ponerla en la página
+-----------------------------
+Mandale ese link a Claude en el chat del proyecto y lo carga él.
+(O, si lo hacés vos: en datos.js, en la línea  planilla: "",  pegá el link
+entre las comillas y publicá como siempre.)
+
+Las hojas «Pedidos» y «Socios» se crean solas con el primer perfil o pedido.
+
+
+CÓMO SE USA TODOS LOS MESES
+---------------------------
+· Hoja «Pedidos»: una fila por cada combo pedido. Cuando te pagan, tildá la
+  casilla «Pagado». Solo las cajas pagadas suman para el regalo.
+· Hoja «Socios»: una fila por cliente, con «Cajas pagadas» y «Total pagado»
+  calculados solos. Ahí ves cuánto colaboró cada uno.
+· Si te pagan por fuera de la página (en mano, por transferencia sin pedido),
+  podés agregar la fila a mano en «Pedidos»: WhatsApp (10 números, sin 0 ni
+  15, por ejemplo 3434123456), Mes, Combo, Cantidad, Tipo («caja» o «dúo»),
+  Monto, y tildar Pagado.
+· Si alguien manda un pedido y después no paga, dejá la casilla sin tildar
+  o borrá la fila.
+· El cliente ve el cambio la próxima vez que abre «Mi perfil».
+
+
+IMPORTANTE
+----------
+· No cambies el nombre de las hojas ni el orden de las columnas.
+· Si algún día tocás el código de Apps Script, tenés que volver a
+  Implementar → Gestionar implementaciones → editar (lápiz) → Versión:
+  «Nueva versión». Así el link sigue siendo el mismo.
+· Cualquiera que sepa el WhatsApp de un socio puede ver su nombre y sus
+  cajas desde la página (no ve el mail ni la dirección).
