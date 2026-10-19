@@ -484,7 +484,7 @@
         '<span class="eyebrow">' + esc(c.nombre) + "</span>" +
         '<span class="wgroup__desc">' + format(c.descripcion) + "</span>" +
         '<b class="wgroup__price">' + money(c.precio) + "</b>" +
-        (c.agotado ? '<span class="tag tag--soldout">Sold out</span>' : '<a class="btn btn--sm" href="#duos" data-order="' + c.id + '" data-paso="1">Pedir</a>') + "</div>" +
+        (c.agotado ? '<span class="tag tag--soldout">Sold out</span>' : '<a class="btn btn--sm" href="#duos" data-order="' + c.id + '" data-paso="1">Comprar</a>') + "</div>" +
         c.vinos.map(function (v, i) {
           var foto = rutaFoto(v.foto);
           var meta = [str(v.varietal), str(v.region)].filter(Boolean).join(" · ");
@@ -1508,11 +1508,6 @@
       }
       var mn2 = $("#mnav");
       if (mn2 && mn2.open && !mn2.contains(e.target)) mn2.open = false;
-    });
-    /* el menú del celular se abre justo debajo del encabezado (arriba puede estar el aviso) */
-    var mn3 = $("#mnav"), mnNav = mn3 && $("nav", mn3);
-    if (mnNav) mn3.addEventListener("toggle", function () {
-      if (mn3.open) mnNav.style.top = Math.max(0, $("#hd").getBoundingClientRect().bottom) + "px";
     });
     root.classList.add("views-on");
     var fromHash = function () {
