@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>The Wine Loft · Club de vinos en Paraná</title>
+  <meta name="description" content="Club de vinos en Paraná, Entre Ríos. Cada mes elegimos cuatro vinos por vos y te los llevamos a casa: dos tintos anunciados y dos sorpresas.">
+  <meta name="theme-color" content="#151E31">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:site_name" content="The Wine Loft">
+  <meta property="og:title" content="The Wine Loft · Club de vinos en Paraná">
+  <meta property="og:description" content="Un club de vinos con acento del Litoral. Cajas del mes y dúos de todos los días, entregados en tu casa.">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg?v=202610161">
+
+  <!-- Hay JavaScript: recién ahí se activan las apariciones y los efectos. -->
+  <script>document.documentElement.classList.add("js");</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="styles.css?v=202610161">
+
+  <script defer src="datos.js?v=202610161"></script>
+  <script defer src="main.js?v=202610161"></script>
+</head>
+<body>
+
+<!-- ============================================ MAYORÍA DE EDAD (la muestra main.js) -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT" hidden>
+  <div class="gate__step" id="gateAge">
+    <img src="assets/img/logo.webp" alt="The Wine Loft" width="130" height="154">
+    <h2 id="gateT">¿Sos mayor de 18 años?</h2>
+    <p>Para entrar a The Wine Loft y comprar vinos tenés que ser mayor de edad.</p>
+    <div class="ctas">
+      <button type="button" class="btn" id="gateYes">Sí, soy mayor de 18</button>
+      <button type="button" class="btn btn--line" id="gateNo">No, soy menor</button>
+    </div>
+    <p id="gateMsg" class="hand gate__msg" hidden>Te esperamos cuando cumplas 18.</p>
+    <small>Beber con moderación. Prohibida su venta a menores de 18 años.</small>
+  </div>
+  <div class="gate__step welcome" id="gateWelcome" hidden>
+    <img src="assets/img/logo.webp" alt="" width="130" height="154">
+    <p class="eyebrow">Club de vinos · Paraná, Entre Ríos</p>
+    <h2>Un club de vinos con <em>acento del Litoral.</em></h2>
+    <p class="lead">Creá tu perfil para reservar tu caja del mes, pedir tus dúos y sumar para tu regalo sorpresa.</p>
+    <div class="perks"><span>Elegís qué no querés recibir</span><span>Tus cajas suman</span><span>Cada 5, un regalo</span></div>
+    <div class="ctas">
+      <button type="button" class="btn" id="wCreate">Crear mi perfil</button>
+      <button type="button" class="btn btn--line" id="wLogin">Ya tengo perfil</button>
+    </div>
+    <button type="button" class="skip" id="wSkip">Ahora no, quiero mirar primero</button>
+  </div>
+</div>
+
+<a href="#contenido" class="skip-link">Saltar al contenido</a>
+
+<div class="proto" data-aviso>Sitio en preparación: todavía no se cobra online ni se envían pedidos.</div>
+
+<!-- ============================================ ENCABEZADO -->
+<header class="hd" id="hd">
+  <div class="hd__in">
+    <a class="brand" href="#inicio" data-go aria-label="The Wine Loft, inicio">
+      <img src="assets/img/logo.webp" alt="" width="34" height="40">
+      <span>The Wine Loft</span>
+    </a>
+    <nav class="hd__nav" aria-label="Secciones">
+      <a href="#club" data-go>El club</a>
+      <a href="#como-funciona" data-go>Cómo funciona</a>
+      <a href="#duos" data-go>Dúos</a>
+      <a href="#preguntas" data-go>Preguntas</a>
+    </nav>
+    <div class="hd__act">
+      <a class="hd__login" id="btnLogin" href="#perfil" data-go>Ingresar</a>
+      <button type="button" class="avatar" id="btnAvatar" hidden aria-label="Mi perfil"></button>
+      <a class="btn btn--line btn--sm" href="#club" data-go data-order="">Reservá tu caja</a>
+      <details class="mnav" id="mnav">
+        <summary aria-label="Abrir el menú"><span></span><span></span></summary>
+        <nav aria-label="Menú">
+          <a href="#club" data-go><span class="solo-compu">El club</span><span class="solo-cel">Combos mensuales</span></a>
+          <a class="solo-compu" href="#como-funciona" data-go>Cómo funciona</a>
+          <a href="#duos" data-go>Dúos</a>
+          <a class="solo-compu" href="#preguntas" data-go>Preguntas</a>
+          <a class="solo-compu" href="#regalo" data-go>Regalá una caja</a>
+          <a href="#perfil" data-go>Mi perfil</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="contenido">
+<div class="view active" data-view="inicio">
+
+  <!-- ============================================ PORTADA -->
+  <section class="hero" id="inicio">
+    <div class="hero__media">
+      <figure class="slot slot--hero" data-slot="portada">
+        <img src="assets/img/portada-vinedo.webp" alt="Viñedo al atardecer, con las hileras de vides hacia el horizonte" width="2400" height="1470">
+      </figure>
+    </div>
+    <div class="hero__copy">
+      <h1 data-texto="portadaTitulo" data-split>Un club de vinos con <em>acento del Litoral.</em></h1>
+      <div class="hero__row rv">
+        <ul class="facts">
+          <li data-dato="ciudad">Paraná, Entre Ríos</li>
+          <li>Reservas del <span data-regla="reservas">1 al 3</span></li>
+          <li>Pago <span data-regla="pago">hasta el 6</span></li>
+          <li>Entregas del <span data-regla="entregas">7 al 10</span></li>
+          <li>Desde <span data-desde>$18.500</span></li>
+        </ul>
+        <a class="btn" href="#club" data-go data-order="">Reservá tu caja</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ EL CLUB: LA CAJA DEL MES (menú con foto fija) -->
+  <div id="club" class="club-wrap">
+  <section class="menu" id="caja">
+    <div class="menu__media">
+      <div class="menu__sticky">
+        <figure class="slot menu__fig is-on" data-menu-fig="reserva">
+          <img src="assets/img/caja-reserva-octubre.webp" alt="Los cuatro vinos de la Caja Reserva de octubre en la biblioteca del loft: Corazón Valiente, Calivista, Chañarmuyo y Tükma" width="855" height="636">
+          <span class="soldout">Sold out</span>
+        </figure>
+        <figure class="slot menu__fig" data-menu-fig="clasica">
+          <div class="ph"><span class="ph__tag">[IMAGEN AQUÍ: Los vinos de la Caja Clásica sobre la mesa, foto vertical]</span></div>
+        </figure>
+      </div>
+    </div>
+    <div class="menu__col">
+      <div class="menu__in">
+        <p class="eyebrow solo-compu"><span data-texto="cajaEtiqueta">El club · La caja del mes</span> · <span data-mes-anio>Octubre 2026</span></p>
+        <p class="eyebrow solo-cel"><span data-mes-anio>Octubre 2026</span></p>
+        <h2 class="solo-cel menu__cel">Combos <em>mensuales.</em></h2>
+        <h2 class="solo-compu" data-texto="cajaTitulo" data-split>Cuatro vinos, <em>dos sorpresas.</em></h2>
+        <p class="menu__lede solo-compu" data-texto="cajaTexto">Cada mes elegimos cuatro vinos por vos y te los llevamos a casa. Dos tintos te los contamos de antemano; los otros dos llegan como sorpresa.</p>
+        <p class="status" data-estado><i></i><span>Reservas del 1 al 3 de cada mes</span></p>
+
+        <div class="flights" data-flights>
+          <article class="flight rv is-soldout" data-flight="reserva">
+            <figure class="slot flight__media"><img src="assets/img/caja-reserva-octubre.webp" alt="Los cuatro vinos de la Caja Reserva de octubre en la biblioteca del loft: Corazón Valiente, Calivista, Chañarmuyo y Tükma"><span class="soldout">Sold out</span></figure>
+            <span class="tag tag--soldout">Sold out</span>
+            <p class="flight__price">$70.000</p>
+            <h3>Caja Reserva</h3>
+            <p class="flight__desc">Cuatro vinos con más guarda y más historia.</p>
+            <p class="flight__per">4 vinos · $17.500 c/u</p>
+            <ol class="pours">
+              <li><span class="pours__meta">N.º 1 · Malbec 2022 · La Rioja</span><b>Chañarmuyo</b><span class="hand">Este pide asado.</span></li>
+              <li><span class="pours__meta">N.º 2 · Cabernet Sauvignon 2022 · Salta</span><b>Tükma Reserva</b><span class="hand">Abrilo media hora antes.</span></li>
+              <li class="pours__surprise"><span class="pours__meta">N.º 3 y 4</span><b>Dos sorpresas</b><span class="pours__x">Puede ser tinto, blanco, rosado o espumante.</span></li>
+            </ol>
+            <p class="flight__off">Esta caja ya no se vende. La dejamos acá para que conozcas lo que trajo.</p>
+          </article>
+          <article class="flight rv" data-flight="clasica">
+            <figure class="slot flight__media"><div class="ph"><span class="ph__tag">[IMAGEN AQUÍ: Los vinos de la Caja Clásica sobre la mesa, foto vertical]</span></div></figure>
+            <p class="flight__price">$55.000</p>
+            <h3>Caja Clásica</h3>
+            <p class="flight__desc">Cuatro vinos para todos los días, bien elegidos.</p>
+            <p class="flight__per">4 vinos · $13.750 c/u</p>
+            <ol class="pours">
+              <li><span class="pours__meta">N.º 1 · Varietal · Región</span><b>Tinto a confirmar</b><span class="hand">Nota del que eligió.</span></li>
+              <li><span class="pours__meta">N.º 2 · Varietal · Región</span><b>Tinto a confirmar</b><span class="hand">Nota del que eligió.</span></li>
+              <li class="pours__surprise"><span class="pours__meta">N.º 3 y 4</span><b>Dos sorpresas</b><span class="pours__x">Puede ser tinto, blanco, rosado o espumante.</span></li>
+            </ol>
+            <a class="btn" href="#club" data-order="clasica">Reservar Caja Clásica</a>
+          </article>
+        </div>
+        <p class="menu__foot solo-compu" data-texto="cajaNota">Si no querés blancos, rosados o espumantes, lo marcás al reservar y no te tocan.</p>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- ============================================ CÓMO FUNCIONA (franja papel, números grandes) -->
+  <section class="solo-compu band band--papel rule" id="como-funciona">
+    <div class="band__top wrap"><span data-texto="reglaEtiqueta">La regla del club</span><span>Todos los meses</span></div>
+    <div class="rule__num" aria-hidden="true">
+      <div class="rule__numin" data-big>
+        <span class="rule__n"><small data-texto="reglaReserva">Reservás hasta el</small>03</span>
+        <em>y</em>
+        <span class="rule__n"><small data-texto="reglaPago">pagás hasta el</small>06</span>
+      </div>
+    </div>
+    <div class="rule__grid wrap">
+      <h2 data-texto="reglaTitulo" data-split>Reservás hasta el 3, pagás hasta el 6.</h2>
+      <p class="rv" data-texto="reglaTexto">Del 1 al 3 de cada mes reservás tu caja. Tenés tiempo hasta el 6 para pagarla con Mercado Pago, y del 7 al 10 te la llevamos a casa.</p>
+      <div class="rv">
+        <dl class="specs">
+          <div><dt>Reservas</dt><dd>del <span data-regla="reservas">1 al 3</span></dd></div>
+          <div><dt>Pago</dt><dd><span data-regla="pago">hasta el 6</span>, con Mercado Pago</dd></div>
+          <div><dt>Entregas</dt><dd>del <span data-regla="entregas">7 al 10</span></dd></div>
+          <div><dt>Envíos</dt><dd>Paraná, alrededores e interior</dd></div>
+        </dl>
+        <a class="ulink" href="#club" data-go>Ver la caja del mes ↑</a>
+      </div>
+    </div>
+
+    <!-- Tu perfil en el club: cada caja suma, con la quinta llega el regalo sorpresa -->
+    <div class="perks wrap" id="club-suma">
+      <div class="perks__txt">
+        <p class="perks__eyebrow rv" data-texto="clubEtiqueta">Tu perfil en el club</p>
+        <h2 data-texto="clubTitulo" data-split>Cada caja <em>suma.</em></h2>
+        <p class="perks__sub rv" data-texto="clubTexto">Creá tu perfil y seguí tus cajas del mes. Al completar cinco, te llevamos un regalo sorpresa junto con la quinta.</p>
+        <p class="hand rv" data-texto="clubNota">no te vamos a decir qué es</p>
+        <div class="rv"><a class="btn btn--ink" id="clubCta" href="#perfil" data-go>Crear mi perfil</a></div>
+      </div>
+      <button type="button" class="club-card rv" data-demo data-club-card aria-label="Ver el perfil de ejemplo de Lucía M.">
+        <span class="who">
+          <span class="who__name"><span class="eyebrow">Ejemplo de perfil</span><b>Lucía M.</b></span>
+          <span class="eyebrow">Socia desde julio</span>
+        </span>
+        <span class="meter" style="--p:60">
+          <span class="stamps" data-stamps><span class="stamp on"><span>1</span></span><span class="stamp on"><span>2</span></span><span class="stamp on"><span>3</span></span><span class="stamp"><span>4</span></span><span class="stamp gift"><span>5</span></span></span>
+          <span class="bar"><i></i></span>
+          <span class="meter-foot"><span data-cnt>3 de 5 cajas</span><span data-left>Te faltan 2 para el regalo</span></span>
+        </span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================ DÚOS (lista con foto que sigue al mouse) -->
+  <section class="wines" id="duos">
+    <div class="wrap">
+      <div class="wines__head">
+        <h2><span data-texto="duosTitulo" data-split>Dúos.</span><sup data-duos-count>04</sup></h2>
+        <div class="wines__intro rv solo-compu">
+          <p data-texto="duosTexto">Dos vinos elegidos por nosotros, para pedir cualquier día del mes. También cambian todos los meses.</p>
+          <a class="ulink" href="#club" data-go>Ver la caja del mes</a>
+        </div>
+      </div>
+      <div class="duos-note rv">
+        <span class="duos-note__tag">Todo el mes · Sin reserva</span>
+        <p class="solo-compu" data-texto="duosAclaracion">Los dúos van por fuera del club: no tienen fechas de reserva ni sorpresas, y no suman para el regalo sorpresa. Los pedís cualquier día del mes.</p>
+      </div>
+      <div class="wlist" data-duos>
+        <div class="wgroup rv">
+          <div class="wgroup__head" data-img="assets/img/duo-reserva-cielo.webp">
+            <span class="eyebrow">Combo Autor</span>
+            <span class="wgroup__desc">Dos vinos para una ocasión que lo merece.</span>
+            <b class="wgroup__price">$25.000</b>
+            <a class="btn btn--sm" href="#duos" data-order="duo-reserva" data-paso="1">Pedir</a>
+          </div>
+          <a class="wrow" href="#duos" data-order="duo-reserva" data-paso="1" data-img="assets/img/v-marioneta-recorte.webp">
+            <span class="wrow__n">N.º 1</span><span class="wrow__name">Marioneta</span><span class="wrow__meta">Malbec · Mendoza</span><span class="wrow__note hand">Pide pizza casera.</span><img class="wrow__thumb" src="assets/img/v-marioneta-recorte.webp" alt="">
+          </a>
+          <a class="wrow" href="#duos" data-order="duo-reserva" data-paso="1" data-img="assets/img/v-13cles-recorte.webp">
+            <span class="wrow__n">N.º 2</span><span class="wrow__name">13 Clés</span><span class="wrow__meta">Malbec · Argentina</span><span class="wrow__note hand">Guardalo para el domingo.</span><img class="wrow__thumb" src="assets/img/v-13cles-recorte.webp" alt="">
+          </a>
+        </div>
+        <div class="wgroup rv">
+          <div class="wgroup__head" data-img="assets/img/duo-clasico-cielo.webp">
+            <span class="eyebrow">Combo Origen</span>
+            <span class="wgroup__desc">Dos vinos para la cena de esta noche.</span>
+            <b class="wgroup__price">$18.500</b>
+            <a class="btn btn--sm" href="#duos" data-order="duo-clasico" data-paso="1">Pedir</a>
+          </div>
+          <a class="wrow" href="#duos" data-order="duo-clasico" data-paso="1" data-img="assets/img/v-tepeyac-recorte.webp">
+            <span class="wrow__n">N.º 1</span><span class="wrow__name">Tepeyac Reserva</span><span class="wrow__meta">Malbec · Mendoza</span><span class="wrow__note hand">Para el asado del sábado.</span><img class="wrow__thumb" src="assets/img/v-tepeyac-recorte.webp" alt="">
+          </a>
+          <a class="wrow" href="#duos" data-order="duo-clasico" data-paso="1" data-img="assets/img/v-criolla-recorte.webp">
+            <span class="wrow__n">N.º 2</span><span class="wrow__name">Criolla Argentina</span><span class="wrow__meta">Tinta · Bodega Niven 2025 · Mendoza</span><span class="wrow__note hand">Con algo para picar.</span><img class="wrow__thumb" src="assets/img/v-criolla-recorte.webp" alt="">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="cursor-img" aria-hidden="true"><img alt=""></div>
+    <div class="pour" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================================ VINOS POR ESTACIÓN (ventanas escalonadas) -->
+  <section class="solo-compu year" id="estaciones">
+    <div class="wrap year__head">
+      <h2 data-texto="estacionesTitulo" data-split>Vinos por <em>estación.</em></h2>
+      <p class="rv" data-texto="estacionesTexto">Qué uvas acompañan mejor cada época del año.</p>
+    </div>
+    <div class="wrap year__track">
+      <ol class="year__list" data-estaciones style="--n:4">
+        <li class="year__item" style="--h:.66" data-est="verano">
+          <div class="year__mediabox"><figure class="slot year__media" data-slot="est1"><img src="assets/img/est-verano-uvas.webp" alt="Verano: racimo de uvas blancas en una vid vieja, al sol de la tarde" width="900" height="1271"></figure></div>
+          <span class="year__dot"></span>
+          <p class="year__day">Verano</p><p class="year__t">Diciembre a febrero</p><p class="year__x">Acidez alta, poco cuerpo y bien fríos. Con el calor, lo que pide el cuerpo es refrescarse.</p><ul class="year__uvas" aria-label="Uvas de verano"><li>Chardonnay sin barrica</li><li>Criolla Chica</li></ul>
+        </li>
+        <li class="year__item" style="--h:.84" data-est="otono">
+          <div class="year__mediabox"><figure class="slot year__media" data-slot="est2"><img src="assets/img/est-otono-uvas.webp" alt="Otoño: hojas rojas y doradas en el viñedo" width="900" height="1136"></figure></div>
+          <span class="year__dot"></span>
+          <p class="year__day">Otoño</p><p class="year__t">Marzo a mayo</p><p class="year__x">Cuerpo medio, frutados y con taninos amables, para pastas, carnes al horno y hongos.</p><ul class="year__uvas" aria-label="Uvas de otoño"><li>Malbec</li><li>Pinot Noir</li></ul>
+        </li>
+        <li class="year__item" style="--h:1" data-est="invierno">
+          <div class="year__mediabox"><figure class="slot year__media" data-slot="est3"><img src="assets/img/est-invierno-uvas.webp" alt="Invierno: una mano junto a un racimo de uvas tintas" width="900" height="1864"></figure></div>
+          <span class="year__dot"></span>
+          <p class="year__day">Invierno</p><p class="year__t">Junio a agosto</p><p class="year__x">Cuerpo pleno, taninos firmes y crianza en madera, a la altura del locro, los guisos y el cordero.</p><ul class="year__uvas" aria-label="Uvas de invierno"><li>Cabernet Sauvignon</li><li>Tannat</li></ul>
+        </li>
+        <li class="year__item" style="--h:.74" data-est="primavera">
+          <div class="year__mediabox"><figure class="slot year__media" data-slot="est4"><img src="assets/img/est-primavera-uvas.webp" alt="Primavera: racimo de uvas que empiezan a tomar color" width="900" height="1523"></figure></div>
+          <span class="year__dot"></span>
+          <p class="year__day">Primavera</p><p class="year__t">Septiembre a noviembre</p><p class="year__x">Frescos, aromáticos y livianos, para una cocina más verde y ligera que no canse el paladar.</p><ul class="year__uvas" aria-label="Uvas de primavera"><li>Torrontés</li><li>Sauvignon Blanc</li></ul>
+        </li>
+      </ol>
+      <span class="year__now" data-hoy hidden><i></i><span>Ahora</span></span>
+    </div>
+  </section>
+
+  <!-- ============================================ ESTE MES, QUE EL VINO LO ELIJA OTRO (foto de fondo) -->
+
+  <section class="solo-compu moment">
+    <div class="moment__card">
+      <figure class="slot slot--wide moment__fig" data-slot="momento">
+        <img src="assets/img/momento-duos-fondo.webp" alt="Los vinos de los dúos de octubre sobre la mesa del loft: Tepeyac, 13 Clés, Criolla Argentina y Marioneta" width="1800" height="2400">
+      </figure>
+      <div class="moment__copy">
+        <h2 data-texto="momentoTitulo" data-split>Este mes, que el vino <em>lo elija otro.</em></h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ REGALÁ (opción para regalo) -->
+  <section class="solo-compu gift" id="regalo">
+    <div class="wrap gift__grid">
+      <figure class="slot gift__media" data-slot="regalo">
+        <img src="assets/img/regalo-loft.webp" alt="Una botella con la faja de cuero azul de The Wine Loft" width="1100" height="1387">
+      </figure>
+      <div class="gift__copy">
+        <p class="eyebrow">Para regalar</p>
+        <h2 data-texto="regaloTitulo" data-split>Regalá un mes de <em>vino.</em></h2>
+        <p class="gift__lede rv" data-texto="regaloTexto">Elegí tu caja o tu dúo y marcá «Para regalo» al pedirlo. Lo enviamos a donde nos indiques, con una carta de feliz cumpleaños y charcutería o cristalería incluida (o las dos).</p>
+        <ul class="gift__list rv">
+          <li><b>Carta de feliz cumpleaños</b><span>Va junto con el regalo.</span></li>
+          <li><b>Charcutería o cristalería, incluida</b><span>Salame y queso, o una copa de cristal: elegís uno, o los dos (el segundo se suma aparte).</span></li>
+          <li><b>A la dirección que nos digas</b><span>Se la llevamos a quien recibe el regalo.</span></li>
+        </ul>
+        <p class="hand rv" data-texto="regaloNota">mejor que otra corbata</p>
+        <div class="gift__btns rv">
+          <a class="btn" href="#club" data-go data-order="" data-regalo>Armar un regalo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ PREGUNTAS -->
+  <section class="solo-compu faq" id="preguntas">
+    <div class="wrap faq__grid">
+      <div>
+        <h2 data-texto="preguntasTitulo" data-split>Preguntas <em>frecuentes.</em></h2>
+        <p class="hand rv" data-texto="preguntasNota">y si no está acá, escribinos</p>
+      </div>
+      <div class="faq__list rv" id="faqList">
+        <details open><summary>¿Cuándo reservo la caja del mes?</summary><p>Del 1 al 3 de cada mes. Tenés hasta el 6 para pagarla con Mercado Pago y te la llevamos del 7 al 10.</p></details>
+        <details><summary>¿Y los dúos?</summary><p>Los dúos van por fuera del club: no tienen fechas de reserva, los pedís cualquier día del mes. Son dos vinos elegidos por nosotros y cambian todos los meses.</p></details>
+        <details><summary>¿A dónde envían?</summary><p>A Paraná y alrededores, y al interior de Entre Ríos. Al cargar tu dirección te confirmamos el costo de envío.</p></details>
+        <details><summary>¿Puedo elegir qué no me toque?</summary><p>Sí. Al reservar marcás si no querés blancos, rosados o espumantes, y armamos tus dos sorpresas con eso en cuenta.</p></details>
+        <details><summary>¿Cómo funciona el regalo sorpresa del club?</summary><p>Cada caja del mes que recibís suma una marca en tu perfil. Con la quinta, llega el regalo sorpresa.</p></details>
+        <details><summary>¿Puedo regalar una caja?</summary><p>Sí. Al pedir, marcá «Para regalo»: lo enviamos a donde nos indiques, con una carta de feliz cumpleaños, e incluye charcutería (salame y queso) o cristalería (una copa de cristal), el que elijas. Si querés los dos, el segundo se suma como adicional.</p></details>
+        <details><summary>¿Qué adicionales puedo sumar?</summary><p>Charcutería (salame y queso) y cristalería (una copa de cristal). Los elegís en el último paso del pedido, antes de confirmar.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ FRASE DESTACADA -->
+  <section class="solo-compu quote">
+    <figure class="slot slot--wide quote__bg" data-slot="cita">
+      <div class="ph"><span class="ph__tag">[IMAGEN AQUÍ: Foto horizontal oscura: vino sirviéndose en una copa, en primer plano]</span></div>
+    </figure>
+    <blockquote class="quote__in">
+      <p data-texto="cita" data-split>Abrí uno el jueves, guardá otro para el domingo.</p>
+      <footer><span class="quote__line"></span><span data-texto="citaFirma">Nota del que eligió</span></footer>
+    </blockquote>
+  </section>
+
+  <!-- ============================================ CIERRE -->
+  <section class="solo-compu close" id="reservar">
+    <figure class="slot slot--wide close__bg" data-slot="cierre">
+      <div class="ph"><span class="ph__tag">[IMAGEN AQUÍ: Paisaje del Litoral: el río Paraná al atardecer, foto horizontal]</span></div>
+    </figure>
+    <div class="close__copy">
+      <h2 data-texto="cierreTitulo" data-split>Reservá tu caja <em>antes del 3.</em></h2>
+      <div class="close__row rv">
+        <dl class="close__info">
+          <div><dt>Reservas</dt><dd>del <span data-regla="reservas">1 al 3</span></dd></div>
+          <div><dt>Pago</dt><dd><span data-regla="pago">hasta el 6</span></dd></div>
+          <div><dt>Entregas</dt><dd>del <span data-regla="entregas">7 al 10</span></dd></div>
+          <div><dt>Envíos</dt><dd>Paraná, alrededores e interior</dd></div>
+        </dl>
+        <a class="btn" href="#club" data-go data-order="">Reservá tu caja</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============================================ MI PERFIL (necesita JavaScript) -->
+<section class="view needs-js" data-view="perfil" id="perfil">
+  <div id="signup" class="su">
+    <!-- En el celular: «Cada caja suma» (en compu está en «Cómo funciona») -->
+    <div class="solo-cel band--papel suma-cel" id="perfil-suma">
+      <div class="perks wrap">
+        <div class="perks__txt">
+          <p class="perks__eyebrow" data-texto="clubEtiqueta">Tu perfil en el club</p>
+          <h2 data-texto="clubTitulo">Cada caja <em>suma.</em></h2>
+          <p class="perks__sub" data-texto="clubTexto">Creá tu perfil y seguí tus cajas del mes. Al completar cinco, te llevamos un regalo sorpresa junto con la quinta.</p>
+          <p class="hand" data-texto="clubNota">no te vamos a decir qué es</p>
+        </div>
+        <button type="button" class="club-card rv" data-demo data-club-card aria-label="Ver el perfil de ejemplo de Lucía M.">
+          <span class="who">
+            <span class="who__name"><span class="eyebrow">Ejemplo de perfil</span><b>Lucía M.</b></span>
+            <span class="eyebrow">Socia desde julio</span>
+          </span>
+          <span class="meter" style="--p:60">
+            <span class="stamps" data-stamps><span class="stamp on"><span>1</span></span><span class="stamp on"><span>2</span></span><span class="stamp on"><span>3</span></span><span class="stamp"><span>4</span></span><span class="stamp gift"><span>5</span></span></span>
+            <span class="bar"><i></i></span>
+            <span class="meter-foot"><span data-cnt>3 de 5 cajas</span><span data-left>Te faltan 2 para el regalo</span></span>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="wrap su-grid">
+      <div class="su-intro">
+        <p class="eyebrow">Tu lugar en el club</p>
+        <h2 class="su-title">Creá tu <em>perfil.</em></h2>
+        <p>Con tu perfil reservás tu caja, elegís qué no querés recibir y seguís cada compra. Cada caja del mes suma, y con la quinta llega un regalo sorpresa.</p>
+        <p class="su-device">Tu perfil queda guardado en este celular o computadora. No hace falta contraseña.</p>
+        <div class="su-preview">
+          <p class="eyebrow">Así se va a ver</p>
+          <div class="pcard">
+            <div class="cv bg-loft" id="pvCover"></div>
+            <div class="bd">
+              <div class="av av-md" id="pvAvatar">?</div>
+              <div class="nm" id="pvName">Tu nombre</div>
+              <div class="sm">Socio/a desde <span data-mes>octubre</span> · <span id="pvZona">Paraná</span></div>
+              <div class="mini-bar"><i></i></div>
+              <div class="mini-foot">0 de <span data-regalo-cada>5</span> cajas · el regalo llega con la quinta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="su-msg" id="suMsg" hidden></div>
+        <form class="su-form" id="suForm" novalidate>
+          <fieldset>
+            <legend><span>01</span>Tus datos</legend>
+            <div class="row2">
+              <div class="field"><label for="suName">Nombre</label><input id="suName" autocomplete="name" placeholder="Como te decimos"></div>
+              <div class="field"><label for="suTel">WhatsApp</label><input id="suTel" inputmode="tel" autocomplete="tel" placeholder="343 ..."></div>
+            </div>
+            <div class="field"><label for="suEmail">Email</label><input id="suEmail" type="email" autocomplete="email" placeholder="vos@email.com"></div>
+          </fieldset>
+          <fieldset>
+            <legend><span>02</span>Tu foto y tu fondo</legend>
+            <div class="up"><div class="av av-sm" id="suAvatar">?</div><input type="file" id="suPhoto" accept="image/*"><label for="suPhoto" class="btn btn--line">Subir foto de perfil</label></div>
+            <div class="bgs" id="suBgs"></div>
+          </fieldset>
+          <fieldset>
+            <legend><span>03</span>Tus gustos</legend>
+            <div class="field"><label for="suZona">¿Dónde te llevamos las cajas?</label><select id="suZona"></select></div>
+            <p class="su-label">No quiero recibir en mis sorpresas</p>
+            <div class="chips" id="suPrefs"></div>
+          </fieldset>
+          <label class="check"><input type="checkbox" id="suAge"> Declaro ser mayor de 18 años.</label>
+          <p class="err" id="suErr" aria-live="polite"></p>
+          <div class="su-actions"><button class="btn" id="suSubmit">Crear mi perfil</button><button type="button" class="btn btn--line" id="suDemo">Ver un perfil de ejemplo</button></div>
+          <p class="su-alt">¿Ya tenés perfil? <button type="button" id="suLogin">Ingresá</button></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="dash" hidden>
+    <div class="cover" id="dCover"></div>
+    <div class="wrap">
+      <p class="demo-note" id="demoNote" hidden>Estás viendo un perfil de ejemplo. <button type="button" id="demoExit">Salir del ejemplo</button></p>
+      <div class="id-row">
+        <div class="av av-lg" id="dAvatar"></div>
+        <div class="id-text"><p class="eyebrow" id="dSince"></p><h2>Hola, <em id="dName"></em></h2></div>
+        <div class="id-actions"><button type="button" class="btn btn--line btn--sm" id="editBtn">Editar perfil</button><button type="button" class="btn btn--line btn--sm" id="logout">Cerrar sesión</button></div>
+      </div>
+      <div class="editor" id="editor" hidden>
+        <div class="up"><div class="av av-sm" id="edAvatar"></div><input type="file" id="edPhoto" accept="image/*"><label for="edPhoto" class="btn btn--line">Cambiar foto</label></div>
+        <div class="bgs" id="edBgs"></div>
+        <p class="saved" id="edSaved" aria-live="polite"></p>
+      </div>
+      <div class="stats">
+        <div><b id="stCajas">0</b><span>Cajas del mes</span></div>
+        <div><b id="stDuos">0</b><span>Dúos pedidos</span></div>
+      </div>
+      <div class="dash-grid">
+        <div class="p-meter">
+          <!-- En el celular, este cuadro es «Cada caja suma» -->
+          <div class="p-suma solo-cel">
+            <p class="perks__eyebrow" data-texto="clubEtiqueta">Tu perfil en el club</p>
+            <h3 data-texto="clubTitulo">Cada caja <em>suma.</em></h3>
+            <p class="perks__sub" data-texto="clubTextoPerfil">Seguí acá tus cajas del mes. Al completar cinco, te llevamos un regalo sorpresa junto con la quinta.</p>
+            <p class="hand" data-texto="clubNota">no te vamos a decir qué es</p>
+          </div>
+          <div class="p-meter__box">
+            <p class="eyebrow">Camino al regalo sorpresa</p>
+            <div class="meter" id="pMeter" style="--p:0">
+              <div class="stamps"></div>
+              <div class="bar"><i></i></div>
+              <div class="meter-foot"><span class="cnt"></span><span class="left"></span></div>
+            </div>
+            <p class="hand" id="pNote"></p>
+          </div>
+        </div>
+        <div class="p-card">
+          <h3>Próxima caja</h3>
+          <div class="kv" id="pNext"></div>
+          <button type="button" class="btn" data-order="">Reservar caja</button>
+        </div>
+        <div class="p-card wide">
+          <h3>Mis compras</h3>
+          <div class="table-wrap"><table class="buys"><thead><tr><th>Mes</th><th>Combo</th><th>Monto</th></tr></thead><tbody id="pHist"></tbody></table></div>
+          <p class="p-foot">Lo que pediste desde este dispositivo. El conteo oficial para el regalo lo llevamos nosotros.</p>
+        </div>
+        <div class="p-card wide">
+          <h3>No quiero recibir</h3>
+          <p class="p-foot">Lo usamos para armar tus sorpresas todos los meses.</p>
+          <div class="chips" id="profilePrefs"></div>
+          <p class="saved" id="prefSaved" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============================================ PIE -->
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft__top solo-compu">
+      <p class="ft__statement" data-texto="pieTitulo">Un club de vinos con acento del Litoral.</p>
+      <div class="ft__brand">
+        <img src="assets/img/logo.webp" alt="" width="54" height="64">
+        <p data-texto="pieTexto">Cada mes elegimos cuatro vinos por vos y te los llevamos a casa. Sin catálogo infinito y sin palabras que intimidan.</p>
+      </div>
+    </div>
+    <div class="ft__cols">
+      <div class="solo-compu">
+        <h3>El club</h3>
+        <ul>
+          <li>Reservas del <span data-regla="reservas">1 al 3</span></li>
+          <li>Pago <span data-regla="pago">hasta el 6</span></li>
+          <li>Entregas del <span data-regla="entregas">7 al 10</span></li>
+          <li data-dato="ciudad">Paraná, Entre Ríos</li>
+        </ul>
+      </div>
+      <div class="solo-compu">
+        <h3>Explorá</h3>
+        <ul>
+          <li><a href="#club" data-go>El club</a></li>
+          <li><a href="#como-funciona" data-go>Cómo funciona</a></li>
+          <li><a href="#duos" data-go>Dúos</a></li>
+          <li><a href="#regalo" data-go>Regalá una caja</a></li>
+          <li><a href="#preguntas" data-go>Preguntas</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contacto</h3>
+        <ul data-contactos>
+          <li data-contacto="whatsapp" hidden><a href="#contenido">WhatsApp</a></li>
+          <li data-contacto="instagram" hidden><a href="#contenido">Instagram</a></li>
+          <li data-contacto="email" hidden><a href="#contenido">Email</a></li>
+          <li data-sin-contacto>WhatsApp e Instagram, muy pronto.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Tu cuenta</h3>
+        <ul>
+          <li><a href="#perfil" data-go>Mi perfil</a></li>
+          <li><a href="#club" data-go data-order="">Reservá tu caja</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ft__legal">
+      <span>Beber con moderación. Prohibida su venta a menores de 18 años.</span>
+      <span>© <span data-anio>2026</span> <span data-dato="nombre">The Wine Loft</span> · <span data-dato="ciudad">Paraná, Entre Ríos</span></span>
+    </div>
+  </div>
+  <p class="ft__word solo-compu" aria-hidden="true"><span data-dato="nombre">The Wine Loft</span></p>
+</footer>
+
+<!-- ============================================ PEDIDO -->
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-label="Tu pedido" hidden>
+  <div class="drawer-head"><h3 id="dTitle">Tu pedido</h3><button type="button" class="x" data-close aria-label="Cerrar">×</button></div>
+  <div class="progress-steps" id="pSteps"></div>
+  <div class="drawer-body" id="dBody"></div>
+  <div class="drawer-foot" id="dFoot"></div>
+</aside>
+
+<!-- ============================================ INGRESAR -->
+<div class="modal" id="loginModal" hidden role="dialog" aria-modal="true" aria-labelledby="lgT">
+  <div class="card">
+    <div class="card__head"><h3 id="lgT">Entrá al loft</h3><button type="button" class="x" data-close aria-label="Cerrar">×</button></div>
+    <p class="sub">Tu perfil queda guardado en el celular o la computadora donde lo creaste, sin contraseña. Si lo creaste en este dispositivo, ya estás adentro.</p>
+    <button type="button" class="btn wide" id="lgCreate">Crear mi perfil</button>
+    <button type="button" class="btn btn--line wide" id="lgDemo">Probar con un perfil de ejemplo</button>
+    <p class="switch">¿Lo creaste en otro dispositivo? Abrí la página desde ahí.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+</body>
+</html>

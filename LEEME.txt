@@ -1,0 +1,853 @@
+﻿=====================================================================
+  THE WINE LOFT · CÓMO USAR TU PÁGINA (versión «Prueba 3»)
+=====================================================================
+
+Esta guía es para vos, aunque nunca hayas tocado una página web.
+Leela una vez de punta a punta; después usala como consulta.
+
+ÍNDICE
+  0. EMPEZÁ ACÁ: de cero a tu link en Instagram
+  1. Qué hay en la carpeta
+  2. Cómo ver la página en tu compu
+  3. Lo primero: poné tu WhatsApp
+  3 B. Avisos a tu mail (perfiles nuevos y copia de cada pedido)
+  4. El pedido: cómo funciona hoy y cómo activarlo
+  4 B. Adicionales y «Para regalo»
+  5. Cómo cambiar los textos
+  6. Todos los meses: combos, vinos, precios y fechas
+  7. Cómo cambiar las fotos
+  8. El perfil de tus clientes
+  9. Cómo subir la página a Hostinger (Netlify: 9 B; Vercel: 9 C)
+  9 D. GRATIS: Cloudflare Pages (si no querés pagar hosting)
+ 10. Cómo subir un cambio después
+ 11. Subí un cambio y no se ve: qué hacer
+ 12. Si algo se rompe
+
+
+---------------------------------------------------------------------
+0. EMPEZÁ ACÁ: DE CERO A TU LINK EN INSTAGRAM
+---------------------------------------------------------------------
+
+  LO QUE NECESITÁS (todo gratis)
+  - Un número de WhatsApp para el club. Lo ideal es la app
+    WhatsApp Business (gratis) con un número solo para el club.
+  - Tu mail, para recibir los avisos de la página.
+  - Una cuenta en web3forms.com: es la que te manda los avisos al
+    mail (parte 3 B).
+  - Una cuenta en Cloudflare: es donde vive la página (parte 9 D).
+  - Tu Instagram.
+  - Para cobrar: tu Mercado Pago. Podés pasar tu alias por WhatsApp
+    o crear links de pago (parte 4, C).
+
+  QUÉ TE LLEGA Y DÓNDE
+  - Cada pedido: a tu WhatsApp, ya escrito (combo, sorpresas,
+    adicionales, regalo, dirección, nombre y teléfono), y una copia
+    a tu mail.
+  - Cada perfil nuevo: a tu mail (nombre, WhatsApp, mail, zona y
+    qué no quiere recibir).
+  - Cuando alguien cambia «No quiero recibir» en su perfil: a tu mail.
+  - «Avisame cuando abra»: a tu WhatsApp, y una copia a tu mail.
+  - Consultas: a tu WhatsApp (botón del pie de la página).
+  Ojo: en WhatsApp el mensaje te llega recién cuando el cliente toca
+  «Enviar». La copia al mail te llega siempre, aunque no lo mande:
+  así podés escribirle vos.
+
+  LOS PASOS
+  1. Instalá WhatsApp Business en el celular del número del club.
+  2. Sacá tu clave de avisos en web3forms.com (parte 3 B).
+  3. Abrí datos.js (parte 3) y completá:
+        whatsapp: "549...",            tu número (parte 3)
+        instagram: "tuusuario",        sin @
+        claveAvisos: "la clave",       la de web3forms (parte 3 B)
+        aviso: "",                     vacío: saca el cartel rosa
+     Guardá.
+  4. Mirala en tu compu (doble clic en index.html): que se vea bien.
+  5. Subila a Cloudflare (parte 9 D). Te da tu dirección, por
+     ejemplo  thewineloft.pages.dev
+  6. Probala desde tu celular, con esa dirección: creá un perfil y
+     hacé un pedido. Te tiene que llegar el mail y abrirse WhatsApp
+     con el pedido. La primera vez, mirá también la carpeta «Spam»
+     y marcá el mail como «No es spam».
+  7. Poné el link en Instagram: en tu perfil, «Editar perfil» >
+     «Enlaces» > «Agregar enlace externo» > pegá tu dirección >
+     «Listo». (Instagram deja hasta 5 enlaces.)
+  8. Opcional, botón de WhatsApp en tu Instagram: pasá a cuenta
+     profesional («Editar perfil» > «Cambiar a cuenta profesional»),
+     después «Editar perfil» > «Información pública de contacto» >
+     WhatsApp > tu número. Te llega un código y lo confirmás.
+
+  Cuando cambies algo (cada mes), lo volvés a subir como dice la
+  parte 9 D, «CUANDO TENGAS EL WHATSAPP». El link de Instagram no
+  cambia.
+
+
+---------------------------------------------------------------------
+1. QUÉ HAY EN LA CARPETA
+---------------------------------------------------------------------
+
+  index.html   La página. Doble clic para verla.
+  datos.js     TUS DATOS: WhatsApp, combos, precios, vinos, fechas,
+               fotos y textos. Es el único archivo que vas a tocar.
+  styles.css   El diseño (colores, letras). No hace falta tocarlo.
+  main.js      Los botones, el pedido y el perfil. No hace falta
+               tocarlo.
+  .htaccess    Instrucciones para Hostinger (para que tus cambios se
+               vean enseguida). No lo borres. Empieza con un punto.
+  _headers     Lo mismo, pero para Netlify y Cloudflare. No lo
+               borres.
+  assets/img   La carpeta de las imágenes: el logo y tus fotos.
+
+
+---------------------------------------------------------------------
+2. CÓMO VER LA PÁGINA EN TU COMPU
+---------------------------------------------------------------------
+
+  1. Clic derecho sobre el archivo .zip > «Extraer todo» > Extraer.
+     En Mac: doble clic sobre el .zip y se crea la carpeta.
+  2. Abrí la carpeta que se creó.
+  3. Doble clic en index.html. Se abre en tu navegador.
+
+  Primero aparece la pregunta «¿Sos mayor de 18 años?» y después la
+  bienvenida. Se pregunta una vez por visita.
+
+  Es una sola página larga, como la de inspiración: portada, el club
+  (la caja del mes), cómo funciona (los números grandes «03 y 06» y
+  «Cada caja suma», el regalo sorpresa del club, sobre fondo papel),
+  los dúos (con una copa dibujada que se inclina y derrama vino a
+  medida que bajás: el vino cae sobre la palabra «Dúos.», corre por
+  la «D» como sobre algo sólido, gotea y sigue hasta formar un
+  charquito; si subís, vuelve atrás), vinos por estación, «Este mes, que el vino lo elija
+  otro» (con foto de fondo), «Regalá un mes de vino»,
+  preguntas y el cierre.
+  EN EL CELULAR la página es corta, para pedir rápido (por ejemplo,
+  desde el link de Instagram): portada, «Combos mensuales» (las cajas
+  del mes) y «Dúos», y abajo el contacto y la leyenda legal. Lo demás
+  (cómo funciona, estaciones, regalo, preguntas) se ve solo en
+  computadora, notebook y tablet. El pedido es el mismo en todos lados.
+  En el celular, «Cada caja suma» aparece en «Mi perfil» (parte 8).
+
+  El menú de arriba tiene, en este orden: El club, Cómo funciona,
+  Dúos y Preguntas. En el celular, el menú suma «Regalá una caja» y
+  «Mi perfil». «Ingresar» y «Mi perfil» abren el perfil.
+
+  Los recuadros rayados que dicen [IMAGEN AQUÍ: ...] marcan dónde va
+  una foto que todavía no tenemos y qué conviene fotografiar
+  (parte 7).
+
+  Con internet se ve con las tipografías de la marca. Sin internet
+  se ve igual, pero con letras parecidas.
+
+
+---------------------------------------------------------------------
+3. LO PRIMERO: PONÉ TU WHATSAPP
+---------------------------------------------------------------------
+
+  IMPORTANTE: datos.js NO se abre con doble clic (Windows intenta
+  ejecutarlo y da un error). Se abre así:
+
+     Clic derecho sobre datos.js > Abrir con > Bloc de notas
+
+  EN MAC: clic derecho sobre datos.js > Abrir con > TextEdit.
+  ANTES de escribir, en el menú de arriba: Edición >
+  Sustituciones > desmarcá «Comillas inteligentes». Si no, TextEdit
+  cambia las comillas " por otras y la página no lee tus datos.
+  Para guardar: Cmd + S.
+
+  Buscá esta línea (está cerca del principio):
+
+     whatsapp: "",
+
+  Escribí tu número ENTRE LAS COMILLAS, solo números, así:
+  549 + característica sin el 0 + número sin el 15.
+
+     Tu número:        0343 15 412-3456
+     Cómo va:          whatsapp: "5493434123456",
+
+  Guardá con Ctrl + G (o Ctrl + S) y volvé a abrir index.html.
+
+  ¿Todavía no tenés número? Podés publicar la página igual: el
+  pedido queda «de prueba» (no envía ni cobra) y se ve el cartel
+  «Sitio en preparación». Cuando tengas el número, lo cargás acá,
+  dejás  aviso: "",  (vacío) y la volvés a subir (9 D).
+
+  En el mismo lugar podés completar (o dejar vacío para ocultarlo):
+     instagram: "thewineloft",          (solo el usuario, sin @)
+     email:     "hola@tudominio.com",
+  Aparecen en el pie de la página.
+
+  Y para que te lleguen avisos al mail: claveAvisos (parte 3 B).
+
+
+---------------------------------------------------------------------
+3 B. AVISOS A TU MAIL (perfiles nuevos y copia de cada pedido)
+---------------------------------------------------------------------
+
+  La página te puede mandar un mail cada vez que alguien:
+    - crea su perfil (nombre, WhatsApp, mail, zona y qué no quiere
+      recibir),
+    - cambia «No quiero recibir» en su perfil,
+    - toca el último botón del pedido (te llega el pedido completo,
+      el mismo texto que va a WhatsApp).
+  Lo hace con web3forms.com, gratis hasta 250 avisos por mes.
+
+  CÓMO ACTIVARLO (una sola vez)
+  1. Entrá a  web3forms.com  y tocá el botón para crear tu clave
+     («Create your Form» o «Create Access Key»).
+  2. Escribí el mail donde querés recibir los avisos y confirmalo
+     (te llega un mail para verificarlo).
+  3. Te dan tu «Access Key»: una clave larga con guiones, tipo
+        a1b2c3d4-1234-5678-9abc-def012345678
+     Copiala.
+  4. En datos.js, pegala entre las comillas:
+        claveAvisos: "a1b2c3d4-1234-5678-9abc-def012345678",
+     Guardá y volvé a subir la página.
+
+  Los avisos llegan solo con la página publicada en internet (no
+  desde tu compu con doble clic) y solo cuando el pedido es de
+  verdad: en modo prueba (sin WhatsApp ni links de pago) no se
+  manda nada. El perfil de ejemplo (Lucía) tampoco avisa.
+  Si la clave está mal pegada, la página no manda nada (y anda
+  igual). Revisá que tenga 36 caracteres, con guiones.
+
+  Cuando los avisos están activos, el formulario del perfil le
+  aclara al cliente: «Tus datos nos llegan a nosotros, solo para
+  coordinar tus cajas».
+
+  ¿Y por qué los avisos no llegan a WhatsApp? Porque para que una
+  página te mande mensajes de WhatsApp sola hace falta un servicio
+  aparte, técnico y en general pago. Los pedidos sí te llegan a
+  WhatsApp: los manda el cliente.
+
+
+---------------------------------------------------------------------
+4. EL PEDIDO: CÓMO FUNCIONA HOY Y CÓMO ACTIVARLO
+---------------------------------------------------------------------
+
+  El pedido de una caja tiene 5 pasos:
+  Elegí tu combo > Tus sorpresas > ¿Dónde te la llevamos? >
+  ¿Querés sumar algo? (adicionales y regalo, parte 4 B) > Resumen.
+  (Los dúos no tienen el paso de sorpresas: son 4 pasos.)
+  Los combos agotados aparecen en la lista marcados «Sold out» y no
+  se pueden elegir.
+
+  VARIOS COMBOS EN UN MISMO PEDIDO
+  En el Resumen el cliente puede:
+    - Elegir cuántas veces quiere ese combo (botones − y +, hasta
+      10). Se repite igual, con sus adicionales y el regalo.
+    - Tocar «+ Agregar otro combo a la compra»: vuelve a «Elegí tu
+      combo» y le hace de nuevo todas las preguntas (sorpresas,
+      datos de envío ya completos para no reescribirlos, adicionales
+      y regalo). Arriba de cada paso ve «Combo 2 de tu pedido».
+  Al final ve la lista «Ya en tu pedido» (con «Quitar») y el total
+  de todo. A vos te llega UN solo WhatsApp con cada combo numerado,
+  sus adicionales, si es regalo y a dónde va cada uno.
+  En el perfil, cada caja suma una marca (2 cajas = 2 marcas).
+
+  El último botón cambia según lo que cargues en datos.js:
+
+  A) HOY (sin WhatsApp ni links de pago): MODO PRUEBA
+     El botón dice «Pagar con Mercado Pago» y muestra «¡Listo!»,
+     igual que en el video. NO cobra ni te manda nada.
+     La franja rosa de arriba avisa «Sitio en preparación».
+
+  B) CON TU WHATSAPP CARGADO
+     El botón dice «Enviar pedido por WhatsApp». Se abre WhatsApp
+     con el pedido ya escrito: combo, precio, qué no quiere recibir,
+     adicionales, si es para regalo (con la dirección de quien lo
+     recibe), dirección, nombre y teléfono. Vos coordinás el pago
+     por chat.
+     Si las reservas de las cajas están cerradas, el botón dice
+     «Avisame cuando abra» y te llega ese pedido de aviso.
+     Si activaste los avisos (parte 3 B), además te llega una copia
+     del pedido a tu mail.
+
+  C) CON LINKS DE PAGO DE MERCADO PAGO
+     En tu cuenta de Mercado Pago podés crear un «link de pago» por
+     cada combo (con su precio). Pegalo en datos.js, en el combo:
+        linkPago: "https://mpago.la/xxxxxxx",
+     El botón dice «Pagar con Mercado Pago» y abre ese link. Si
+     además cargaste el WhatsApp, al final aparece un botón para que
+     el cliente te mande su dirección por WhatsApp.
+     Ojo: el link tiene un precio fijo, así que se usa solo cuando
+     el pedido es un combo, una vez y sin adicionales ni regalo. Si
+     el pedido tiene más cosas, el botón pasa a «Enviar pedido por
+     WhatsApp» y el cobro lo coordinás por chat.
+
+  Cuando la página ya esté lista para vender, cambiá o borrá la
+  franja rosa:
+     aviso: "",                       (vacío = no se muestra)
+  o poné otro texto, por ejemplo:
+     aviso: "Reservas del 1 al 3 · Entregas del 7 al 10",
+
+
+---------------------------------------------------------------------
+4 B. ADICIONALES Y «PARA REGALO»
+---------------------------------------------------------------------
+
+  Antes del resumen, el pedido pregunta «¿Querés sumar algo?»:
+
+    Charcutería    Salame y queso
+    Cristalería    Una copa de cristal
+    Para regalo    Lo enviamos a donde indique el cliente, con una
+                   carta de feliz cumpleaños, y trae INCLUIDO uno de los
+                   dos adicionales (charcutería o cristalería, el que
+                   elija). El incluido no se cobra aparte.
+                   También puede elegir «Las dos»: una va incluida y
+                   la otra se cobra como adicional (la de menor
+                   precio, porque el precio del regalo ya cubre
+                   cualquiera de las dos).
+
+  Si marca «Para regalo», el pedido le pide para quién es, la
+  localidad y la dirección del regalo. Sirve para cajas y dúos.
+
+  LOS PRECIOS: en datos.js, parte 3, buscá  adicionales:
+     charcuteria: { ... precio: "" },
+     cristaleria: { ... precio: "" },
+     regalo:      { ... precio: "" }
+  Escribí el precio entre las comillas, sin puntos ni $:
+     precio: "6500",
+  Mientras esté vacío, la página dice «precio a confirmar», no lo
+  suma al total y avisa que ese precio lo confirmás por WhatsApp.
+  El precio de «Para regalo» es lo que cuesta el regalo ENCIMA de
+  la caja (incluye la carta de cumpleaños y el adicional que elija).
+
+  LA PUBLICIDAD DEL REGALO: el bloque «Regalá un mes de vino.»
+  (antes de las preguntas), con su botón «Armar un regalo» que abre
+  el pedido con «Para regalo» ya marcado. También está en el pie, en
+  el menú del celular y en dos preguntas frecuentes. Sus textos están
+  en datos.js, parte 6 (regaloTitulo, regaloTexto, regaloNota).
+
+
+---------------------------------------------------------------------
+5. CÓMO CAMBIAR LOS TEXTOS
+---------------------------------------------------------------------
+
+  Los textos están en datos.js, parte 6, en el mismo orden en que
+  aparecen en la página. Las preguntas frecuentes y las cuatro
+  estaciones de «Vinos por estación» están ahí también.
+
+  VINOS POR ESTACIÓN
+  Cada estación tiene una descripción corta y sus uvas de ejemplo
+  (aparecen como etiquetitas). Se cambian en datos.js, parte 6,
+  buscando  estaciones:
+     { nombre: "Primavera", meses: "Septiembre a noviembre",
+       texto: "Frescos, aromáticos y livianos, ...",
+       uvas: "Torrontés y Sauvignon Blanc" }
+  En uvas, separá las variedades con coma o con «y»:
+     uvas: "Torrontés, Sauvignon Blanc y rosados frescos"
+  Si dejás uvas vacío (""), aparece el recuadro [COMPLETAR: ...].
+  La estación de hoy lleva la marca rosa «Ahora» (se calcula sola).
+
+  «CADA CAJA SUMA» (el regalo sorpresa, en Cómo funciona)
+  Sus textos están en datos.js, parte 6: clubEtiqueta, clubTitulo,
+  clubTexto y clubNota. La tarjeta de ejemplo (Lucía M., 3 de 5
+  cajas) se arma sola; si la tocan, abre el perfil de ejemplo.
+  clubTextoPerfil es el texto que ve, en el celular, quien ya tiene
+  perfil (parte 8).
+  Si cambiás regaloCada (parte 2), la tarjeta se acomoda sola, pero
+  acordate de cambiar «cinco» y «la quinta» en clubTexto y en
+  clubTextoPerfil.
+
+  Las 5 reglas para no romper nada:
+
+  1. Cambiá solo lo que está ENTRE COMILLAS "así".
+  2. No borres las comillas, ni la coma del final, ni las llaves
+     { } ni los corchetes [ ].
+  3. Si querés comillas dentro de un texto, usá estas: « »
+     (nunca " porque cortan el texto).
+  4. Para que una parte salga en CURSIVA ROSA (el estilo de los
+     títulos), ponela entre asteriscos:
+        combosTitulo: "Elegí tu *combo.*",
+  5. Si dejás un texto vacío ("") ese texto no se muestra.
+
+  \n quiere decir «salto de línea» (por ejemplo en el título «Este
+  mes, que el vino \n *lo elija otro.*» y en los mensajes). Las palabras entre llaves {así} se completan solas.
+
+  Truco: en el Bloc de notas, menú Edición > Buscar (Ctrl + B o
+  Ctrl + F). Escribí una palabra del texto y te lleva directo.
+
+
+---------------------------------------------------------------------
+6. TODOS LOS MESES: COMBOS, VINOS, PRECIOS Y FECHAS
+---------------------------------------------------------------------
+
+  En datos.js, parte 2 (EL MES):
+
+     mes: "noviembre",
+     anio: "2026",
+     reservasDesde: "2026-11-01",    (año-mes-día)
+     reservasHasta: "2026-11-03",
+
+  La página calcula sola, con la fecha de hoy en Argentina, si las
+  reservas de las cajas están abiertas («Reservas abiertas hasta el
+  3 de noviembre») o cerradas («Próximas reservas: 1 al 3 de
+  diciembre»). Los dúos se pueden pedir cualquier día del mes (van
+  por fuera del club; la página lo aclara en «Dúos»).
+
+  Un poco más abajo están:
+     reservas: "1 al 3",       hasta qué día se reserva
+     pago: "hasta el 6",       hasta qué día se paga
+     entregas: "7 al 10",
+  Los números grandes «Reservás hasta el 03 y pagás hasta el 06»
+  salen de ahí.
+
+  En la parte 3 (COMBOS Y VINOS) está cada combo:
+     nombre, tipo ("caja" o "duo"), precio (sin puntos ni $),
+     botellas, descripción, destacado (la cinta rosa, por ejemplo
+     "La más pedida"; vacío = sin cinta), foto, fotoTexto (qué se ve
+     en la foto), linkPago, agotado y la lista de vinos.
+  Las cajas aparecen en «El club» (con la foto fija a la izquierda)
+  y los dúos en la lista grande «Dúos.»
+
+  COMBO AGOTADO («Sold out»)
+  La Caja Reserva ya no se vende: tiene
+     agotado: "si",
+     agotadoTexto: "Esta caja ya no se vende. La dejamos acá ...",
+  Se sigue mostrando con sus vinos, marcada «Sold out», sin botón
+  de reservar, y en el pedido no se puede elegir. Para volver a
+  venderla, dejá  agotado: "",  (vacío). Sirve para cualquier combo.
+
+  Cada vino: nombre, varietal (con año), región, nota (la frase a
+  mano, como «Este pide asado.») y foto de la botella. En los dúos,
+  esa foto aparece al pasar el mouse por el vino (y chiquita al
+  costado en el celular). Al pasar el mouse por el nombre del dúo
+  aparece la foto del dúo (la foto del combo).
+  Las botellas de los dúos están RECORTADAS, sin fondo: así aparecen
+  con la forma de la botella. Si cambiás una, usá una foto con fondo
+  transparente (por ejemplo, sacándole el fondo con remove.bg o con la
+  app de fotos del celular) y guardala como .webp o .png. Si la foto
+  tiene fondo, se va a ver el recuadro.
+
+  En las cajas: si cargás 2 vinos y botellas es "4", la página
+  muestra 2 vinos anunciados y 2 «Sorpresa» sola.
+
+  El precio por botella ($17.500 c/u) y el «Desde $18.500» de la
+  portada se calculan solos.
+
+  Truco para ver cómo se verá con las reservas abiertas: abrí la
+  página y, en la barra de direcciones, agregá al final
+     ?hoy=2026-11-02
+  y apretá Enter. Esa prueba solo la ves vos.
+
+
+---------------------------------------------------------------------
+7. CÓMO CAMBIAR LAS FOTOS
+---------------------------------------------------------------------
+
+  ESPACIOS «IMAGEN AQUÍ»
+  Donde la página de inspiración tiene fotos y nosotros todavía no,
+  hay un recuadro rayado que dice [IMAGEN AQUÍ: ...] con la foto que
+  conviene sacar. Son estos (en datos.js, parte 4, FOTOS):
+
+    cita       Fondo de la frase destacada      horizontal y oscura
+    cierre     Cierre «Reservá tu caja...»      horizontal (21:9)
+  Y en la parte 3: la foto de la Caja Clásica (foto: "").
+
+  Ya están puestas tus fotos:
+    - el viñedo de la portada (portada-vinedo.webp, mejorada y ampliada)
+    - los cuatro vinos de octubre en la biblioteca (Caja Reserva,
+      caja-reserva-octubre.webp)
+    - las fotos de los dos dúos (duo-reserva-cielo.webp y
+      duo-clasico-cielo.webp) y las cuatro botellas recortadas sin
+      fondo (v-marioneta-recorte.webp, v-13cles-recorte.webp,
+      v-tepeyac-recorte.webp y v-criolla-recorte.webp)
+    - las cuatro de «Vinos por estación», con uvas y viñedo (en datos.js:
+      est1 = verano, est2 = otoño, est3 = invierno, est4 = primavera;
+      mejor verticales; mejoradas y ampliadas)
+    - los vinos de los dúos sobre la mesa, de fondo en «Este mes, que el
+      vino lo elija otro» (momento-duos-fondo.webp, mejorada y ampliada)
+    - la botella con la faja «loft», en «Regalá un mes de vino»
+      (regalo-loft.webp, mejorada y ampliada)
+    - el logo
+  biblioteca.webp y loft.webp se usan como fondos para elegir en
+  «Mi perfil». En la carpeta también quedaron dos-tintos.webp y
+  vinos-octubre.webp, que hoy no se usan (podés borrarlos o
+  guardarlos para otro mes).
+
+  CÓMO PONER UNA FOTO
+  1. Convertila a WebP gratis: entrá a squoosh.app, arrastrá la
+     foto, elegí «WebP» abajo a la derecha y descargala. Que mida
+     unos 1600 a 2000 píxeles de ancho y pese menos de 300 KB.
+     Nombre corto, sin espacios ni tildes: portada-loft.webp
+  2. Copiala en la carpeta  assets/img
+  3. En datos.js, escribí el nombre en el lugar que corresponda:
+        portada: "portada-loft.webp",
+     y en portadaTexto, una descripción corta de lo que se ve.
+  4. Guardá y volvé a abrir index.html. El recuadro rayado se
+     reemplaza por tu foto.
+
+  Las fotos se ven SIEMPRE COMPLETAS, sin recortes: el espacio toma
+  la forma de la foto. Por eso conviene respetar la forma sugerida.
+  En el celular, los textos van debajo de la foto.
+
+  LA PORTADA Y «ESTE MES, QUE EL VINO LO ELIJA OTRO» SON LA
+  EXCEPCIÓN: son fondos. La foto llena la pantalla detrás del título,
+  con una capa azul noche semitransparente para que se lea bien. Para llenar la pantalla puede recortar un poco
+  de cielo o de los costados (en el celular, los costados), así que
+  conviene una foto horizontal de paisaje con lo importante en el
+  centro. Para la portada, que mida unos 2400 píxeles de ancho.
+
+  OJO AL CAMBIAR UNA FOTO: usá SIEMPRE un nombre nuevo (no
+  reemplaces un archivo con el mismo nombre). Los navegadores guardan
+  las fotos un mes; con el mismo nombre, mucha gente vería la vieja.
+
+
+---------------------------------------------------------------------
+8. EL PERFIL DE TUS CLIENTES
+---------------------------------------------------------------------
+
+  «Crear mi perfil», «Ingresar» y «Mi perfil» funcionan como en el
+  prototipo: foto, fondo, zona, qué no quiere recibir, sus pedidos y
+  las 5 marcas del regalo sorpresa. Ya no muestra el total de dinero
+  gastado (en «Mis compras» sigue el precio de cada pedido).
+  Solo las cajas del mes suman marcas; los dúos no.
+
+  EN EL CELULAR, «Mi perfil» muestra el cuadro «Cada caja suma»
+  (el mismo de «Cómo funciona», sobre papel):
+    - Si todavía no tiene perfil: arriba de todo, con la tarjeta de
+      ejemplo de Lucía (si la toca, ve el perfil de ejemplo) y debajo
+      el formulario para crear el suyo.
+    - Si ya tiene perfil: el cuadro con SUS cajas, las marcas que
+      lleva y cuántas le faltan para el regalo.
+  En compu, notebook y tablet el perfil queda como antes (el cuadro
+  está en «Cómo funciona»).
+
+  Lo importante: el perfil se guarda EN EL CELULAR O LA COMPU del
+  cliente, sin contraseña. Esto quiere decir que:
+    - Si entra desde otro dispositivo, no ve su perfil.
+    - Si borra los datos del navegador, el perfil se borra.
+    - Si lo creó desde el link de Instagram, queda guardado en el
+      navegador de Instagram: si después abre la página en Safari o
+      Chrome, no lo ve (y al revés).
+    - Si activaste los avisos (parte 3 B), cada perfil nuevo te
+      llega al mail con sus datos. Sin avisos, no ves los perfiles.
+    - El conteo OFICIAL de cajas para el regalo lo llevás vos, con
+      los pedidos que te llegan.
+  La página se lo aclara al cliente en «Mi perfil».
+
+  Para que el perfil quede en internet (con contraseña y visible
+  para vos), hace falta un servidor y una base de datos; se puede
+  hacer más adelante.
+
+  «Probar con un perfil de ejemplo» muestra a Lucía con 3 cajas.
+  Ese ejemplo no se guarda y se sale con «Salir del ejemplo».
+
+
+---------------------------------------------------------------------
+9. CÓMO SUBIR LA PÁGINA A HOSTINGER (la primera vez)
+---------------------------------------------------------------------
+
+  Vas a subir el .zip tal cual y descomprimirlo allá.
+
+  1. Entrá a hpanel.hostinger.com con tu usuario.
+  2. En «Sitios web», buscá tu dominio y entrá a «Administrar»
+     (o «Panel»).
+  3. Buscá «Administrador de archivos» y abrilo.
+  4. Entrá a la carpeta  public_html  (doble clic).
+     - Si adentro hay un archivo default.php o index.php que puso
+       Hostinger, borralo.
+     - Si ya habías subido una versión anterior, borrá sus
+       archivos: index.html, datos.js, styles.css, main.js y la
+       carpeta assets. Si querés, descargalos antes como copia.
+  5. Tocá el botón de subir (flecha hacia arriba) > «Archivo» y
+     elegí el .zip de la página. Esperá a que termine.
+  6. Clic derecho sobre el .zip > «Extraer». Si te pide carpeta de
+     destino, dejá public_html (no escribas otro nombre).
+  7. Revisá que DENTRO de public_html, sin carpetas en el medio,
+     estén: index.html, datos.js, styles.css, main.js, .htaccess
+     y la carpeta assets.
+     Si quedaron adentro de otra carpeta, entrá, seleccioná todo y
+     movelo a public_html.
+  8. Borrá el .zip de public_html (ya no hace falta).
+  9. Abrí tu dominio en el navegador. Listo.
+
+  Candado de seguridad (https): en hPanel buscá «SSL» (suele estar
+  en «Seguridad») y activalo; es gratis. Si en esa pantalla aparece
+  la opción «Forzar HTTPS», activala también.
+
+  Sobre .htaccess: es un archivo «oculto» porque empieza con punto.
+  Si no lo ves en el Administrador de archivos, buscá la opción
+  para mostrar archivos ocultos.
+
+
+---------------------------------------------------------------------
+9 B. O SI PREFERÍS NETLIFY (gratis, sin Hostinger)
+---------------------------------------------------------------------
+
+  1. Descomprimí el .zip en tu compu (clic derecho > Extraer todo).
+  2. Entrá a app.netlify.com/drop (con tu cuenta de Netlify; si no
+     tenés, se crea gratis con tu email).
+  3. Arrastrá la CARPETA descomprimida (no el .zip) al recuadro.
+  4. En unos segundos te da una dirección del tipo
+     nombre-al-azar.netlify.app. Esa es tu página.
+  5. Para tu dominio propio: en Netlify, «Domain management» >
+     «Add a domain» y seguí los pasos.
+
+  Para subir un cambio en Netlify: entrá a tu sitio > «Deploys» y
+  volvé a arrastrar la carpeta completa con el cambio hecho.
+  Netlify ya sirve siempre la versión nueva; si no la ves, probá
+  el punto 1 de la parte 11 (los puntos 3 y 4 son solo para
+  Hostinger).
+
+
+---------------------------------------------------------------------
+9 C. O SI USÁS VERCEL
+---------------------------------------------------------------------
+
+  Ojo con el plan: el plan gratis de Vercel («Hobby») es solo para
+  uso personal, no comercial. Como el club vende, lo que
+  corresponde es el plan «Pro» (USD 20 por mes; suele ofrecer una
+  prueba gratis). Si preferís no pagar hosting, mirá 9 D
+  (Cloudflare Pages, gratis).
+
+  ANTES DE SUBIRLA (una sola vez)
+  - Tu WhatsApp en datos.js (parte 3). Sin eso, los pedidos no
+    te llegan.
+  - El cartel «Sitio en preparación»: en datos.js dejá  aviso: ""
+  - Los precios de los adicionales y del regalo, si ya los tenés.
+  - Probala con doble clic en index.html: que se vea bien.
+
+  LA PRIMERA VEZ
+
+  1. Creá tu cuenta en vercel.com («Sign Up»). Si te pregunta para
+     qué la vas a usar, elegí la opción comercial (Pro).
+  2. Entrá a  vercel.com/drop
+  3. Arrastrá al recuadro el archivo wineloft-prueba3.zip tal cual
+     (no hace falta descomprimirlo). También sirve la carpeta
+     descomprimida: tiene que ser la carpeta que tiene adentro
+     index.html, datos.js y assets (no una carpeta más arriba).
+  4. Elegí tu equipo («team») y escribí un nombre para el proyecto,
+     por ejemplo  thewineloft  (minúsculas, números y guiones).
+  5. Tocá «Deploy». En un minuto te da una dirección del tipo
+     thewineloft.vercel.app  (si ese nombre está tomado, le suma
+     algo). Esa ya es tu página, publicada y con candado (https).
+  6. Abrila en el celular y hacé un pedido de prueba completo.
+
+  TU DOMINIO PROPIO (.com.ar)
+
+  Primero registralo en nic.ar (con tu CUIT/CUIL y clave fiscal).
+  Después:
+
+  En Vercel:
+  1. Entrá al proyecto > «Settings» > «Domains» > «Add Domain».
+  2. Escribí tu dominio (por ejemplo  thewineloft.com.ar ) y aceptá
+     la opción recomendada, que también suma el «www» y lo redirige.
+  3. Vercel va a decir «Invalid Configuration» (es normal: todavía
+     no lo conectaste). Elegí la forma de los nameservers
+     («Vercel DNS»). Son estos dos:
+        ns1.vercel-dns.com
+        ns2.vercel-dns.com
+     La otra forma (un número tipo 76.76.21.21) no sirve para un
+     .com.ar, porque NIC.ar no la acepta.
+
+  En NIC.ar:
+  4. Entrá a nic.ar > «Ingresar», con CUIT/CUIL y clave fiscal.
+  5. En Trámites a Distancia, tocá «Iniciar trámite» en «NICar -
+     Registros, Renovaciones y Otras Operaciones».
+  6. En la fila de tu dominio, tocá «Delegar».
+  7. «Agregar una nueva delegación» > escribí  ns1.vercel-dns.com
+     > «Guardar». Repetí con  ns2.vercel-dns.com
+     Si ya había otras (por ejemplo, de Hostinger), borralas.
+  8. Confirmá con «Ejecutar Cambios».
+  9. Esperá. NIC.ar lo activa en el día y después puede tardar
+     hasta 24 a 48 horas en verse en todos lados. Cuando en Vercel
+     diga «Valid Configuration», tu dominio ya anda, con candado
+     (https) automático y gratis.
+
+  ¿Vas a tener mail con tu dominio (tipo hola@tudominio.com.ar)?
+  Al delegar a Vercel, los datos del mail también se cargan en
+  Vercel: en «Domains» (de tu cuenta) > tu dominio > «DNS Records».
+  Pedile esos datos a tu proveedor de mail y cargalos ahí.
+
+  PARA SUBIR UN CAMBIO EN VERCEL (por ejemplo, cada mes)
+
+  1. Hacé el cambio en tu compu (datos.js, fotos) y probalo con
+     doble clic en index.html.
+  2. Guardá una copia de la carpeta del mes anterior, por las dudas.
+  3. Entrá a vercel.com y abrí tu proyecto (thewineloft).
+  4. Arrastrá la CARPETA COMPLETA (o un .zip de toda la carpeta)
+     sobre la página del proyecto. En un minuto queda publicada la
+     versión nueva, con la misma dirección.
+     Subí siempre TODO, no solo datos.js: lo que no esté en lo que
+     arrastrás desaparece de la página.
+  5. NO uses vercel.com/drop otra vez: eso crea un proyecto NUEVO,
+     con otra dirección, y tu dominio sigue en el viejo.
+
+  Si algo salió mal, arrastrá de nuevo la carpeta del mes anterior
+  y vuelve todo como estaba.
+
+  Vercel siempre muestra la versión nueva, así que no hace falta
+  cambiar la «versión» (parte 11, punto 2). Si no ves el cambio,
+  probá el punto 1 de la parte 11. Los archivos .htaccess y _headers
+  son para Hostinger y Netlify: Vercel no los usa, y no molestan.
+
+  EN INSTAGRAM
+  Editar perfil > «Enlaces» > «Agregar enlace externo» > pegá tu
+  dirección (la de .com.ar cuando esté lista; mientras tanto, la
+  de .vercel.app).
+
+
+---------------------------------------------------------------------
+9 D. GRATIS: CLOUDFLARE PAGES (la opción si no querés pagar)
+---------------------------------------------------------------------
+
+  Es gratis, se puede usar para un negocio y no tiene límite de
+  visitas. Se sube arrastrando, igual que en Vercel.
+
+  SE PUEDE SUBIR AUNQUE TODAVÍA NO TENGAS WHATSAPP
+  Mientras datos.js no tenga tu número, la página se ve completa
+  pero el pedido funciona «de prueba»: no envía ni cobra nada, y
+  arriba se ve el cartel «Sitio en preparación». Cuando tengas el
+  número, seguí «CUANDO TENGAS EL WHATSAPP», más abajo.
+
+  LA PRIMERA VEZ
+  1. Creá tu cuenta gratis en  dash.cloudflare.com/sign-up  (email
+     y contraseña) y confirmá el mail que te mandan. Si te ofrece
+     agregar un dominio o un plan pago, salteá ese paso.
+  2. En el menú de la izquierda, entrá a «Workers & Pages» (puede
+     estar dentro de «Compute»).
+  3. Tocá «Create application». Abajo de todo dice «Looking to
+     deploy Pages?»: tocá «Get started».
+  4. Elegí «Drag and drop your files».
+  5. Escribí el nombre del proyecto:  thewineloft
+     (si aparece el botón «Create project», tocalo).
+  6. Arrastrá al recuadro el archivo wineloft-prueba3.zip, o la
+     carpeta que tiene adentro index.html, datos.js y assets.
+  7. Cuando termine de subir, tocá «Deploy site».
+  8. Tu página queda en  thewineloft.pages.dev  (si ese nombre está
+     tomado, le suma algo: la dirección exacta aparece en pantalla).
+     Abrila en el celular y recorrela.
+
+  CUANDO TENGAS EL WHATSAPP (y cualquier cambio, por ejemplo
+  cada mes)
+  1. Abrí datos.js (parte 3), poné tu número y dejá el aviso vacío:
+        aviso: "",
+     Guardá y probá con doble clic en index.html.
+  2. En Cloudflare: «Workers & Pages» > tu proyecto (thewineloft).
+  3. Tocá «Create deployment» (o «Create a new deployment»), elegí
+     «Production» y arrastrá la CARPETA COMPLETA, o un .zip de toda
+     la carpeta (en Mac: clic derecho sobre la carpeta >
+     «Comprimir»). Tocá «Save and Deploy».
+     Subí siempre TODO, no solo datos.js: lo que no esté en lo que
+     subís desaparece de la página.
+  4. En un minuto queda la versión nueva, en la misma dirección. Si
+     no la ves, recargá (parte 11, punto 1).
+
+  Guardá una copia de la carpeta del mes anterior: si algo sale
+  mal, la subís de nuevo y queda todo como estaba.
+
+  TU DOMINIO .com.ar (más adelante, cuando quieras)
+  El dominio en NIC.ar tiene un costo anual. Mientras tanto, la
+  dirección .pages.dev sirve perfecto para el link de Instagram.
+  Cuando lo tengas:
+  1. En Cloudflare: «Add a domain», escribí tu dominio y elegí el
+     plan «Free». Cloudflare te muestra DOS nameservers (del tipo
+     nombre.ns.cloudflare.com). Anotalos.
+  2. En NIC.ar, delegá tu dominio a esos dos nombres. Los pasos son
+     los de 9 C (puntos 4 a 8), pero con los nombres de Cloudflare.
+  3. Cuando Cloudflare diga que el dominio está activo («Active»),
+     andá a «Workers & Pages» > tu proyecto > «Custom domains» >
+     «Set up a domain», escribí tu dominio y tocá «Continue».
+  4. Repetí el punto 3 con  www.tudominio.com.ar  para que también
+     ande con www.
+
+  EN INSTAGRAM
+  Editar perfil > «Enlaces» > «Agregar enlace externo» > pegá la
+  dirección de tu página.
+
+
+---------------------------------------------------------------------
+10. CÓMO SUBIR UN CAMBIO DESPUÉS
+---------------------------------------------------------------------
+
+  (Esto es para Hostinger. Netlify: 9 B; Vercel: 9 C;
+  Cloudflare: 9 D.)
+
+  El 90 % de las veces vas a cambiar solo datos.js.
+
+  1. Cambiá datos.js en tu compu y probalo con doble clic en
+     index.html (que se vea bien ANTES de subirlo).
+  2. En el Administrador de archivos, entrá a public_html.
+  3. Subí datos.js. Cuando pregunte, elegí reemplazar el existente.
+  4. Si sumaste fotos, entrá a public_html/assets/img y subilas ahí.
+
+  También podés editar datos.js directo en Hostinger: clic derecho
+  sobre datos.js > «Editar». Mismas reglas que en el Bloc de notas.
+
+
+---------------------------------------------------------------------
+11. SUBÍ UN CAMBIO Y NO SE VE: QUÉ HACER
+---------------------------------------------------------------------
+
+  Casi siempre es la «memoria» del navegador (la caché), que te
+  muestra la versión anterior. Probá en este orden:
+
+  1. Recargá forzando: Ctrl + F5 (en Mac: Cmd + Shift + R).
+     O abrí la página en una ventana de incógnito (en Chrome o
+     Edge: Ctrl + Shift + N). En el celular: cerrá la pestaña y
+     abrila de nuevo, o probá en modo incógnito.
+
+  2. Si sigue igual, cambiá la «versión» de la página:
+     a. Abrí index.html con el Bloc de notas
+        (clic derecho > Abrir con > Bloc de notas).
+     b. Menú Edición > Reemplazar (Ctrl + R o Ctrl + H, según la
+        versión de Windows).
+        Buscar:          v=202610161
+        Reemplazar con:  v=  y la fecha de hoy, por ejemplo
+                         v=20261115   (año, mes, día, todo junto;
+                         si cambiás dos veces el mismo día, agregá
+                         un 2 al final: v=202611152)
+     c. «Reemplazar todo» (son 4 lugares), guardá y subí index.html
+        a Hostinger (reemplazando).
+     La próxima vez, buscá la fecha que pusiste esta vez.
+
+  3. Revisá que .htaccess esté en Hostinger: abrí en el navegador
+        https://tudominio.com/.htaccess
+     - Si dice «403» o «Forbidden» / «Prohibido»: está bien, existe.
+     - Si dice «404» o «no encontrado»: no se subió. Subilo de nuevo
+       a public_html.
+
+  4. Si tu plan de Hostinger tiene el CDN activado, buscá en hPanel
+     la opción para vaciar (purgar) la caché del CDN.
+
+  5. Esperá 5 minutos y volvé a probar.
+
+
+---------------------------------------------------------------------
+12. SI ALGO SE ROMPE
+---------------------------------------------------------------------
+
+  Antes de cambiar datos.js, hacé una copia: copiá y pegá el
+  archivo en la misma carpeta (queda «datos - copia.js»). Si algo
+  sale mal, borrá el datos.js roto y renombrá la copia a datos.js.
+
+  - La página muestra los textos y combos de siempre e ignora tus
+    cambios: hay un error de escritura en datos.js. Mirá lo último
+    que cambiaste: casi siempre falta una comilla " o una coma al
+    final de la línea, o pusiste " dentro de un texto (usá « »).
+    Tranquilidad: aunque datos.js tenga un error, la página nunca
+    queda en blanco y el pedido sigue andando.
+
+  - Aparecen letras raras (Ã¡ en vez de á): el archivo se guardó
+    con otra codificación. En el Bloc de notas: Archivo > Guardar
+    como > abajo, en «Codificación», elegí UTF-8 > Guardar.
+
+  - El botón final sigue en modo prueba: revisá el número de
+    WhatsApp (solo números, empezando con 549) o que el linkPago
+    empiece con https://
+
+  - Una foto no aparece: revisá que el nombre en datos.js sea
+    idéntico al del archivo y que esté en assets/img.
+
+
+---------------------------------------------------------------------
+PARA TENER EN CUENTA
+---------------------------------------------------------------------
+
+  - La página incluye la pregunta de mayoría de edad y la leyenda de
+    la Ley 24.788 («Beber con moderación. Prohibida su venta a
+    menores de 18 años.»). No las saques.
+  - Funciona en computadoras, celulares y tablets, y se mueve igual
+    aunque Windows tenga apagadas las animaciones.
+  - Si el navegador no tiene JavaScript, igual se ven todas las
+    secciones, una debajo de la otra.
