@@ -154,12 +154,14 @@ section, .view, .club-wrap { scroll-margin-top: var(--hd); }
    ============================================================= */
 .hd {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
-  background: rgba(21, 30, 49, 0.95);
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s;
 }
+/* El fondo va en una capa aparte: si el desenfoque estuviera en .hd,
+   el menú del celular (position: fixed) quedaría encerrado en el encabezado. */
+.hd::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(21, 30, 49, 0.95); }
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .hd { background: rgba(21, 30, 49, 0.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+  .hd::before { background: rgba(21, 30, 49, 0.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 }
 .hd.scrolled { border-bottom-color: var(--line); }
 .hd__in { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; height: var(--hd); padding-inline: var(--gutter); }

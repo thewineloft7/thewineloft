@@ -1509,6 +1509,11 @@
       var mn2 = $("#mnav");
       if (mn2 && mn2.open && !mn2.contains(e.target)) mn2.open = false;
     });
+    /* el menú del celular se abre justo debajo del encabezado (arriba puede estar el aviso) */
+    var mn3 = $("#mnav"), mnNav = mn3 && $("nav", mn3);
+    if (mnNav) mn3.addEventListener("toggle", function () {
+      if (mn3.open) mnNav.style.top = Math.max(0, $("#hd").getBoundingClientRect().bottom) + "px";
+    });
     root.classList.add("views-on");
     var fromHash = function () {
       var v = (window.location.hash || "").slice(1);
@@ -1738,13 +1743,21 @@
     var vh = window.innerHeight || root.clientHeight;
     var top = pour.sec.getBoundingClientRect().top;
     var k = pour.S / 100;
+    /* El charco tiene que terminar de formarse antes del final de la
+       página (en el celular «Dúos» queda casi al final y no se llegaba).
+       «fin» es la altura de pantalla donde el charco queda completo. */
+    var maxS = Math.max(0, root.scrollHeight - vh);
+    var charcoAbajo = top + pour.yEnd + (window.pageYOffset || root.scrollTop || 0) - maxS;
+    var crece = vh * (pour.movil ? 0.12 : 0.22);
+    var fin = Math.max(vh * (pour.movil ? 0.5 : 0.33), charcoAbajo + vh * 0.15);
+    var linea = Math.min(fin + crece, vh * 0.9);
     /* 1) la copa se inclina mientras sube por la pantalla */
-    var t1 = clamp01((vh * 0.9 - (top + pour.gy)) / (vh * 0.35));
+    var t1 = clamp01((linea + vh * 0.35 - (top + pour.gy)) / (vh * 0.35));
     var e = t1 * t1 * (3 - 2 * t1);
     /* 2) el vino avanza acompañando el scroll (y retrocede si se sube) */
-    var t2 = clamp01((vh * 0.55 - (top + pour.y0)) / (pour.yEnd - pour.y0));
+    var t2 = clamp01((linea - (top + pour.y0)) / (pour.yEnd - pour.y0));
     /* 3) al llegar abajo se forma un charquito */
-    var t3 = clamp01((vh * 0.55 - (top + pour.yEnd)) / (vh * 0.22));
+    var t3 = clamp01((linea - (top + pour.yEnd)) / (linea - fin));
     var ang = e * TILT * pour.lado;
     pour.glass.setAttribute("transform", "translate(" + pour.gx.toFixed(1) + "," + pour.gy.toFixed(1) + ") rotate(" + ang.toFixed(2) + ")");
     pour.level.setAttribute("transform", "rotate(" + (-ang).toFixed(2) + ")");
