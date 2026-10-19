@@ -41,6 +41,13 @@ window.__BRAND__ = {
   // que te da web3forms.com (gratis). Vacío ("") = no se manda nada.
   claveAvisos: "",
 
+  // Planilla del club (Google, gratis): cada perfil y cada pedido quedan
+  // anotados en tu planilla. Vos tildás «Pagado» y la caja le suma al
+  // socio en su perfil, en cualquier celular. Pegá acá el link que termina
+  // en /exec (pasos en planilla/LEEME-planilla.txt). Vacío ("") = el perfil
+  // queda guardado solo en el celular de cada cliente, como hasta ahora.
+  planilla: "",
+
   // Franja rosa de arriba de todo. Vacío ("") = no se muestra.
   aviso: "Sitio en preparación: todavía no se cobra online ni se envían pedidos.",
 
