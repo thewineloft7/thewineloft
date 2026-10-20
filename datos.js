@@ -31,7 +31,7 @@ window.__BRAND__ = {
 
   // WhatsApp: SOLO NÚMEROS, con 549 + característica sin el 0 + número sin el 15.
   // Ejemplo para Paraná (343): "5493434123456"
-  whatsapp: "",
+  whatsapp: "5493434626678",
 
   instagram: "",   // Solo el usuario, sin @. Ejemplo: "thewineloft"
   email: "",       // Ejemplo: "hola@thewineloft.com.ar"
@@ -39,7 +39,7 @@ window.__BRAND__ = {
   // Avisos a tu mail: cada perfil nuevo, cada cambio de «no quiero
   // recibir» y una copia de cada pedido. Pegá acá la clave («Access Key»)
   // que te da web3forms.com (gratis). Vacío ("") = no se manda nada.
-  claveAvisos: "",
+  claveAvisos: "260ba19a-3efc-46b5-a004-e71ac44dac0e",
 
   // Planilla del club (Google, gratis): cada perfil y cada pedido quedan
   // anotados en tu planilla. Vos tildás «Pagado» y la caja le suma al
@@ -49,7 +49,7 @@ window.__BRAND__ = {
   planilla: "",
 
   // Franja rosa de arriba de todo. Vacío ("") = no se muestra.
-  aviso: "Sitio en preparación: todavía no se cobra online ni se envían pedidos.",
+  aviso: "",
 
   /* ------------------------------------------------------------------
      2. EL MES
@@ -175,6 +175,21 @@ window.__BRAND__ = {
   },
 
   /* ------------------------------------------------------------------
+     3 B. POR ENCARGUE
+     Los vinos que traemos a pedido. Cada uno va entre llaves { },
+     separado del siguiente por una coma. Copiá el ejemplo de abajo,
+     sacale las dos barras // del principio y completalo.
+     precio: sin puntos ni $. Vacío ("") = dice «Consultar precio».
+     foto: una foto de la carpeta assets/img (vacío = sin foto).
+     Mientras la lista esté vacía, se ve el cartel «Próximamente»
+     (sus textos están en la parte 6, «Por encargue»).
+     ------------------------------------------------------------------ */
+
+  encargue: [
+    // { nombre: "Nombre del vino", bodega: "Bodega", varietal: "Malbec 2022", region: "Mendoza", precio: "25000", foto: "", nota: "" },
+  ],
+
+  /* ------------------------------------------------------------------
      4. FOTOS DE LA PÁGINA
      Vacío ("") = se ve el espacio marcado «IMAGEN AQUÍ» con lo que
      conviene fotografiar. Cuando tengas la foto, copiala en assets/img
@@ -204,15 +219,7 @@ window.__BRAND__ = {
 
     // Bloque «Regalá un mes de vino» (ideal: vertical)
     regalo: "regalo-loft.webp",
-    regaloTexto: "Una botella con la faja de cuero azul de The Wine Loft",
-
-    // Fondo de la frase destacada (ideal: horizontal y oscura)
-    cita: "",
-    citaTexto: "Foto horizontal oscura: vino sirviéndose en una copa, en primer plano",
-
-    // Cierre, antes del pie (ideal: horizontal)
-    cierre: "",
-    cierreTexto: "Paisaje del Litoral: el río Paraná al atardecer, foto horizontal"
+    regaloTexto: "Una botella con la faja de cuero azul de The Wine Loft"
   },
 
   /* ------------------------------------------------------------------
@@ -227,7 +234,9 @@ window.__BRAND__ = {
     pedido: "Hola! Quiero pedir la {combo} de {mes} ({total}).\nSorpresas: {sorpresas}.\nAdicionales: {adicionales}.{regalo}\nMis datos: {direccion}.\nNombre: {nombre} · WhatsApp: {telefono}",
     pedidoVarios: "Hola! Quiero hacer este pedido de {mes} ({total}):\n{detalle}\nNombre: {nombre} · WhatsApp: {telefono}",
     avisame: "Hola! Quiero que me avisen cuando abran las reservas de la caja de {proximoMes}. Me interesa la {combo}.",
-    consulta: "Hola! Quiero saber más sobre The Wine Loft."
+    consulta: "Hola! Quiero saber más sobre The Wine Loft.",
+    encargue: "Hola! Quiero encargar {vino}. ¿Me confirman el precio y cuándo lo tienen?",
+    encargueConsulta: "Hola! Quiero consultar por un vino por encargue."
   },
 
   /* ------------------------------------------------------------------
@@ -255,6 +264,17 @@ window.__BRAND__ = {
     duosTitulo: "Dúos.",
     duosTexto: "Dos vinos elegidos por nosotros, para pedir cualquier día del mes. También cambian todos los meses.",
     duosAclaracion: "Los dúos van por fuera del club: no tienen fechas de reserva ni sorpresas, y no suman para el regalo sorpresa. Los pedís cualquier día del mes.",
+
+    // Por encargue (el catálogo de vinos a pedido, parte 3 B).
+    // En compu va al final de la página; en el celular, después de los Dúos.
+    // Mientras no cargues vinos se ve el cartel «Próximamente» con
+    // encargueVacio (el texto grande) y encargueVacioNota (la frase a mano).
+    encargueEtiqueta: "Catálogo",
+    encargueTitulo: "Por *encargue.*",
+    encargueTexto: "Vinos que traemos a pedido. Elegí el tuyo, escribinos y te confirmamos precio y entrega.",
+    encarguePronto: "Próximamente",
+    encargueVacio: "Botellas *Magnum* y vinos especiales que traemos a pedido. Muy pronto vas a poder elegirlos acá.",
+    encargueVacioNota: "¿buscás una botella en particular? preguntanos",
 
     // Vinos por estación. texto = cómo son los vinos de esa época;
     // uvas = las variedades de ejemplo, separadas por coma o por «y».
@@ -306,12 +326,7 @@ window.__BRAND__ = {
       { p: "¿Qué adicionales puedo sumar?", r: "Charcutería (salame y queso) y cristalería (una copa de cristal). Los elegís en el último paso del pedido, antes de confirmar." }
     ],
 
-    // Frase destacada
-    cita: "Abrí uno el jueves, guardá otro para el domingo.",
-    citaFirma: "Nota del que eligió",
-
-    // Cierre y pie
-    cierreTitulo: "Reservá tu caja *antes del 3.*",
+    // Pie
     pieTitulo: "Un club de vinos con acento del Litoral.",
     pieTexto: "Cada mes elegimos cuatro vinos por vos y te los llevamos a casa. Sin catálogo infinito y sin palabras que intimidan.",
 

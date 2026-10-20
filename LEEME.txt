@@ -15,6 +15,7 @@ Leela una vez de punta a punta; después usala como consulta.
   4 B. Adicionales y «Para regalo»
   5. Cómo cambiar los textos
   6. Todos los meses: combos, vinos, precios y fechas
+  6 B. Por encargue: tu catálogo de vinos a pedido
   7. Cómo cambiar las fotos
   8. El perfil de tus clientes
   9. Cómo subir la página a Hostinger (Netlify: 9 B; Vercel: 9 C)
@@ -117,18 +118,25 @@ Leela una vez de punta a punta; después usala como consulta.
   medida que bajás: el vino cae sobre la palabra «Dúos.», corre por
   la «D» como sobre algo sólido, gotea y sigue hasta formar un
   charquito; si subís, vuelve atrás), vinos por estación, «Este mes, que el vino lo elija
-  otro» (con foto de fondo), «Regalá un mes de vino»,
-  preguntas y el cierre.
+  otro» (con foto de fondo), «Regalá un mes de vino», las preguntas
+  y, al final, antes del pie, «Por encargue» (en el lugar donde antes
+  estaba la frase «Abrí uno el jueves…»).
   EN EL CELULAR la página es corta, para pedir rápido (por ejemplo,
-  desde el link de Instagram): portada, «Combos mensuales» (las cajas
-  del mes) y «Dúos», y abajo el contacto y la leyenda legal. Lo demás
-  (cómo funciona, estaciones, regalo, preguntas) se ve solo en
-  computadora, notebook y tablet. El pedido es el mismo en todos lados.
-  En el celular, «Cada caja suma» aparece en «Mi perfil» (parte 8).
+  desde el link de Instagram): portada, el acceso rápido «Tu perfil»
+  (justo debajo de la portada), «Combos mensuales» (las cajas del
+  mes), «Dúos» y «Por encargue», y abajo el contacto y la leyenda
+  legal. Lo demás (cómo funciona, estaciones, regalo, preguntas) se
+  ve solo en computadora, notebook y tablet. El pedido es el mismo en
+  todos lados. En el celular, «Cada caja suma» aparece en «Mi perfil»
+  (parte 8).
 
   El menú de arriba tiene, en este orden: El club, Cómo funciona,
-  Dúos y Preguntas. En el celular, el menú suma «Regalá una caja» y
-  «Mi perfil». «Ingresar» y «Mi perfil» abren el perfil.
+  Dúos, Preguntas y Por encargue. En el celular, el menú (las tres
+  rayitas) tiene: Mi perfil (primero), Combos mensuales, Dúos y
+  Por encargue. Arriba a la derecha, en el celular, «Ingresar» es un
+  circulito con el dibujo de una persona (si ya tiene perfil, su foto
+  o su inicial). «Ingresar», el circulito y «Mi perfil» abren el
+  perfil.
 
   Los recuadros rayados que dicen [IMAGEN AQUÍ: ...] marcan dónde va
   una foto que todavía no tenemos y qué conviene fotografiar
@@ -431,17 +439,88 @@ Leela una vez de punta a punta; después usala como consulta.
 
 
 ---------------------------------------------------------------------
+6 B. POR ENCARGUE: TU CATÁLOGO DE VINOS A PEDIDO
+---------------------------------------------------------------------
+
+  «Por encargue» es una sección aparte, con su lugar en el menú (en
+  compu y en celular): un catálogo de los vinos que traés a pedido,
+  por fuera de las cajas y los dúos. En compu está al final de la
+  página, antes del pie (donde antes estaba «Abrí uno el jueves…»);
+  en el celular, justo después de los Dúos. Cada vino se ve en una tarjeta
+  con su foto, bodega, varietal, región, una frase a mano (si querés)
+  y el precio, y un botón «Encargar».
+
+  Al tocar «Encargar», al cliente se le abre WhatsApp con el mensaje
+  ya escrito: «Hola! Quiero encargar Gran Reserva de Bodega Tal
+  (Malbec 2021). ¿Me confirman el precio y cuándo lo tienen?». Vos le
+  confirmás precio y entrega por WhatsApp; no hay pago online. Si
+  activaste los avisos (parte 3 B), además te llega un mail
+  «Encargue: ...» con el vino que tocó.
+
+  HOY LA LISTA ESTÁ VACÍA: la sección muestra el cartel
+  «PRÓXIMAMENTE» con «Botellas Magnum y vinos especiales que traemos
+  a pedido. Muy pronto vas a poder elegirlos acá.», el dibujo de una
+  botella común al lado de una Magnum, la frase a mano «¿buscás una
+  botella en particular? preguntanos» y el botón «Consultar por
+  WhatsApp» (le abre WhatsApp con «Hola! Quiero consultar por un vino
+  por encargue.» y, con los avisos activados, te llega un mail
+  «Consulta por encargue»). Apenas cargues el primer vino, el cartel
+  y el dibujo se van y aparecen las tarjetas.
+  Esos textos se cambian en datos.js, parte 6, «Por encargue»:
+     encarguePronto      la etiqueta («Próximamente»)
+     encargueVacio       el texto grande (lo que va entre asteriscos
+                         sale en cursiva bordó, como *Magnum*)
+     encargueVacioNota   la frase a mano
+  Además, al terminar un pedido, donde antes decía «Abrí uno el
+  jueves, guardá otro para el domingo.», ahora hay un link
+  «Próximamente: vinos por encargue →» que lleva a esta sección (con
+  vinos cargados dice «¿Buscás algo especial? Mirá los vinos por
+  encargue →»).
+
+  CÓMO CARGAR UN VINO
+  En datos.js, parte 3 B (POR ENCARGUE), está la lista:
+
+     encargue: [
+       // { nombre: "Nombre del vino", bodega: "Bodega", ... },
+     ],
+
+  1. Copiá la línea de ejemplo y pegala debajo, SIN las dos barras //
+     del principio (las barras hacen que la línea no cuente).
+  2. Completala. Por ejemplo:
+     { nombre: "Gran Reserva", bodega: "Bodega Tal", varietal: "Malbec 2021", region: "Mendoza", precio: "32000", foto: "gran-reserva.webp", nota: "Para una ocasión." },
+  3. Para sumar otro vino, otra línea igual debajo. Cada vino va entre
+     llaves { } y termina con una coma.
+
+  Qué va en cada lugar:
+     nombre     el nombre del vino (si está vacío, el vino no aparece)
+     bodega     la bodega
+     varietal   la uva y el año, por ejemplo "Cabernet Franc 2020"
+     region     de dónde es, por ejemplo "Valle de Uco"
+     precio     sin puntos ni $: "32000". Vacío ("") = dice
+                «Consultar precio».
+     foto       el nombre de la foto, guardada en assets/img. Vacío =
+                en lugar de foto aparece la inicial del vino.
+     nota       una frase corta que se ve escrita a mano (opcional).
+
+  La foto se ve siempre entera (no se corta). Queda mejor una botella
+  recortada, sin fondo, como las de los dúos (parte 6), o una foto
+  vertical de la botella. Para sacar un vino, borrá su línea o
+  ponele // adelante.
+
+  Ojo: el botón «Encargar» necesita tu WhatsApp en datos.js
+  (parte 3). Sin número, la tarjeta dice «Escribinos para
+  encargarlo.»
+
+
+---------------------------------------------------------------------
 7. CÓMO CAMBIAR LAS FOTOS
 ---------------------------------------------------------------------
 
   ESPACIOS «IMAGEN AQUÍ»
   Donde la página de inspiración tiene fotos y nosotros todavía no,
   hay un recuadro rayado que dice [IMAGEN AQUÍ: ...] con la foto que
-  conviene sacar. Son estos (en datos.js, parte 4, FOTOS):
-
-    cita       Fondo de la frase destacada      horizontal y oscura
-    cierre     Cierre «Reservá tu caja...»      horizontal (21:9)
-  Y en la parte 3: la foto de la Caja Clásica (foto: "").
+  conviene sacar. Queda uno solo: la foto de la Caja Clásica
+  (en datos.js, parte 3, foto: "").
 
   Ya están puestas tus fotos:
     - el viñedo de la portada (portada-vinedo.webp, mejorada y ampliada)
@@ -501,6 +580,17 @@ Leela una vez de punta a punta; después usala como consulta.
   las 5 marcas del regalo sorpresa. Ya no muestra el total de dinero
   gastado (en «Mis compras» sigue el precio de cada pedido).
   Solo las cajas del mes suman marcas; los dúos no.
+
+  ACCESO RÁPIDO EN EL CELULAR: justo debajo de la portada hay una
+  tarjeta «Tu perfil» para entrar de un toque:
+    - Sin perfil: dice «Creá tu perfil» y un botón «Entrar», que lleva
+      a crearlo.
+    - Con perfil: su foto o inicial, «Hola, (nombre)», cuántas cajas
+      lleva («3 de 5 cajas · te faltan 2 para el regalo»), las marcas
+      y un botón «Ver», que abre su perfil.
+  Además, «Mi perfil» es lo primero del menú, y arriba a la derecha
+  está el circulito con la persona. En compu, notebook y tablet esa
+  tarjeta no aparece (se entra con «Ingresar», arriba).
 
   EN EL CELULAR, «Mi perfil» muestra el cuadro «Cada caja suma»
   (el mismo de «Cómo funciona», sobre papel):
@@ -760,8 +850,24 @@ Leela una vez de punta a punta; después usala como consulta.
 10. CÓMO SUBIR UN CAMBIO DESPUÉS
 ---------------------------------------------------------------------
 
-  (Esto es para Hostinger. Netlify: 9 B; Vercel: 9 C;
-  Cloudflare: 9 D.)
+  TU PÁGINA YA ESTÁ PUBLICADA:  https://thewineloft.vercel.app
+  Se publica sola desde tu GitHub (github.com/thewineloft7/thewineloft):
+  cada cambio que entra ahí aparece en el link en un minuto, sin
+  hacer nada más.
+
+  Lo más fácil: pedile el cambio a Claude en el chat del proyecto.
+  Él lo prueba, te pregunta «¿lo publico?» y lo sube a GitHub.
+
+  Si querés cambiar algo vos (por ejemplo un precio en datos.js):
+  1. Entrá a github.com/thewineloft7/thewineloft (con tu cuenta).
+  2. Tocá datos.js y después el lápiz («Edit this file»).
+  3. Cambiá lo que necesites, con las mismas reglas de la parte 5.
+  4. Tocá «Commit changes» (y otra vez «Commit changes»).
+  En un minuto está en el link. Para sumar una foto: entrá a la
+  carpeta assets/img, «Add file» > «Upload files».
+
+  Lo de abajo es para si algún día la subís a otro lado
+  (Hostinger; Netlify: 9 B; Vercel a mano: 9 C; Cloudflare: 9 D).
 
   El 90 % de las veces vas a cambiar solo datos.js.
 
@@ -792,7 +898,7 @@ Leela una vez de punta a punta; después usala como consulta.
         (clic derecho > Abrir con > Bloc de notas).
      b. Menú Edición > Reemplazar (Ctrl + R o Ctrl + H, según la
         versión de Windows).
-        Buscar:          v=202610161
+        Buscar:          v=202610201
         Reemplazar con:  v=  y la fecha de hoy, por ejemplo
                          v=20261115   (año, mes, día, todo junto;
                          si cambiás dos veces el mismo día, agregá

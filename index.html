@@ -12,7 +12,7 @@
   <meta property="og:site_name" content="The Wine Loft">
   <meta property="og:title" content="The Wine Loft · Club de vinos en Paraná">
   <meta property="og:description" content="Un club de vinos con acento del Litoral. Cajas del mes y dúos de todos los días, entregados en tu casa.">
-  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg?v=202610161">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg?v=202610201">
 
   <!-- Hay JavaScript: recién ahí se activan las apariciones y los efectos. -->
   <script>document.documentElement.classList.add("js");</script>
@@ -20,10 +20,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="styles.css?v=202610161">
+  <link rel="stylesheet" href="styles.css?v=202610201">
 
-  <script defer src="datos.js?v=202610161"></script>
-  <script defer src="main.js?v=202610161"></script>
+  <script defer src="datos.js?v=202610201"></script>
+  <script defer src="main.js?v=202610201"></script>
 </head>
 <body>
 
@@ -70,20 +70,22 @@
       <a href="#como-funciona" data-go>Cómo funciona</a>
       <a href="#duos" data-go>Dúos</a>
       <a href="#preguntas" data-go>Preguntas</a>
+      <a href="#encargue" data-go>Por encargue</a>
     </nav>
     <div class="hd__act">
-      <a class="hd__login" id="btnLogin" href="#perfil" data-go>Ingresar</a>
+      <a class="hd__login" id="btnLogin" href="#perfil" data-go><svg class="hd__ico" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8.5" r="3.8"></circle><path d="M4.8 20c.9-3.6 3.8-5.6 7.2-5.6s6.3 2 7.2 5.6"></path></svg><span class="hd__login-t">Ingresar</span></a>
       <button type="button" class="avatar" id="btnAvatar" hidden aria-label="Mi perfil"></button>
       <a class="btn btn--line btn--sm" href="#club" data-go data-order="">Reservá tu caja</a>
       <details class="mnav" id="mnav">
         <summary aria-label="Abrir el menú"><span></span><span></span></summary>
         <nav aria-label="Menú">
+          <a href="#perfil" data-go>Mi perfil</a>
           <a href="#club" data-go><span class="solo-compu">El club</span><span class="solo-cel">Combos mensuales</span></a>
           <a class="solo-compu" href="#como-funciona" data-go>Cómo funciona</a>
           <a href="#duos" data-go>Dúos</a>
           <a class="solo-compu" href="#preguntas" data-go>Preguntas</a>
           <a class="solo-compu" href="#regalo" data-go>Regalá una caja</a>
-          <a href="#perfil" data-go>Mi perfil</a>
+          <a href="#encargue" data-go>Por encargue</a>
         </nav>
       </details>
     </div>
@@ -113,6 +115,20 @@
         <a class="btn" href="#club" data-go data-order="">Reservá tu caja</a>
       </div>
     </div>
+  </section>
+
+  <!-- ============================================ ACCESO RÁPIDO A MI PERFIL (solo en el celular) -->
+  <section class="solo-cel prapido" id="perfil-rapido" aria-label="Tu perfil">
+    <a class="prapido__in" href="#perfil" data-go>
+      <span class="prapido__av" data-prapido-av aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8.5" r="3.8"></circle><path d="M4.8 20c.9-3.6 3.8-5.6 7.2-5.6s6.3 2 7.2 5.6"></path></svg></span>
+      <span class="prapido__txt">
+        <span class="prapido__eyebrow" data-prapido-eyebrow>Tu perfil en el club</span>
+        <b data-prapido-titulo>Creá tu perfil</b>
+        <span class="prapido__sub" data-prapido-sub>Cada caja del mes suma para tu regalo sorpresa.</span>
+        <span class="prapido__stamps" data-prapido-stamps hidden></span>
+      </span>
+      <span class="prapido__go" data-prapido-go>Entrar</span>
+    </a>
   </section>
 
   <!-- ============================================ EL CLUB: LA CAJA DEL MES (menú con foto fija) -->
@@ -358,33 +374,25 @@
     </div>
   </section>
 
-  <!-- ============================================ FRASE DESTACADA -->
-  <section class="solo-compu quote">
-    <figure class="slot slot--wide quote__bg" data-slot="cita">
-      <div class="ph"><span class="ph__tag">[IMAGEN AQUÍ: Foto horizontal oscura: vino sirviéndose en una copa, en primer plano]</span></div>
-    </figure>
-    <blockquote class="quote__in">
-      <p data-texto="cita" data-split>Abrí uno el jueves, guardá otro para el domingo.</p>
-      <footer><span class="quote__line"></span><span data-texto="citaFirma">Nota del que eligió</span></footer>
-    </blockquote>
-  </section>
-
-  <!-- ============================================ CIERRE -->
-  <section class="solo-compu close" id="reservar">
-    <figure class="slot slot--wide close__bg" data-slot="cierre">
-      <div class="ph"><span class="ph__tag">[IMAGEN AQUÍ: Paisaje del Litoral: el río Paraná al atardecer, foto horizontal]</span></div>
-    </figure>
-    <div class="close__copy">
-      <h2 data-texto="cierreTitulo" data-split>Reservá tu caja <em>antes del 3.</em></h2>
-      <div class="close__row rv">
-        <dl class="close__info">
-          <div><dt>Reservas</dt><dd>del <span data-regla="reservas">1 al 3</span></dd></div>
-          <div><dt>Pago</dt><dd><span data-regla="pago">hasta el 6</span></dd></div>
-          <div><dt>Entregas</dt><dd>del <span data-regla="entregas">7 al 10</span></dd></div>
-          <div><dt>Envíos</dt><dd>Paraná, alrededores e interior</dd></div>
-        </dl>
-        <a class="btn" href="#club" data-go data-order="">Reservá tu caja</a>
+  <!-- ============================================ POR ENCARGUE (en compu, al final, donde estaba la frase «Abrí uno el jueves…»;
+       en el celular queda justo después de los Dúos). Los vinos se cargan en datos.js, parte 3 B -->
+  <section class="band band--papel encargue" id="encargue">
+    <div class="wrap">
+      <div class="encargue__top">
+        <div class="encargue__head">
+          <p class="eyebrow encargue__eyebrow" data-texto="encargueEtiqueta">Catálogo</p>
+          <h2 data-texto="encargueTitulo">Por <em>encargue.</em></h2>
+          <p class="encargue__lede" data-texto="encargueTexto">Vinos que traemos a pedido. Elegí el tuyo, escribinos y te confirmamos precio y entrega.</p>
+          <div class="encargue__vacio" data-encargue-vacio>
+            <span class="encargue__pronto" data-texto="encarguePronto">Próximamente</span>
+            <p class="encargue__vacio-t" data-texto="encargueVacio">Botellas <em>Magnum</em> y vinos especiales que traemos a pedido. Muy pronto vas a poder elegirlos acá.</p>
+            <p class="hand encargue__vacio-nota" data-texto="encargueVacioNota">¿buscás una botella en particular? preguntanos</p>
+            <a class="btn btn--ink btn--sm encargue__wa" data-encargue-wa href="#" target="_blank" rel="noopener" hidden>Consultar por WhatsApp</a>
+          </div>
+        </div>
+        <figure class="encargue__art" data-encargue-art aria-hidden="true"><svg class="encart" viewBox="0 0 300 372" role="img" aria-label="Una botella común y una botella Magnum, más grande"><line class="encart__floor" x1="18" y1="329" x2="282" y2="329"></line><path class="encart__glass" d="M65 319V188C65 171.88 83 175.52 83 162V100H101V162C101 175.52 119 171.88 119 188V319Q119 328 110 328H74Q65 328 65 319Z"></path><rect class="encart__cap" x="82" y="98" width="20" height="26" rx="2"></rect><rect class="encart__label" x="70" y="219" width="44" height="59" rx="2"></rect><path class="encart__shine" d="M74 194V210.4M74 300V314"></path><path class="encart__glass" d="M180 319V152C180 132.16 203 136.64 203 120V44H225V120C225 136.64 248 132.16 248 152V319Q248 328 239 328H189Q180 328 180 319Z"></path><rect class="encart__cap" x="202" y="42" width="24" height="32" rx="2"></rect><rect class="encart__label" x="186.5" y="191" width="55" height="74" rx="2"></rect><path class="encart__shine" d="M189 158V180.16M189 292.8V314"></path><text class="encart__t" x="92" y="360" text-anchor="middle">75 cl</text><text class="encart__t encart__t--big" x="214" y="360" text-anchor="middle">Magnum · 1,5 L</text></svg></figure>
       </div>
+      <div class="encargue__grid" data-encargue hidden></div>
     </div>
   </section>
 </div>
@@ -552,6 +560,7 @@
           <li><a href="#duos" data-go>Dúos</a></li>
           <li><a href="#regalo" data-go>Regalá una caja</a></li>
           <li><a href="#preguntas" data-go>Preguntas</a></li>
+          <li><a href="#encargue" data-go>Por encargue</a></li>
         </ul>
       </div>
       <div>
