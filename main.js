@@ -2006,7 +2006,8 @@
     if (!gate) return;
     var ok = false;
     try { ok = window.sessionStorage.getItem("twl_edad") === "ok"; } catch (e) { ok = false; }
-    if (ok) return;
+    /* Quien ya tiene perfil declaró ser mayor de 18 al crearlo: no se le pregunta más */
+    if (ok || (user && !user.demo)) return;
     function cerrar() {
       gate.classList.add("gone");
       setTimeout(function () { gate.hidden = true; }, 650);
