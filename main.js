@@ -62,7 +62,9 @@
     pedido: "Hola! Quiero pedir la {combo} de {mes} ({total}).\nSorpresas: {sorpresas}.\nAdicionales: {adicionales}.{regalo}\nMis datos: {direccion}.\nNombre: {nombre} · WhatsApp: {telefono}",
     pedidoVarios: "Hola! Quiero hacer este pedido de {mes} ({total}):\n{detalle}\nNombre: {nombre} · WhatsApp: {telefono}",
     avisame: "Hola! Quiero que me avisen cuando abran las reservas de la caja de {proximoMes}. Me interesa la {combo}.",
-    consulta: "Hola! Quiero saber más sobre The Wine Loft."
+    consulta: "Hola! Quiero saber más sobre The Wine Loft.",
+    encargue: "Hola! Quiero encargar {vino}. ¿Me confirman el precio y cuándo lo tienen?",
+    encargueConsulta: "Hola! Quiero consultar por un vino por encargue."
   };
 
   /* ------------------------------------------------------------------
@@ -703,6 +705,38 @@
     if (av) { av.hidden = !user; if (user) avatarInto(av, user); }
     var cta = $("#clubCta");
     if (cta) cta.textContent = user ? "Ver mi perfil" : "Crear mi perfil";
+    safe(paintPerfilRapido, "acceso rápido al perfil");
+  }
+
+  /* Tarjeta «Tu perfil» arriba de los combos (solo en el celular):
+     sin perfil invita a crearlo; con perfil muestra sus cajas */
+  var ICONO_PERFIL = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8.5" r="3.8"></circle><path d="M4.8 20c.9-3.6 3.8-5.6 7.2-5.6s6.3 2 7.2 5.6"></path></svg>';
+  function paintPerfilRapido() {
+    var box = $("#perfil-rapido");
+    if (!box) return;
+    var av = $("[data-prapido-av]", box), ey = $("[data-prapido-eyebrow]", box), ti = $("[data-prapido-titulo]", box),
+      sub = $("[data-prapido-sub]", box), st = $("[data-prapido-stamps]", box), go2 = $("[data-prapido-go]", box);
+    if (user) {
+      var c = Math.min(countMensual(user), GOAL), falta = GOAL - c, h = "";
+      avatarInto(av, user);
+      av.classList.add("is-user");
+      ey.textContent = user.demo ? "Perfil de ejemplo" : "Tu perfil";
+      ti.textContent = "Hola, " + user.name;
+      sub.textContent = c >= GOAL ? "¡Tu regalo viaja con la próxima caja!"
+        : c + " de " + GOAL + " cajas · te " + (falta === 1 ? "falta 1" : "faltan " + falta) + " para el regalo";
+      for (var i = 1; i <= GOAL; i++) h += '<i class="' + (i <= c ? "on" : "") + (i === GOAL ? " gift" : "") + '"></i>';
+      st.innerHTML = h;
+      st.hidden = false;
+      go2.textContent = "Ver";
+    } else {
+      av.innerHTML = ICONO_PERFIL;
+      av.classList.remove("is-user");
+      ey.textContent = "Tu perfil en el club";
+      ti.textContent = "Creá tu perfil";
+      sub.textContent = "Cada caja del mes suma para tu regalo sorpresa.";
+      st.hidden = true;
+      go2.textContent = "Entrar";
+    }
   }
 
   function fondoPicker(el, name, cur, onPick) {
@@ -1410,6 +1444,7 @@
           price: cuenta(it).total, mensual: ci.tipo === "caja", n: it.cant || 1 });
       });
       save();
+      safe(paintPerfilRapido, "acceso rápido al perfil");
       gift = cajasN > 0 && before < GOAL && countMensual(user) >= GOAL;
     }
     /* El próximo pedido arranca de cero: sin combos agregados, adicionales ni regalo */
@@ -1442,13 +1477,23 @@
       extra = '<p class="small">Sitio en preparación: este pedido todavía no se envió ni se cobró.</p>';
     }
     $("#dBody").innerHTML = '<div class="done"><img src="assets/img/logo.webp" alt=""><h4>' + titulo + "</h4><p>" + texto + "</p>" +
-      (accion.tipo !== "avisame" ? '<p class="hand">' + (gift ? "¡Y esta trae tu regalo sorpresa!" : "Abrí uno el jueves, guardá otro para el domingo.") + "</p>" : "") +
-      extra + "</div>";
+      (accion.tipo !== "avisame" && gift ? '<p class="hand">¡Y esta trae tu regalo sorpresa!</p>' : "") +
+      extra + finEncargue() + "</div>";
     $("#dFoot").innerHTML = "<span></span>" + (user ? '<button type="button" class="btn" id="seeProfile">Ver mi perfil</button>' : '<button type="button" class="btn" id="closeDone">Cerrar</button>');
     var sp = $("#seeProfile");
     if (sp) sp.addEventListener("click", function () { closeOrder(); setTimeout(function () { go("perfil", true); }, 400); });
     var cd = $("#closeDone");
     if (cd) cd.addEventListener("click", closeOrder);
+    var fe = $("[data-fin-encargue]");
+    if (fe) fe.addEventListener("click", closeOrder);
+  }
+
+  /* Al final del pedido, un acceso a «Por encargue» */
+  function finEncargue() {
+    if (!$("#encargue")) return "";
+    var t = listaEncargue().length ? "¿Buscás algo especial? Mirá los vinos por encargue"
+      : (filled(TX.encarguePronto) ? str(TX.encarguePronto) : "Próximamente") + ": vinos por encargue";
+    return '<p class="done__enc"><a href="#encargue" data-go data-fin-encargue>' + esc(t) + " →</a></p>";
   }
 
   /* ------------------------------------------------------------------
@@ -1879,6 +1924,77 @@
   }
 
   /* ------------------------------------------------------------------
+     Por encargue: el catálogo de vinos que se traen a pedido. Se arma
+     con la lista «encargue» de datos.js; si está vacía, se ve un aviso.
+     «Encargar» abre WhatsApp con el mensaje y manda una copia al mail.
+     ------------------------------------------------------------------ */
+
+  function listaEncargue() {
+    return (Array.isArray(data.encargue) ? data.encargue : []).filter(function (v) { return v && filled(v.nombre); });
+  }
+
+  function applyEncargue() {
+    var grid = $("[data-encargue]"), vacio = $("[data-encargue-vacio]"), art = $("[data-encargue-art]"), sec = $("#encargue");
+    if (!grid) return;
+    var lista = listaEncargue();
+    if (!lista.length) {
+      /* Todavía sin vinos: el cartel «Próximamente» y, con WhatsApp, el botón para consultar */
+      grid.hidden = true;
+      if (vacio) vacio.hidden = false;
+      if (art) art.hidden = false;
+      var wa = $("[data-encargue-wa]");
+      if (wa && hasWA) {
+        wa.href = waLink(MENSAJES("encargueConsulta", {}));
+        wa.hidden = false;
+        wa.addEventListener("click", function () {
+          avisar("Consulta por encargue", {
+            "Qué hizo": "Tocó «Consultar por WhatsApp» en «Por encargue» (todavía sin vinos cargados).",
+            "Perfil en la página": user && !user.demo ? user.name + (user.tel ? " · " + user.tel : "") : "",
+            "Fecha": ahora()
+          });
+        });
+      }
+      return;
+    }
+    if (vacio) vacio.hidden = true;
+    if (art) art.hidden = true;
+    if (sec) sec.classList.add("is-lista");
+    grid.hidden = false;
+    function nombreLargo(v) {
+      return str(v.nombre) + (filled(v.bodega) ? " de " + str(v.bodega) : "") + (filled(v.varietal) ? " (" + str(v.varietal) + ")" : "");
+    }
+    grid.innerHTML = lista.map(function (v, i) {
+      var precio = num(v.precio), foto = rutaFoto(v.foto);
+      var meta = [v.bodega, v.varietal, v.region].map(str).filter(Boolean).join(" · ");
+      var media = foto
+        ? '<img src="' + esc(foto) + '" alt="' + esc(str(v.nombre)) + '" loading="lazy">'
+        : '<span class="enc__mono" aria-hidden="true">' + esc(inicial(v.nombre)) + "</span>";
+      var accion = hasWA
+        ? '<a class="btn btn--sm enc__btn" href="' + esc(waLink(MENSAJES("encargue", { vino: nombreLargo(v) }))) + '" target="_blank" rel="noopener" data-encargar="' + i + '">Encargar</a>'
+        : '<span class="enc__nota">Escribinos para encargarlo.</span>';
+      return '<article class="enc rv"><figure class="enc__media">' + media + "</figure>" +
+        '<div class="enc__body">' + (meta ? '<p class="enc__meta">' + esc(meta) + "</p>" : "") +
+        "<h3>" + esc(str(v.nombre)) + "</h3>" +
+        (filled(v.nota) ? '<p class="enc__note hand">' + esc(str(v.nota)) + "</p>" : "") +
+        '<div class="enc__row"><span class="enc__price">' + (precio ? money(precio) : "Consultar precio") + "</span>" + accion + "</div>" +
+        "</div></article>";
+    }).join("");
+    $$("[data-encargar]", grid).forEach(function (a) {
+      a.addEventListener("click", function () {
+        var v = lista[parseInt(a.getAttribute("data-encargar"), 10)];
+        if (!v) return;
+        avisar("Encargue: " + str(v.nombre), {
+          "Qué hizo": "Tocó «Encargar»: se le abrió WhatsApp con el mensaje para mandártelo.",
+          "Vino": nombreLargo(v),
+          "Precio": num(v.precio) ? money(num(v.precio)) : "a confirmar",
+          "Perfil en la página": user && !user.demo ? user.name + (user.tel ? " · " + user.tel : "") : "",
+          "Fecha": ahora()
+        });
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------
      Arranque
      ------------------------------------------------------------------ */
 
@@ -1888,6 +2004,7 @@
     safe(applyContactos, "contacto");
     safe(applyMenu, "caja del mes");
     safe(applyDuos, "dúos");
+    safe(applyEncargue, "por encargue");
     safe(applyEstaciones, "vinos por estación");
     safe(applyClubCard, "tarjeta del club");
     safe(function () { if (user) user.prefs.forEach(function (p) { pagePrefs.push(p); }); }, "preferencias");
