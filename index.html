@@ -12,7 +12,7 @@
   <meta property="og:site_name" content="The Wine Loft">
   <meta property="og:title" content="The Wine Loft · Club de vinos en Paraná">
   <meta property="og:description" content="Un club de vinos con acento del Litoral. Cajas del mes y dúos de todos los días, entregados en tu casa.">
-  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg?v=202610201">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg?v=202610221">
 
   <!-- Hay JavaScript: recién ahí se activan las apariciones y los efectos. -->
   <script>document.documentElement.classList.add("js");</script>
@@ -20,10 +20,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="styles.css?v=202610201">
+  <link rel="stylesheet" href="styles.css?v=202610221">
 
-  <script defer src="datos.js?v=202610201"></script>
-  <script defer src="main.js?v=202610201"></script>
+  <script defer src="datos.js?v=202610221"></script>
+  <script defer src="main.js?v=202610221"></script>
 </head>
 <body>
 
@@ -137,11 +137,10 @@
     <div class="menu__media">
       <div class="menu__sticky">
         <figure class="slot menu__fig is-on" data-menu-fig="reserva">
-          <img src="assets/img/caja-reserva-octubre.webp" alt="Los cuatro vinos de la Caja Reserva de octubre en la biblioteca del loft: Corazón Valiente, Calivista, Chañarmuyo y Tükma" width="855" height="636">
-          <span class="soldout">Sold out</span>
+          <img src="assets/img/caja-reserva-terruno-coordenada.webp" alt="Caja Reserva: Mi Terruño Limited Reserve Petit Verdot y Coordenada Cabernet Sauvignon, más dos botellas sorpresa" width="1118" height="1407">
         </figure>
         <figure class="slot menu__fig" data-menu-fig="clasica">
-          <div class="ph"><span class="ph__tag">[IMAGEN AQUÍ: Los vinos de la Caja Clásica sobre la mesa, foto vertical]</span></div>
+          <img src="assets/img/caja-clasica-pala-abismal.webp" alt="Caja Clásica: Pala Corazón Malbec y Abismal Destino Malbec, más dos botellas sorpresa" width="1118" height="1407">
         </figure>
       </div>
     </div>
@@ -155,9 +154,9 @@
         <p class="status" data-estado><i></i><span>Reservas del 1 al 3 de cada mes</span></p>
 
         <div class="flights" data-flights>
-          <article class="flight rv is-soldout" data-flight="reserva">
-            <figure class="slot flight__media"><img src="assets/img/caja-reserva-octubre.webp" alt="Los cuatro vinos de la Caja Reserva de octubre en la biblioteca del loft: Corazón Valiente, Calivista, Chañarmuyo y Tükma"><span class="soldout">Sold out</span></figure>
-            <span class="tag tag--soldout">Sold out</span>
+          <article class="flight rv" data-flight="reserva">
+            <figure class="slot flight__media"><img src="assets/img/caja-reserva-terruno-coordenada.webp" alt="Caja Reserva: Mi Terruño Limited Reserve Petit Verdot y Coordenada Cabernet Sauvignon, más dos botellas sorpresa"></figure>
+            <span class="tag">La más pedida</span>
             <p class="flight__price">$70.000</p>
             <h3>Caja Reserva</h3>
             <p class="flight__desc">Cuatro vinos con más guarda y más historia.</p>
@@ -167,10 +166,10 @@
               <li><span class="pours__meta">N.º 2 · Cabernet Sauvignon 2022 · Salta</span><b>Tükma Reserva</b><span class="hand">Abrilo media hora antes.</span></li>
               <li class="pours__surprise"><span class="pours__meta">N.º 3 y 4</span><b>Dos sorpresas</b><span class="pours__x">Puede ser tinto, blanco, rosado o espumante.</span></li>
             </ol>
-            <p class="flight__off">Esta caja ya no se vende. La dejamos acá para que conozcas lo que trajo.</p>
+            <a class="btn" href="#club" data-order="reserva">Reservar Caja Reserva</a>
           </article>
           <article class="flight rv" data-flight="clasica">
-            <figure class="slot flight__media"><div class="ph"><span class="ph__tag">[IMAGEN AQUÍ: Los vinos de la Caja Clásica sobre la mesa, foto vertical]</span></div></figure>
+            <figure class="slot flight__media"><img src="assets/img/caja-clasica-pala-abismal.webp" alt="Caja Clásica: Pala Corazón Malbec y Abismal Destino Malbec, más dos botellas sorpresa"></figure>
             <p class="flight__price">$55.000</p>
             <h3>Caja Clásica</h3>
             <p class="flight__desc">Cuatro vinos para todos los días, bien elegidos.</p>
@@ -180,7 +179,7 @@
               <li><span class="pours__meta">N.º 2 · Varietal · Región</span><b>Tinto a confirmar</b><span class="hand">Nota del que eligió.</span></li>
               <li class="pours__surprise"><span class="pours__meta">N.º 3 y 4</span><b>Dos sorpresas</b><span class="pours__x">Puede ser tinto, blanco, rosado o espumante.</span></li>
             </ol>
-            <a class="btn" href="#club" data-order="clasica">Reservar Caja Clásica</a>
+            <a class="btn btn--line" href="#club" data-order="clasica">Reservar Caja Clásica</a>
           </article>
         </div>
         <p class="menu__foot solo-compu" data-texto="cajaNota">Si no querés blancos, rosados o espumantes, lo marcás al reservar y no te tocan.</p>

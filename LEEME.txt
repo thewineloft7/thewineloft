@@ -408,12 +408,13 @@ Leela una vez de punta a punta; después usala como consulta.
   y los dúos en la lista grande «Dúos.»
 
   COMBO AGOTADO («Sold out»)
-  La Caja Reserva ya no se vende: tiene
+  Hoy las dos cajas están a la venta (agotado: ""). Si un combo se
+  agota, poné en ese combo:
      agotado: "si",
      agotadoTexto: "Esta caja ya no se vende. La dejamos acá ...",
-  Se sigue mostrando con sus vinos, marcada «Sold out», sin botón
+  Se sigue mostrando con sus vinos, marcado «Sold out», sin botón
   de reservar, y en el pedido no se puede elegir. Para volver a
-  venderla, dejá  agotado: "",  (vacío). Sirve para cualquier combo.
+  venderlo, dejá  agotado: "",  (vacío). Sirve para cualquier combo.
 
   Cada vino: nombre, varietal (con año), región, nota (la frase a
   mano, como «Este pide asado.») y foto de la botella. En los dúos,
@@ -519,13 +520,13 @@ Leela una vez de punta a punta; después usala como consulta.
   ESPACIOS «IMAGEN AQUÍ»
   Donde la página de inspiración tiene fotos y nosotros todavía no,
   hay un recuadro rayado que dice [IMAGEN AQUÍ: ...] con la foto que
-  conviene sacar. Queda uno solo: la foto de la Caja Clásica
-  (en datos.js, parte 3, foto: "").
+  conviene sacar. Hoy no queda ninguno: ya están todas las fotos.
 
   Ya están puestas tus fotos:
     - el viñedo de la portada (portada-vinedo.webp, mejorada y ampliada)
-    - los cuatro vinos de octubre en la biblioteca (Caja Reserva,
-      caja-reserva-octubre.webp)
+    - las dos cajas, con sus dos vinos y las dos botellas sorpresa:
+      Caja Reserva (caja-reserva-terruno-coordenada.webp) y
+      Caja Clásica (caja-clasica-pala-abismal.webp)
     - las fotos de los dos dúos (duo-reserva-cielo.webp y
       duo-clasico-cielo.webp) y las cuatro botellas recortadas sin
       fondo (v-marioneta-recorte.webp, v-13cles-recorte.webp,
@@ -539,8 +540,8 @@ Leela una vez de punta a punta; después usala como consulta.
       (regalo-loft.webp, mejorada y ampliada)
     - el logo
   biblioteca.webp y loft.webp se usan como fondos para elegir en
-  «Mi perfil». En la carpeta también quedaron dos-tintos.webp y
-  vinos-octubre.webp, que hoy no se usan (podés borrarlos o
+  «Mi perfil». En la carpeta también quedaron dos-tintos.webp,
+  vinos-octubre.webp y caja-reserva-octubre.webp, que hoy no se usan (podés borrarlos o
   guardarlos para otro mes).
 
   CÓMO PONER UNA FOTO
@@ -898,7 +899,7 @@ Leela una vez de punta a punta; después usala como consulta.
         (clic derecho > Abrir con > Bloc de notas).
      b. Menú Edición > Reemplazar (Ctrl + R o Ctrl + H, según la
         versión de Windows).
-        Buscar:          v=202610201
+        Buscar:          v=202610221
         Reemplazar con:  v=  y la fecha de hoy, por ejemplo
                          v=20261115   (año, mes, día, todo junto;
                          si cambiás dos veces el mismo día, agregá
