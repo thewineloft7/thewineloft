@@ -31,7 +31,7 @@ window.__BRAND__ = {
 
   // WhatsApp: SOLO NÚMEROS, con 549 + característica sin el 0 + número sin el 15.
   // Ejemplo para Paraná (343): "5493434123456"
-  whatsapp: "5493434626678",
+  whatsapp: "",
 
   instagram: "",   // Solo el usuario, sin @. Ejemplo: "thewineloft"
   email: "",       // Ejemplo: "hola@thewineloft.com.ar"
@@ -49,7 +49,7 @@ window.__BRAND__ = {
   planilla: "",
 
   // Franja rosa de arriba de todo. Vacío ("") = no se muestra.
-  aviso: "",
+  aviso: "Sitio en preparación: todavía no se cobra online ni se envían pedidos.",
 
   /* ------------------------------------------------------------------
      2. EL MES
