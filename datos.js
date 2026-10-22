@@ -99,8 +99,8 @@ window.__BRAND__ = {
       fotoTexto: "Caja Reserva: Mi Terruño Limited Reserve Petit Verdot y Coordenada Cabernet Sauvignon, más dos botellas sorpresa",
       linkPago: "",
       vinos: [
-        { nombre: "Chañarmuyo", varietal: "Malbec 2022", region: "La Rioja", nota: "Este pide asado.", foto: "" },
-        { nombre: "Tükma Reserva", varietal: "Cabernet Sauvignon 2022", region: "Salta", nota: "Abrilo media hora antes.", foto: "" }
+        { nombre: "Mi Terruño", varietal: "Petit Verdot 2018", region: "Mendoza", nota: "", foto: "" },
+        { nombre: "Coordenada", varietal: "Cabernet Sauvignon", region: "", nota: "", foto: "" }
       ]
     },
     {
@@ -116,8 +116,8 @@ window.__BRAND__ = {
       fotoTexto: "Caja Clásica: Pala Corazón Malbec y Abismal Destino Malbec, más dos botellas sorpresa",
       linkPago: "",
       vinos: [
-        { nombre: "Tinto a confirmar", varietal: "Varietal", region: "Región", nota: "Nota del que eligió.", foto: "" },
-        { nombre: "Tinto a confirmar", varietal: "Varietal", region: "Región", nota: "Nota del que eligió.", foto: "" }
+        { nombre: "Pala Corazón", varietal: "Malbec", region: "Mendoza", nota: "", foto: "" },
+        { nombre: "Abismal Destino", varietal: "Malbec", region: "Valle de Uco", nota: "", foto: "" }
       ]
     },
     {
