@@ -16,6 +16,7 @@ Leela una vez de punta a punta; después usala como consulta.
   5. Cómo cambiar los textos
   6. Todos los meses: combos, vinos, precios y fechas
   6 B. Por encargue: tu catálogo de vinos a pedido
+  6 C. Espumantes destacados
   7. Cómo cambiar las fotos
   8. El perfil de tus clientes
   9. Cómo subir la página a Hostinger (Netlify: 9 B; Vercel: 9 C)
@@ -117,23 +118,24 @@ Leela una vez de punta a punta; después usala como consulta.
   los dúos (con una copa dibujada que se inclina y derrama vino a
   medida que bajás: el vino cae sobre la palabra «Dúos.», corre por
   la «D» como sobre algo sólido, gotea y sigue hasta formar un
-  charquito; si subís, vuelve atrás), vinos por estación, «Este mes, que el vino lo elija
+  charquito; si subís, vuelve atrás), «Espumantes destacados»,
+  vinos por estación, «Este mes, que el vino lo elija
   otro» (con foto de fondo), «Regalá un mes de vino», las preguntas
   y, al final, antes del pie, «Por encargue» (en el lugar donde antes
   estaba la frase «Abrí uno el jueves…»).
   EN EL CELULAR la página es corta, para pedir rápido (por ejemplo,
   desde el link de Instagram): portada, el acceso rápido «Tu perfil»
   (justo debajo de la portada), «Combos mensuales» (las cajas del
-  mes), «Dúos» y «Por encargue», y abajo el contacto y la leyenda
+  mes), «Dúos», «Espumantes destacados» y «Por encargue», y abajo el contacto y la leyenda
   legal. Lo demás (cómo funciona, estaciones, regalo, preguntas) se
   ve solo en computadora, notebook y tablet. El pedido es el mismo en
   todos lados. En el celular, «Cada caja suma» aparece en «Mi perfil»
   (parte 8).
 
   El menú de arriba tiene, en este orden: El club, Cómo funciona,
-  Dúos, Preguntas y Por encargue. En el celular, el menú (las tres
-  rayitas) tiene: Mi perfil (primero), Combos mensuales, Dúos y
-  Por encargue. Arriba a la derecha, en el celular, «Ingresar» es un
+  Dúos, Espumantes, Preguntas y Por encargue. En el celular, el menú
+  (las tres rayitas) tiene: Mi perfil (primero), Combos mensuales,
+  Dúos, Espumantes y Por encargue. Arriba a la derecha, en el celular, «Ingresar» es un
   circulito con el dibujo de una persona (si ya tiene perfil, su foto
   o su inicial). «Ingresar», el circulito y «Mi perfil» abren el
   perfil.
@@ -511,6 +513,36 @@ Leela una vez de punta a punta; después usala como consulta.
   Ojo: el botón «Encargar» necesita tu WhatsApp en datos.js
   (parte 3). Sin número, la tarjeta dice «Escribinos para
   encargarlo.»
+
+
+---------------------------------------------------------------------
+6 C. ESPUMANTES DESTACADOS
+---------------------------------------------------------------------
+
+  Una sección con los espumantes de la casa, justo después de los
+  Dúos (en compu y en celular). Cada uno tiene su foto, el precio por
+  botella («Unidad») y el precio por 6 («Por 6»: lo que sale cada
+  botella llevando la caja de 6 del mismo espumante, y el total de la
+  caja, que se calcula solo).
+
+  Con tu WhatsApp cargado, cada tarjeta tiene dos botones: «Comprar 1»
+  y «Caja x 6». Le abren WhatsApp al cliente con el mensaje escrito,
+  por ejemplo: «Hola! Quiero comprar una caja de 6 de Keo Extra Brut
+  100% Pinot Noir ($117.600). ¿Me confirman la entrega?». Con los
+  avisos activados te llega también un mail «Espumante: ...».
+  Sin WhatsApp, en vez de los botones dice «Muy pronto lo vas a poder
+  comprar por WhatsApp.»
+
+  CÓMO CAMBIARLOS: en datos.js, parte 3 C (ESPUMANTES DESTACADOS):
+     { nombre: "Mastroeni Extra Brut", precio: "10800", precio6: "9800", foto: "esp-mastroeni.webp" },
+     precio     una botella, sin puntos ni $
+     precio6    cada botella llevando la caja de 6 (vacío = sin
+                precio por caja ni botón «Caja x 6»)
+     foto       la botella recortada, sin fondo, en assets/img
+  Para sumar uno, copiá una línea y cambiala; para sacarlo, borrala.
+  Si la lista queda vacía, la sección y su link del menú no se ven.
+  Los títulos («Selección de la casa», «Espumantes destacados.» y la
+  aclaración de abajo) están en la parte 6, «Espumantes destacados».
 
 
 ---------------------------------------------------------------------
@@ -899,7 +931,7 @@ Leela una vez de punta a punta; después usala como consulta.
         (clic derecho > Abrir con > Bloc de notas).
      b. Menú Edición > Reemplazar (Ctrl + R o Ctrl + H, según la
         versión de Windows).
-        Buscar:          v=202610221
+        Buscar:          v=202610261
         Reemplazar con:  v=  y la fecha de hoy, por ejemplo
                          v=20261115   (año, mes, día, todo junto;
                          si cambiás dos veces el mismo día, agregá

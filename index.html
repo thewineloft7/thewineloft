@@ -12,7 +12,7 @@
   <meta property="og:site_name" content="The Wine Loft">
   <meta property="og:title" content="The Wine Loft · Club de vinos en Paraná">
   <meta property="og:description" content="Un club de vinos con acento del Litoral. Cajas del mes y dúos de todos los días, entregados en tu casa.">
-  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg?v=202610221">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg?v=202610261">
 
   <!-- Hay JavaScript: recién ahí se activan las apariciones y los efectos. -->
   <script>document.documentElement.classList.add("js");</script>
@@ -20,10 +20,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="styles.css?v=202610221">
+  <link rel="stylesheet" href="styles.css?v=202610261">
 
-  <script defer src="datos.js?v=202610221"></script>
-  <script defer src="main.js?v=202610221"></script>
+  <script defer src="datos.js?v=202610261"></script>
+  <script defer src="main.js?v=202610261"></script>
 </head>
 <body>
 
@@ -69,6 +69,7 @@
       <a href="#club" data-go>El club</a>
       <a href="#como-funciona" data-go>Cómo funciona</a>
       <a href="#duos" data-go>Dúos</a>
+      <a href="#espumantes" data-go>Espumantes</a>
       <a href="#preguntas" data-go>Preguntas</a>
       <a href="#encargue" data-go>Por encargue</a>
     </nav>
@@ -83,6 +84,7 @@
           <a href="#club" data-go><span class="solo-compu">El club</span><span class="solo-cel">Combos mensuales</span></a>
           <a class="solo-compu" href="#como-funciona" data-go>Cómo funciona</a>
           <a href="#duos" data-go>Dúos</a>
+          <a href="#espumantes" data-go>Espumantes</a>
           <a class="solo-compu" href="#preguntas" data-go>Preguntas</a>
           <a class="solo-compu" href="#regalo" data-go>Regalá una caja</a>
           <a href="#encargue" data-go>Por encargue</a>
@@ -283,6 +285,59 @@
     </div>
     <div class="cursor-img" aria-hidden="true"><img alt=""></div>
     <div class="pour" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================================ ESPUMANTES DESTACADOS (se arma desde datos.js, parte 3 C) -->
+  <section class="espumantes" id="espumantes">
+    <div class="wrap">
+      <div class="espumantes__head">
+        <p class="eyebrow" data-texto="espumantesEtiqueta">Selección de la casa</p>
+        <h2 data-texto="espumantesTitulo">Espumantes <em>destacados.</em></h2>
+      </div>
+      <div class="espumantes__grid" data-espumantes>
+        <article class="esp rv">
+          <figure class="esp__media"><img src="assets/img/esp-mastroeni.webp" alt="Mastroeni Extra Brut" loading="lazy"></figure>
+          <div class="esp__body">
+            <h3>Mastroeni Extra Brut</h3>
+            <div class="esp__precios">
+              <p class="esp__uno"><span>Unidad</span><b>$10.800</b></p>
+              <p class="esp__seis"><span>Por 6</span><b>$9.800 c/u</b><small>$58.800 la caja</small></p>
+            </div>
+          </div>
+        </article>
+        <article class="esp rv">
+          <figure class="esp__media"><img src="assets/img/esp-las-perdices.webp" alt="Las Perdices Champenoise Joven Extra Brut" loading="lazy"></figure>
+          <div class="esp__body">
+            <h3>Las Perdices Champenoise Joven Extra Brut</h3>
+            <div class="esp__precios">
+              <p class="esp__uno"><span>Unidad</span><b>$10.500</b></p>
+              <p class="esp__seis"><span>Por 6</span><b>$9.500 c/u</b><small>$57.000 la caja</small></p>
+            </div>
+          </div>
+        </article>
+        <article class="esp rv">
+          <figure class="esp__media"><img src="assets/img/esp-keo.webp" alt="Keo Extra Brut 100% Pinot Noir" loading="lazy"></figure>
+          <div class="esp__body">
+            <h3>Keo Extra Brut 100% Pinot Noir</h3>
+            <div class="esp__precios">
+              <p class="esp__uno"><span>Unidad</span><b>$20.600</b></p>
+              <p class="esp__seis"><span>Por 6</span><b>$19.600 c/u</b><small>$117.600 la caja</small></p>
+            </div>
+          </div>
+        </article>
+        <article class="esp rv">
+          <figure class="esp__media"><img src="assets/img/esp-chanarmuyo.webp" alt="Chañarmuyo Champenoise Brut Nature" loading="lazy"></figure>
+          <div class="esp__body">
+            <h3>Chañarmuyo Champenoise Brut Nature</h3>
+            <div class="esp__precios">
+              <p class="esp__uno"><span>Unidad</span><b>$26.300</b></p>
+              <p class="esp__seis"><span>Por 6</span><b>$25.300 c/u</b><small>$151.800 la caja</small></p>
+            </div>
+          </div>
+        </article>
+      </div>
+      <p class="espumantes__nota" data-texto="espumantesNota">«Por 6» es el precio de cada botella llevando la caja de 6 del mismo espumante.</p>
+    </div>
   </section>
 
   <!-- ============================================ VINOS POR ESTACIÓN (ventanas escalonadas) -->
@@ -557,6 +612,7 @@
           <li><a href="#club" data-go>El club</a></li>
           <li><a href="#como-funciona" data-go>Cómo funciona</a></li>
           <li><a href="#duos" data-go>Dúos</a></li>
+          <li><a href="#espumantes" data-go>Espumantes</a></li>
           <li><a href="#regalo" data-go>Regalá una caja</a></li>
           <li><a href="#preguntas" data-go>Preguntas</a></li>
           <li><a href="#encargue" data-go>Por encargue</a></li>

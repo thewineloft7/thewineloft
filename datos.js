@@ -190,6 +190,22 @@ window.__BRAND__ = {
   ],
 
   /* ------------------------------------------------------------------
+     3 C. ESPUMANTES DESTACADOS
+     Se venden por botella o por caja de 6 del mismo espumante.
+     precio: una botella. precio6: cada botella llevando la caja de 6
+     (el total de la caja se calcula solo). Sin puntos ni $.
+     foto: la botella recortada, sin fondo, en assets/img.
+     Para sacar uno, borrá su línea. Lista vacía = la sección no se ve.
+     ------------------------------------------------------------------ */
+
+  espumantes: [
+    { nombre: "Mastroeni Extra Brut", precio: "10800", precio6: "9800", foto: "esp-mastroeni.webp" },
+    { nombre: "Las Perdices Champenoise Joven Extra Brut", precio: "10500", precio6: "9500", foto: "esp-las-perdices.webp" },
+    { nombre: "Keo Extra Brut 100% Pinot Noir", precio: "20600", precio6: "19600", foto: "esp-keo.webp" },
+    { nombre: "Chañarmuyo Champenoise Brut Nature", precio: "26300", precio6: "25300", foto: "esp-chanarmuyo.webp" },
+  ],
+
+  /* ------------------------------------------------------------------
      4. FOTOS DE LA PÁGINA
      Vacío ("") = se ve el espacio marcado «IMAGEN AQUÍ» con lo que
      conviene fotografiar. Cuando tengas la foto, copiala en assets/img
@@ -236,7 +252,8 @@ window.__BRAND__ = {
     avisame: "Hola! Quiero que me avisen cuando abran las reservas de la caja de {proximoMes}. Me interesa la {combo}.",
     consulta: "Hola! Quiero saber más sobre The Wine Loft.",
     encargue: "Hola! Quiero encargar {vino}. ¿Me confirman el precio y cuándo lo tienen?",
-    encargueConsulta: "Hola! Quiero consultar por un vino por encargue."
+    encargueConsulta: "Hola! Quiero consultar por un vino por encargue.",
+    espumante: "Hola! Quiero comprar {cantidad} de {vino} ({total}). ¿Me confirman la entrega?"
   },
 
   /* ------------------------------------------------------------------
@@ -264,6 +281,11 @@ window.__BRAND__ = {
     duosTitulo: "Dúos.",
     duosTexto: "Dos vinos elegidos por nosotros, para pedir cualquier día del mes. También cambian todos los meses.",
     duosAclaracion: "Los dúos van por fuera del club: no tienen fechas de reserva ni sorpresas, y no suman para el regalo sorpresa. Los pedís cualquier día del mes.",
+
+    // Espumantes destacados (parte 3 C)
+    espumantesEtiqueta: "Selección de la casa",
+    espumantesTitulo: "Espumantes *destacados.*",
+    espumantesNota: "«Por 6» es el precio de cada botella llevando la caja de 6 del mismo espumante.",
 
     // Por encargue (el catálogo de vinos a pedido, parte 3 B).
     // En compu va al final de la página; en el celular, después de los Dúos.

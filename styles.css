@@ -1070,3 +1070,40 @@ section.gift .hand { margin-top: 1.5rem; }
   .enc__btn { width: 100%; }
   .enc__meta { letter-spacing: 0.06em; }
 }
+
+/* =============================================================
+   22. Espumantes destacados
+   ============================================================= */
+.espumantes { padding-block: clamp(4.5rem, 9vw, 7.5rem); background: var(--band); border-top: 1px solid var(--line); }
+.espumantes__head { display: flex; flex-direction: column; align-items: center; gap: 0.9rem; text-align: center; }
+.espumantes__head .eyebrow { color: var(--muted); }
+.espumantes h2 { font-size: clamp(2.8rem, 6vw, 4.8rem); font-weight: 300; line-height: 1; }
+.espumantes__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(0.9rem, 2vw, 1.5rem); margin-top: clamp(2.25rem, 5vw, 3.5rem); }
+@media (max-width: 1080px) { .espumantes__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.esp { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.esp__media { position: relative; aspect-ratio: 1 / 1; margin: 0; background-color: var(--papel); background-image: var(--papel-tex); }
+.esp__media img { position: absolute; inset: 0; width: 100%; height: 100%; padding: 7%; box-sizing: border-box; object-fit: contain; filter: drop-shadow(0 10px 12px rgba(70, 50, 30, 0.3)); }
+.esp__media .enc__mono { position: absolute; inset: 0; display: grid; place-items: center; }
+.esp__body { flex: 1; display: flex; flex-direction: column; gap: 0.9rem; padding: 1.1rem 1.2rem 1.25rem; }
+.esp h3 { font-size: 1.35rem; font-weight: 400; line-height: 1.15; }
+.esp__precios { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.75rem; margin-top: auto; }
+.esp__precios p { display: flex; flex-direction: column; gap: 0.15rem; margin: 0; }
+.esp__precios span { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.esp__precios b { font-size: 1.25rem; font-weight: 600; white-space: nowrap; }
+.esp__seis { align-items: flex-end; text-align: right; }
+.esp__seis span, .esp__seis b { color: var(--accent); }
+.esp__seis small { font-size: 0.86rem; color: var(--muted); white-space: nowrap; }
+.esp__btns { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.esp__btns .btn { justify-content: center; text-align: center; padding-inline: 0.5rem; }
+.esp__pronto { margin: 0; font-size: 0.8rem; color: var(--muted); }
+.espumantes__nota { margin-top: 1.75rem; text-align: center; font-size: 0.86rem; color: var(--muted); }
+@media (max-width: 760px) {
+  .espumantes { padding-block: 2.75rem 3rem; }
+  .espumantes h2 { font-size: clamp(2.3rem, 10vw, 2.8rem); }
+  .esp__body { gap: 0.7rem; padding: 0.8rem 0.75rem 0.9rem; }
+  .esp h3 { font-size: 1.05rem; }
+  .esp__precios { flex-direction: column; align-items: stretch; gap: 0.55rem; }
+  .esp__seis { align-items: flex-start; text-align: left; }
+  .esp__precios b { font-size: 1.1rem; }
+  .esp__btns { grid-template-columns: 1fr; }
+}

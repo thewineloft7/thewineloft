@@ -64,7 +64,8 @@
     avisame: "Hola! Quiero que me avisen cuando abran las reservas de la caja de {proximoMes}. Me interesa la {combo}.",
     consulta: "Hola! Quiero saber más sobre The Wine Loft.",
     encargue: "Hola! Quiero encargar {vino}. ¿Me confirman el precio y cuándo lo tienen?",
-    encargueConsulta: "Hola! Quiero consultar por un vino por encargue."
+    encargueConsulta: "Hola! Quiero consultar por un vino por encargue.",
+    espumante: "Hola! Quiero comprar {cantidad} de {vino} ({total}). ¿Me confirman la entrega?"
   };
 
   /* ------------------------------------------------------------------
@@ -2035,6 +2036,49 @@
      «Encargar» abre WhatsApp con el mensaje y manda una copia al mail.
      ------------------------------------------------------------------ */
 
+  /* Espumantes destacados: por botella o por caja de 6 */
+  function applyEspumantes() {
+    var grid = $("[data-espumantes]"), sec = $("#espumantes");
+    if (!grid || !Array.isArray(data.espumantes)) return;
+    var lista = data.espumantes.filter(function (v) { return v && filled(v.nombre) && num(v.precio); });
+    if (!lista.length) {
+      if (sec) sec.hidden = true;
+      $$('a[href="#espumantes"]').forEach(function (a) { (a.closest("li") || a).hidden = true; });
+      return;
+    }
+    grid.innerHTML = lista.map(function (v, i) {
+      var p1 = num(v.precio), p6 = num(v.precio6), foto = rutaFoto(v.foto);
+      var media = foto
+        ? '<img src="' + esc(foto) + '" alt="' + esc(str(v.nombre)) + '" loading="lazy">'
+        : '<span class="enc__mono" aria-hidden="true">' + esc(inicial(v.nombre)) + "</span>";
+      var botones = hasWA
+        ? '<div class="esp__btns"><a class="btn btn--sm btn--line" href="#" target="_blank" rel="noopener" data-esp="' + i + '" data-cant="1">Comprar 1</a>' +
+          (p6 ? '<a class="btn btn--sm" href="#" target="_blank" rel="noopener" data-esp="' + i + '" data-cant="6">Caja x 6</a>' : "") + "</div>"
+        : '<p class="esp__pronto">Muy pronto lo vas a poder comprar por WhatsApp.</p>';
+      return '<article class="esp rv"><figure class="esp__media">' + media + "</figure>" +
+        '<div class="esp__body"><h3>' + esc(str(v.nombre)) + "</h3>" +
+        '<div class="esp__precios"><p class="esp__uno"><span>Unidad</span><b>' + money(p1) + "</b></p>" +
+        (p6 ? '<p class="esp__seis"><span>Por 6</span><b>' + money(p6) + " c/u</b><small>" + money(p6 * 6) + " la caja</small></p>" : "") +
+        "</div>" + botones + "</div></article>";
+    }).join("");
+    if (!hasWA) return;
+    $$("[data-esp]", grid).forEach(function (a) {
+      var v = lista[parseInt(a.getAttribute("data-esp"), 10)], seis = a.getAttribute("data-cant") === "6";
+      var total = seis ? num(v.precio6) * 6 : num(v.precio);
+      a.href = waLink(MENSAJES("espumante", { cantidad: seis ? "una caja de 6" : "1 botella", vino: str(v.nombre), total: money(total) }));
+      a.addEventListener("click", function () {
+        avisar("Espumante: " + str(v.nombre) + (seis ? " (caja de 6)" : ""), {
+          "Qué hizo": "Tocó «" + (seis ? "Caja x 6" : "Comprar 1") + "» en Espumantes: se le abrió WhatsApp con el mensaje para mandártelo.",
+          "Vino": str(v.nombre),
+          "Cantidad": seis ? "Caja de 6" : "1 botella",
+          "Total": money(total),
+          "Perfil en la página": user && !user.demo ? user.name + (user.tel ? " · " + user.tel : "") : "",
+          "Fecha": ahora()
+        });
+      });
+    });
+  }
+
   function listaEncargue() {
     return (Array.isArray(data.encargue) ? data.encargue : []).filter(function (v) { return v && filled(v.nombre); });
   }
@@ -2110,6 +2154,7 @@
     safe(applyContactos, "contacto");
     safe(applyMenu, "caja del mes");
     safe(applyDuos, "dúos");
+    safe(applyEspumantes, "espumantes");
     safe(applyEncargue, "por encargue");
     safe(applyEstaciones, "vinos por estación");
     safe(applyClubCard, "tarjeta del club");
