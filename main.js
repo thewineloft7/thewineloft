@@ -146,7 +146,7 @@
   var FOTOS = data.fotos || {};
   var MES = str(data.mes) || "octubre";
   var ANIO = str(data.anio) || String(new Date().getFullYear());
-  var RESERVAS = str(data.reservas) || "1 al 3";
+  var RESERVAS = str(data.reservas) || "hasta el 3";
   var PAGO = str(data.pago) || "hasta el 6";
   var ENTREGAS = str(data.entregas) || "7 al 10";
   var GOAL = Math.max(2, num(data.regaloCada) || 5);
@@ -300,7 +300,19 @@
     return { a: parseInt(m[0] || "1", 10), b: parseInt(m[1] || m[0] || "3", 10) };
   })();
 
-  var estado = (function () {
+  /* Reservas abiertas todo el mes, hasta el día de cierre (cierreReservas).
+     Lo que se reserva hoy es la caja del mes en que cierra: después del
+     cierre ya se reserva la del mes siguiente. El mes de la caja sale solo. */
+  var CIERRE = Math.min(28, num(data.cierreReservas));
+  if (CIERRE) {
+    var hc = hoy(), mc = mesNum(hc), ac = parseInt(hc.slice(0, 4), 10);
+    if (dia(hc) > CIERRE) { mc += 1; if (mc > 12) { mc = 1; ac += 1; } }
+    MES = MESES[mc - 1];
+    ANIO = String(ac);
+    DIAS_RESERVA = { a: CIERRE, b: CIERRE };
+  }
+
+  var estado = CIERRE ? { tipo: "abierto", texto: "Reservas abiertas hasta el " + CIERRE + " de " + MES, prox: MES } : (function () {
     var desde = str(data.reservasDesde), hasta = str(data.reservasHasta), h = hoy();
     var proxMes = (function () {
       var m = mesNum(h);

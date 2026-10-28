@@ -48,7 +48,6 @@ Leela una vez de punta a punta; después usala como consulta.
   - Cada perfil nuevo: a tu mail (nombre, WhatsApp, mail, zona y
     qué no quiere recibir).
   - Cuando alguien cambia «No quiero recibir» en su perfil: a tu mail.
-  - «Avisame cuando abra»: a tu WhatsApp, y una copia a tu mail.
   - Consultas: a tu WhatsApp (botón del pie de la página).
   Ojo: en WhatsApp el mensaje te llega recién cuando el cliente toca
   «Enviar». La copia al mail te llega siempre, aunque no lo mande:
@@ -266,8 +265,6 @@ Leela una vez de punta a punta; después usala como consulta.
      adicionales, si es para regalo (con la dirección de quien lo
      recibe), dirección, nombre y teléfono. Vos coordinás el pago
      por chat.
-     Si las reservas de las cajas están cerradas, el botón dice
-     «Avisame cuando abra» y te llega ese pedido de aviso.
      Si activaste los avisos (parte 3 B), además te llega una copia
      del pedido a tu mail.
 
@@ -287,7 +284,7 @@ Leela una vez de punta a punta; después usala como consulta.
   franja rosa:
      aviso: "",                       (vacío = no se muestra)
   o poné otro texto, por ejemplo:
-     aviso: "Reservas del 1 al 3 · Entregas del 7 al 10",
+     aviso: "Reservas hasta el 3 · Entregas del 7 al 10",
 
 
 ---------------------------------------------------------------------
@@ -381,21 +378,23 @@ Leela una vez de punta a punta; después usala como consulta.
 6. TODOS LOS MESES: COMBOS, VINOS, PRECIOS Y FECHAS
 ---------------------------------------------------------------------
 
+  LAS RESERVAS ESTÁN SIEMPRE ABIERTAS, hasta el 3 de cada mes.
   En datos.js, parte 2 (EL MES):
 
-     mes: "noviembre",
-     anio: "2026",
-     reservasDesde: "2026-11-01",    (año-mes-día)
-     reservasHasta: "2026-11-03",
+     cierreReservas: "3",      día del mes en que cierran
 
-  La página calcula sola, con la fecha de hoy en Argentina, si las
-  reservas de las cajas están abiertas («Reservas abiertas hasta el
-  3 de noviembre») o cerradas («Próximas reservas: 1 al 3 de
-  diciembre»). Los dúos se pueden pedir cualquier día del mes (van
-  por fuera del club; la página lo aclara en «Dúos»).
+  Lo que se reserva hoy es la caja del mes en que cierra: hasta el 3
+  de noviembre se reserva la caja de noviembre («Reservas abiertas
+  hasta el 3 de noviembre», «Noviembre 2026»); desde el 4, ya la de
+  diciembre. La página lo calcula sola con la fecha de hoy en
+  Argentina: el mes de la caja NO hace falta cambiarlo. Lo que sí
+  cambiás cada mes son los vinos, las fotos y los precios (abajo).
+  Nunca aparece «Avisame cuando abra»: siempre se puede reservar.
+  Los dúos se pueden pedir cualquier día del mes (van por fuera del
+  club; la página lo aclara en «Dúos»).
 
   Un poco más abajo están:
-     reservas: "1 al 3",       hasta qué día se reserva
+     reservas: "hasta el 3",   cómo se lee en la página
      pago: "hasta el 6",       hasta qué día se paga
      entregas: "7 al 10",
   Los números grandes «Reservás hasta el 03 y pagás hasta el 06»
@@ -435,9 +434,10 @@ Leela una vez de punta a punta; después usala como consulta.
   El precio por botella ($17.500 c/u) y el «Desde $18.500» de la
   portada se calculan solos.
 
-  Truco para ver cómo se verá con las reservas abiertas: abrí la
-  página y, en la barra de direcciones, agregá al final
-     ?hoy=2026-11-02
+  Truco para ver cómo se verá otro día (por ejemplo, el 4 de
+  noviembre, cuando ya pasa a la caja de diciembre): abrí la página
+  y, en la barra de direcciones, agregá al final
+     ?hoy=2026-11-04
   y apretá Enter. Esa prueba solo la ves vos.
 
 
@@ -931,7 +931,7 @@ Leela una vez de punta a punta; después usala como consulta.
         (clic derecho > Abrir con > Bloc de notas).
      b. Menú Edición > Reemplazar (Ctrl + R o Ctrl + H, según la
         versión de Windows).
-        Buscar:          v=202610261
+        Buscar:          v=202610281
         Reemplazar con:  v=  y la fecha de hoy, por ejemplo
                          v=20261115   (año, mes, día, todo junto;
                          si cambiás dos veces el mismo día, agregá

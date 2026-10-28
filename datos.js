@@ -53,17 +53,17 @@ window.__BRAND__ = {
 
   /* ------------------------------------------------------------------
      2. EL MES
-     Las fechas van así: "AAAA-MM-DD"  (año-mes-día).
-     La página calcula sola si las reservas de las cajas están abiertas.
+     Las reservas de las cajas están abiertas todo el mes, hasta el día
+     de cierre. Lo que se reserva hoy es la caja del mes en que cierra:
+     hasta el 3 de noviembre se reserva la caja de noviembre; desde el 4,
+     ya la de diciembre. El mes de la caja («Noviembre 2026») se
+     calcula solo: no hace falta cambiarlo.
      ------------------------------------------------------------------ */
 
-  mes: "octubre",
-  anio: "2026",
-  reservasDesde: "2026-10-01",
-  reservasHasta: "2026-10-03",
+  cierreReservas: "3",      // día del mes en que cierran las reservas
 
   // Cómo se lee la regla del club en toda la página.
-  reservas: "1 al 3",       // días para reservar la caja
+  reservas: "hasta el 3",   // hasta qué día se reserva la caja
   pago: "hasta el 6",       // hasta qué día se puede pagar
   entregas: "7 al 10",      // días de entrega
 
@@ -72,7 +72,7 @@ window.__BRAND__ = {
 
   /* ------------------------------------------------------------------
      3. COMBOS Y VINOS
-     tipo: "caja" = se reserva del 1 al 3 y suma para el regalo.
+     tipo: "caja" = se reserva hasta el 3 de cada mes y suma para el regalo.
            "duo"  = se pide cualquier día del mes.
      precio: sin puntos ni signo $.
      agotado: "si" = se sigue mostrando, marcado «Sold out», sin opción
@@ -275,7 +275,7 @@ window.__BRAND__ = {
     reglaReserva: "Reservás hasta el",
     reglaPago: "pagás hasta el",
     reglaTitulo: "Reservás hasta el 3, pagás hasta el 6.",
-    reglaTexto: "Del 1 al 3 de cada mes reservás tu caja. Tenés tiempo hasta el 6 para pagarla con Mercado Pago, y del 7 al 10 te la llevamos a casa.",
+    reglaTexto: "Reservás tu caja cuando quieras, hasta el 3 de cada mes. Tenés tiempo hasta el 6 para pagarla con Mercado Pago, y del 7 al 10 te la llevamos a casa.",
 
     // Dúos
     duosTitulo: "Dúos.",
@@ -339,7 +339,7 @@ window.__BRAND__ = {
     preguntasTitulo: "Preguntas *frecuentes.*",
     preguntasNota: "y si no está acá, escribinos",
     preguntas: [
-      { p: "¿Cuándo reservo la caja del mes?", r: "Del 1 al 3 de cada mes. Tenés hasta el 6 para pagarla con Mercado Pago y te la llevamos del 7 al 10." },
+      { p: "¿Cuándo reservo la caja del mes?", r: "Cuando quieras, hasta el 3 de cada mes. Tenés hasta el 6 para pagarla con Mercado Pago y te la llevamos del 7 al 10. Si reservás después del 3, es para la caja del mes siguiente." },
       { p: "¿Y los dúos?", r: "Los dúos van por fuera del club: no tienen fechas de reserva, los pedís cualquier día del mes. Son dos vinos elegidos por nosotros y cambian todos los meses." },
       { p: "¿A dónde envían?", r: "A Paraná y alrededores, y al interior de Entre Ríos. Al cargar tu dirección te confirmamos el costo de envío." },
       { p: "¿Puedo elegir qué no me toque?", r: "Sí. Al reservar marcás si no querés blancos, rosados o espumantes, y armamos tus dos sorpresas con eso en cuenta." },
