@@ -243,8 +243,9 @@ Leela una vez de punta a punta; después usala como consulta.
                          cuando toca «Comprar 1» o «Caja x 6» en
                          Espumantes
      Cliente potencial   cuando toca «Encargar» en Por encargue
-     Contacto            cuando toca WhatsApp o el mail en el pie de la
-                         página, o «Consultar por WhatsApp» en Por encargue
+     Contacto            cuando toca «Enviar pedido por WhatsApp», WhatsApp
+                         o el mail en el pie de la página, o «Consultar
+                         por WhatsApp» en Por encargue
   Ojo: el pago se coordina por WhatsApp, así que Meta cuenta como
   compra cada pedido que se manda, aunque después no se pague.
 
@@ -961,7 +962,7 @@ Leela una vez de punta a punta; después usala como consulta.
         (clic derecho > Abrir con > Bloc de notas).
      b. Menú Edición > Reemplazar (Ctrl + R o Ctrl + H, según la
         versión de Windows).
-        Buscar:          v=202611032
+        Buscar:          v=202611033
         Reemplazar con:  v=  y la fecha de hoy, por ejemplo
                          v=20261115   (año, mes, día, todo junto;
                          si cambiás dos veces el mismo día, agregá

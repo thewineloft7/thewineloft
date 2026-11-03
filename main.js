@@ -1550,6 +1550,8 @@
       });
     }
     /* Meta: el pedido mandado cuenta como compra, con el total en pesos */
+    /* Meta: el botón «Enviar pedido por WhatsApp» también cuenta como «Contacto» */
+    if (accion.tipo === "wa") pixel("Contact");
     if (accion.tipo === "wa" || accion.tipo === "mp") {
       pixel("Purchase", { value: cuentaPedido().total, currency: "ARS", content_type: "product",
         content_ids: items.map(function (it) { return it.combo; }), num_items: totalN });
