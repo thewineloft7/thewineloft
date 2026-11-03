@@ -284,7 +284,7 @@ Leela una vez de punta a punta; después usala como consulta.
   franja rosa:
      aviso: "",                       (vacío = no se muestra)
   o poné otro texto, por ejemplo:
-     aviso: "Reservas hasta el 3 · Entregas del 7 al 10",
+     aviso: "Reservas y pago hasta el 6 · Entregas del 7 al 10",
 
 
 ---------------------------------------------------------------------
@@ -378,14 +378,14 @@ Leela una vez de punta a punta; después usala como consulta.
 6. TODOS LOS MESES: COMBOS, VINOS, PRECIOS Y FECHAS
 ---------------------------------------------------------------------
 
-  LAS RESERVAS ESTÁN SIEMPRE ABIERTAS, hasta el 3 de cada mes.
-  En datos.js, parte 2 (EL MES):
+  LAS RESERVAS ESTÁN SIEMPRE ABIERTAS: se reserva y se paga hasta el
+  6 de cada mes. En datos.js, parte 2 (EL MES):
 
-     cierreReservas: "3",      día del mes en que cierran
+     cierreReservas: "6",      día del mes en que cierran
 
-  Lo que se reserva hoy es la caja del mes en que cierra: hasta el 3
+  Lo que se reserva hoy es la caja del mes en que cierra: hasta el 6
   de noviembre se reserva la caja de noviembre («Reservas abiertas
-  hasta el 3 de noviembre», «Noviembre 2026»); desde el 4, ya la de
+  hasta el 6 de noviembre», «Noviembre 2026»); desde el 7, ya la de
   diciembre. La página lo calcula sola con la fecha de hoy en
   Argentina: el mes de la caja NO hace falta cambiarlo. Lo que sí
   cambiás cada mes son los vinos, las fotos y los precios (abajo).
@@ -394,11 +394,13 @@ Leela una vez de punta a punta; después usala como consulta.
   club; la página lo aclara en «Dúos»).
 
   Un poco más abajo están:
-     reservas: "hasta el 3",   cómo se lee en la página
+     reservas: "hasta el 6",   cómo se lee en la página
      pago: "hasta el 6",       hasta qué día se paga
      entregas: "7 al 10",
-  Los números grandes «Reservás hasta el 03 y pagás hasta el 06»
-  salen de ahí.
+  Arriba de todo se lee «Reservas y pago hasta el 6». El número
+  grande de «Cómo funciona» sale de ahí: si la reserva y el pago
+  cierran el mismo día dice «Reservás y pagás hasta el 06»; si son
+  días distintos, muestra los dos números.
 
   En la parte 3 (COMBOS Y VINOS) está cada combo:
      nombre, tipo ("caja" o "duo"), precio (sin puntos ni $),
@@ -434,10 +436,10 @@ Leela una vez de punta a punta; después usala como consulta.
   El precio por botella ($17.500 c/u) y el «Desde $18.500» de la
   portada se calculan solos.
 
-  Truco para ver cómo se verá otro día (por ejemplo, el 4 de
+  Truco para ver cómo se verá otro día (por ejemplo, el 7 de
   noviembre, cuando ya pasa a la caja de diciembre): abrí la página
   y, en la barra de direcciones, agregá al final
-     ?hoy=2026-11-04
+     ?hoy=2026-11-07
   y apretá Enter. Esa prueba solo la ves vos.
 
 
@@ -931,7 +933,7 @@ Leela una vez de punta a punta; después usala como consulta.
         (clic derecho > Abrir con > Bloc de notas).
      b. Menú Edición > Reemplazar (Ctrl + R o Ctrl + H, según la
         versión de Windows).
-        Buscar:          v=202610281
+        Buscar:          v=202611021
         Reemplazar con:  v=  y la fecha de hoy, por ejemplo
                          v=20261115   (año, mes, día, todo junto;
                          si cambiás dos veces el mismo día, agregá

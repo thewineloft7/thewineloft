@@ -146,7 +146,7 @@
   var FOTOS = data.fotos || {};
   var MES = str(data.mes) || "octubre";
   var ANIO = str(data.anio) || String(new Date().getFullYear());
-  var RESERVAS = str(data.reservas) || "hasta el 3";
+  var RESERVAS = str(data.reservas) || "hasta el 6";
   var PAGO = str(data.pago) || "hasta el 6";
   var ENTREGAS = str(data.entregas) || "7 al 10";
   var GOAL = Math.max(2, num(data.regaloCada) || 5);
@@ -382,7 +382,9 @@
     /* Números grandes de la regla: «reservás hasta el 03 y pagás hasta el 06» */
     var big = $("[data-big]");
     var diaPago = parseInt((PAGO.match(/\d+/) || ["6"])[0], 10);
-    if (big) big.innerHTML =
+    if (big && DIAS_RESERVA.b === diaPago) big.innerHTML =
+      '<span class="rule__n"><small>' + esc(str(TX.reglaJunto) || "Reservás y pagás hasta el") + "</small>" + pad2(diaPago) + "</span>";
+    else if (big) big.innerHTML =
       '<span class="rule__n"><small>' + esc(str(TX.reglaReserva) || "Reservás hasta el") + "</small>" + pad2(DIAS_RESERVA.b) + "</span>" +
       "<em>y</em>" +
       '<span class="rule__n"><small>' + esc(str(TX.reglaPago) || "pagás hasta el") + "</small>" + pad2(diaPago) + "</span>";
