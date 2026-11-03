@@ -440,6 +440,8 @@
           a.textContent = it.text;
           a.setAttribute("href", it.href);
           if (it.blank) { a.setAttribute("target", "_blank"); a.setAttribute("rel", "noopener"); }
+          /* Meta: escribirle al club por WhatsApp o mail cuenta como «Contacto» */
+          if (k === "whatsapp" || k === "email") a.addEventListener("click", function () { pixel("Contact"); });
         }
         li.hidden = false;
         alguno = true;
