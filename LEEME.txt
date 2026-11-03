@@ -11,6 +11,7 @@ Leela una vez de punta a punta; después usala como consulta.
   2. Cómo ver la página en tu compu
   3. Lo primero: poné tu WhatsApp
   3 B. Avisos a tu mail (perfiles nuevos y copia de cada pedido)
+  3 C. Píxel de Meta (para los anuncios de Facebook e Instagram)
   4. El pedido: cómo funciona hoy y cómo activarlo
   4 B. Adicionales y «Para regalo»
   5. Cómo cambiar los textos
@@ -226,6 +227,32 @@ Leela una vez de punta a punta; después usala como consulta.
   página te mande mensajes de WhatsApp sola hace falta un servicio
   aparte, técnico y en general pago. Los pedidos sí te llegan a
   WhatsApp: los manda el cliente.
+
+
+---------------------------------------------------------------------
+3 C. PÍXEL DE META (para los anuncios de Facebook e Instagram)
+---------------------------------------------------------------------
+
+  El código del píxel (ID 1165672275790394) está en index.html, arriba,
+  entre «Meta Pixel Code» y «End Meta Pixel Code». Como la página es
+  una sola, ya está en todas partes. Le avisa a Meta:
+     Ver la página       cada vez que alguien entra (PageView)
+     Iniciar compra      cuando abre el pedido de una caja o un dúo
+     Compra              cuando toca «Enviar pedido por WhatsApp» (la
+                         pantalla «¡Listo!»), con el total en pesos; y
+                         cuando toca «Comprar 1» o «Caja x 6» en
+                         Espumantes
+     Cliente potencial   cuando toca «Encargar» en Por encargue
+     Contacto            «Consultar por WhatsApp» en Por encargue
+  Ojo: el pago se coordina por WhatsApp, así que Meta cuenta como
+  compra cada pedido que se manda, aunque después no se pague.
+
+  El píxel solo funciona en la web publicada (thewineloft.vercel.app).
+  En la vista previa, al abrir index.html en tu compu y en los
+  borradores de Vercel no se activa, así tus pruebas no ensucian los
+  números de los anuncios.
+  Para cambiar de píxel: reemplazá el número en las dos partes donde
+  aparece en index.html (fbq('init', '...') y el id=... de abajo).
 
 
 ---------------------------------------------------------------------
@@ -933,7 +960,7 @@ Leela una vez de punta a punta; después usala como consulta.
         (clic derecho > Abrir con > Bloc de notas).
      b. Menú Edición > Reemplazar (Ctrl + R o Ctrl + H, según la
         versión de Windows).
-        Buscar:          v=202611021
+        Buscar:          v=202611031
         Reemplazar con:  v=  y la fecha de hoy, por ejemplo
                          v=20261115   (año, mes, día, todo junto;
                          si cambiás dos veces el mismo día, agregá

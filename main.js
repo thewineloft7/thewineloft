@@ -269,6 +269,14 @@
       .then(function (d) { cb(d && d.ok ? d : null); }, function () { cb(null); });
   }
 
+  /* Píxel de Meta (el código base está en index.html): avisa a Meta cuando
+     alguien empieza un pedido o lo manda, para medir y mejorar los anuncios.
+     Sin píxel (vista previa, compu) no hace nada. */
+  function pixel(evento, datos) {
+    try { if (typeof window.fbq === "function") window.fbq("track", evento, datos || {}); }
+    catch (e) { /* sin píxel, la página sigue */ }
+  }
+
   function ahora() {
     try { return new Date().toLocaleString("es-AR", { timeZone: "America/Argentina/Buenos_Aires", dateStyle: "short", timeStyle: "short" }); }
     catch (e) { return new Date().toLocaleString(); }
@@ -1148,6 +1156,7 @@
     if (!elegido) { toast("Por ahora no hay combos a la venta."); return; }
     order.combo = elegido.id;
     if (opts && opts.regalo) order.regalo = true;
+    pixel("InitiateCheckout", { content_ids: [elegido.id], content_type: "product", value: elegido.precio, currency: "ARS" });
     order.prefs = pagePrefs.slice();
     if (user) {
       order.nom = order.nom || (user.demo ? "" : user.name);
@@ -1537,6 +1546,11 @@
         "Perfil en la página": user && !user.demo ? user.name + " (" + countMensual(user) + " de " + GOAL + " cajas antes de este pedido)" : "",
         "Fecha": ahora()
       });
+    }
+    /* Meta: el pedido mandado cuenta como compra, con el total en pesos */
+    if (accion.tipo === "wa" || accion.tipo === "mp") {
+      pixel("Purchase", { value: cuentaPedido().total, currency: "ARS", content_type: "product",
+        content_ids: items.map(function (it) { return it.combo; }), num_items: totalN });
     }
     var pedidoId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     var renglones = items.map(function (it, n) {
@@ -2081,6 +2095,7 @@
       var total = seis ? num(v.precio6) * 6 : num(v.precio);
       a.href = waLink(MENSAJES("espumante", { cantidad: seis ? "una caja de 6" : "1 botella", vino: str(v.nombre), total: money(total) }));
       a.addEventListener("click", function () {
+        pixel("Purchase", { value: total, currency: "ARS", content_type: "product", content_ids: ["espumante-" + slug(v.nombre)], num_items: seis ? 6 : 1 });
         avisar("Espumante: " + str(v.nombre) + (seis ? " (caja de 6)" : ""), {
           "Qué hizo": "Tocó «" + (seis ? "Caja x 6" : "Comprar 1") + "» en Espumantes: se le abrió WhatsApp con el mensaje para mandártelo.",
           "Vino": str(v.nombre),
@@ -2111,6 +2126,7 @@
         wa.href = waLink(MENSAJES("encargueConsulta", {}));
         wa.hidden = false;
         wa.addEventListener("click", function () {
+          pixel("Contact", {});
           avisar("Consulta por encargue", {
             "Qué hizo": "Tocó «Consultar por WhatsApp» en «Por encargue» (todavía sin vinos cargados).",
             "Perfil en la página": user && !user.demo ? user.name + (user.tel ? " · " + user.tel : "") : "",
@@ -2147,6 +2163,7 @@
       a.addEventListener("click", function () {
         var v = lista[parseInt(a.getAttribute("data-encargar"), 10)];
         if (!v) return;
+        pixel("Lead", { content_name: nombreLargo(v) });
         avisar("Encargue: " + str(v.nombre), {
           "Qué hizo": "Tocó «Encargar»: se le abrió WhatsApp con el mensaje para mandártelo.",
           "Vino": nombreLargo(v),

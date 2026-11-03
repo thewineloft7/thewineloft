@@ -12,7 +12,7 @@
   <meta property="og:site_name" content="The Wine Loft">
   <meta property="og:title" content="The Wine Loft · Club de vinos en Paraná">
   <meta property="og:description" content="Un club de vinos con acento del Litoral. Cajas del mes y dúos de todos los días, entregados en tu casa.">
-  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg?v=202611021">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg?v=202611031">
 
   <!-- Hay JavaScript: recién ahí se activan las apariciones y los efectos. -->
   <script>document.documentElement.classList.add("js");</script>
@@ -20,12 +20,36 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="styles.css?v=202611021">
+  <link rel="stylesheet" href="styles.css?v=202611031">
 
-  <script defer src="datos.js?v=202611021"></script>
-  <script defer src="main.js?v=202611021"></script>
+  <script defer src="datos.js?v=202611031"></script>
+  <script defer src="main.js?v=202611031"></script>
+
+  <!-- Meta Pixel Code (píxel de Meta para los anuncios de Facebook e Instagram).
+       Se activa solo en la web publicada: no en la vista previa, ni al abrir
+       index.html en la compu, ni en los borradores de Vercel. -->
+  <script>
+  (function () {
+    var h = location.hostname;
+    if (location.protocol === "file:" || !h || h === "localhost" || h === "127.0.0.1" ||
+        /claude/.test(h) || (/\.vercel\.app$/.test(h) && h !== "thewineloft.vercel.app")) return;
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1165672275790394');
+    fbq('track', 'PageView');
+  })();
+  </script>
+  <!-- End Meta Pixel Code -->
 </head>
 <body>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1165672275790394&amp;ev=PageView&amp;noscript=1"></noscript>
 
 <!-- ============================================ MAYORÍA DE EDAD (la muestra main.js) -->
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT" hidden>
