@@ -15,6 +15,14 @@
    - «Socios»: cada perfil, con el total de cajas pagadas y de plata.
    No hace falta tocar nada de este código. */
 
+/* ID de la planilla (lo que va entre /d/ y /edit en su dirección).
+   Hace falta si el código está en un proyecto de Apps Script aparte;
+   si está pegado desde Extensiones → Apps Script, puede quedar vacío. */
+var ID_PLANILLA = "1f1vcCh343JK7-fTt788goEXEY60_AQUft9WQT4OBFaU";
+function libro() {
+  return ID_PLANILLA ? SpreadsheetApp.openById(ID_PLANILLA) : SpreadsheetApp.getActiveSpreadsheet();
+}
+
 var HOJA_PEDIDOS = "Pedidos";
 var HOJA_SOCIOS = "Socios";
 var COL_PEDIDOS = ["Fecha", "WhatsApp", "Nombre", "Mes", "Combo", "Cantidad", "Tipo", "Monto", "Pagado", "Id"];
@@ -32,7 +40,7 @@ function telKey(t) {
 }
 
 function hoja(nombre, cols) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = libro();
   var h = ss.getSheetByName(nombre);
   if (!h) {
     h = ss.insertSheet(nombre);
@@ -246,7 +254,7 @@ function norm(v) {
 }
 
 function hojaFormato(nombres, cab) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = libro();
   nombres = [].concat(nombres);
   for (var i = 0; i < nombres.length; i++) {
     var h0 = ss.getSheetByName(nombres[i]);
@@ -261,7 +269,7 @@ function hojaFormato(nombres, cab) {
 }
 
 function hojaVinos() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = libro();
   var h = ss.getSheetByName(HOJA_VINOS);
   if (h) return h;
   h = ss.insertSheet(HOJA_VINOS);
@@ -272,7 +280,7 @@ function hojaVinos() {
 }
 
 function hojaCostos() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = libro();
   var h = ss.getSheetByName(HOJA_COSTOS);
   if (h) return h;
   h = ss.insertSheet(HOJA_COSTOS);
