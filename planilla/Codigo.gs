@@ -292,6 +292,19 @@ function hojaCostos() {
   return h;
 }
 
+/* Para correr desde el editor: pone en «COSTOS» los costos de COSTOS_INICIALES
+   (agrega los vinos que falten y no toca los que no están en la lista) */
+function actualizarCostos() {
+  var h = hojaCostos(), vals = h.getDataRange().getValues(), fila = {};
+  for (var i = 1; i < vals.length; i++) fila[norm(vals[i][0])] = i + 1;
+  COSTOS_INICIALES.slice(1).forEach(function (c) {
+    if (c[1] === "") return;
+    var f = fila[norm(c[0])];
+    if (!f) { f = h.getLastRow() + 1; h.getRange(f, 1).setValue(c[0]); }
+    h.getRange(f, 2).setValue(c[1]).setNumberFormat(PLATA);
+  });
+}
+
 /* Qué acepta en las sorpresas, como en la columna «¿QUIERE ROSADO O BLANCO?» */
 function variante(prefs) {
   var p = norm(prefs);
