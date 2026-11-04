@@ -222,6 +222,7 @@ var VINOS_INICIALES = [
   ["AUTOR", "", "marioneta malbec"],
   ["AUTOR", "", "13 cles malbec"]
 ];
+/* Costos: lista de CATALINO Distribuciones, septiembre 2026 (columna PRECIO) */
 var COSTOS_INICIALES = [
   ["VINO", "COSTO"],
   ["mi terruño petit verdot", 16345],
@@ -234,15 +235,15 @@ var COSTOS_INICIALES = [
   ["abismal destino malbec", 9425],
   ["ponce de leon reserva bonarda", 9550],
   ["francisco stocco reserva cabernet", 8835],
-  ["GOYENECHEA MERLOT ROSE", 11940],
-  ["CORAZON VALIENTE TRAMINER", 6667],
-  ["bodega niven tinta criolla", ""],
-  ["tepeyac reserva malbec", ""],
-  ["marioneta malbec", ""],
-  ["13 cles malbec", ""],
-  ["Mastroeni Extra Brut", ""],
-  ["Las Perdices Champenoise Joven Extra Brut", ""],
-  ["Keo Extra Brut 100% Pinot Noir", ""],
+  ["GOYENECHEA MERLOT ROSE", 6667],
+  ["CORAZON VALIENTE TRAMINER", 11940],
+  ["bodega niven tinta criolla", 5467],
+  ["tepeyac reserva malbec", 7008],
+  ["marioneta malbec", 7180],
+  ["13 cles malbec", 6815],
+  ["Mastroeni Extra Brut", 7116],
+  ["Las Perdices Champenoise Joven Extra Brut", 6825],
+  ["Keo Extra Brut 100% Pinot Noir", 11946],
   ["Chañarmuyo Champenoise Brut Nature", 15022]
 ];
 
@@ -376,7 +377,19 @@ function bloque(h, d, it, comboTxt, vinos, col) {
   [1, 2, 3, col + 5, col + 6, col + 7].forEach(function (c) { unirCeldas(h, f0, c, n); });
   h.getRange(f0, 1, n, h.getLastColumn() || 20).setBorder(true, true, true, true, false, false);
   h.getRange(f0, 1).setNote(nota(d, it));
+  var x = extras(it);
+  if (x) h.getRange(f0, 3).setValue(comboTxt + "\n⚠ Lleva " + x + " (precio a definir)").setBackground("#fff2a8").setWrap(true);
   return { fila: f0, filas: n };
+}
+
+/* Charcutería, cristalería y regalo todavía no tienen precio: no se suman
+   al precio ni al costo, pero quedan marcados en amarillo en la celda COMBO */
+function extras(it) {
+  var a = norm(it && it.adicionales), l = [];
+  if (a.indexOf("CHARCUTERIA") >= 0) l.push("charcutería");
+  if (a.indexOf("CRISTALERIA") >= 0) l.push("cristalería");
+  if (it && it.regalo) l.push("regalo");
+  return l.length > 1 ? l.slice(0, -1).join(", ") + " y " + l[l.length - 1] : l.join("");
 }
 
 function unirCeldas(h, f0, c, n) {
