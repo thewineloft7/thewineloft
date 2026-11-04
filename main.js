@@ -256,7 +256,9 @@
     return d.length >= 10 ? d.slice(-10) : "";
   }
   function planillaEnviar(o) {
-    if (!hayPlanilla || !telKey(o.tel)) return;
+    /* Pedidos y espumantes van igual a la planilla (con el formato del club);
+       un perfil sin WhatsApp válido no, porque se identifica con ese número */
+    if (!hayPlanilla || (o.accion === "perfil" && !telKey(o.tel))) return;
     try {
       var p = fetch(PLANILLA, { method: "POST", mode: "no-cors", keepalive: true, body: JSON.stringify(o) });
       if (p && p.catch) p.catch(function () {});
@@ -1565,7 +1567,18 @@
     var enPlanilla = hayPlanilla && (accion.tipo === "wa" || accion.tipo === "mp") && (!user || !user.demo);
     if (enPlanilla) {
       planillaEnviar({ accion: "pedido", id: pedidoId, tel: user ? user.tel || order.tel : order.tel, nombre: user ? user.name : order.nom,
-        items: renglones.map(function (r) { return { m: r.m, c: r.c, price: r.price, mensual: r.mensual, n: r.n }; }) });
+        cliente: order.nom,
+        items: renglones.map(function (r, n) {
+          var it = items[n], ci = combo(it.combo), ad = textoAdicionales(it);
+          return { m: r.m, c: r.c, price: r.price, mensual: r.mensual, n: r.n,
+            /* para las hojas con el formato del club */
+            id: ci.id, combo: ci.nombre, precio: ci.precio, botellas: ci.botellas,
+            vinos: ci.vinos.map(function (v) { return [str(v.nombre), str(v.varietal)].filter(Boolean).join(" "); }),
+            prefs: ci.tipo === "caja" ? prefLabels(it.prefs).join(", ") : "",
+            adicionales: ad === "ninguno" ? "" : ad,
+            dir: [it.dir, it.loc, it.zona].filter(Boolean).join(", "),
+            regalo: it.regalo ? { para: it.gNom, dir: [it.gDir, it.gLoc].filter(Boolean).join(", ") } : null };
+        }) });
     }
     if (accion.tipo !== "avisame" && user) {
       var before = countMensual(user);
@@ -2100,6 +2113,8 @@
       a.href = waLink(MENSAJES("espumante", { cantidad: seis ? "una caja de 6" : "1 botella", vino: str(v.nombre), total: money(total) }));
       a.addEventListener("click", function () {
         pixel("Purchase", { value: total, currency: "ARS", content_type: "product", content_ids: ["espumante-" + slug(v.nombre)], num_items: seis ? 6 : 1 });
+        if (!user || !user.demo) planillaEnviar({ accion: "espumante", producto: str(v.nombre), cantidad: seis ? 6 : 1,
+          precio: num(v.precio), precio6: num(v.precio6), nombre: user ? user.name : "", tel: user ? user.tel || "" : "" });
         avisar("Espumante: " + str(v.nombre) + (seis ? " (caja de 6)" : ""), {
           "Qué hizo": "Tocó «" + (seis ? "Caja x 6" : "Comprar 1") + "» en Espumantes: se le abrió WhatsApp con el mensaje para mandártelo.",
           "Vino": str(v.nombre),

@@ -12,6 +12,7 @@ Leela una vez de punta a punta; después usala como consulta.
   3. Lo primero: poné tu WhatsApp
   3 B. Avisos a tu mail (perfiles nuevos y copia de cada pedido)
   3 C. Píxel de Meta (para los anuncios de Facebook e Instagram)
+  3 D. Los pedidos en una planilla de Google, con el formato de tu Excel
   4. El pedido: cómo funciona hoy y cómo activarlo
   4 B. Adicionales y «Para regalo»
   5. Cómo cambiar los textos
@@ -255,6 +256,20 @@ Leela una vez de punta a punta; después usala como consulta.
   números de los anuncios.
   Para cambiar de píxel: reemplazá el número en las dos partes donde
   aparece en index.html (fbq('init', '...') y el id=... de abajo).
+
+
+---------------------------------------------------------------------
+3 D. LOS PEDIDOS EN UNA PLANILLA DE GOOGLE (con el formato de tu Excel)
+---------------------------------------------------------------------
+
+  Cada pedido de la página (cajas, dúos y espumantes) puede caer solo en
+  una planilla de Google tuya, con las mismas pestañas y columnas que
+  «ALTO EXCEL DE WINELOFT»: cliente, dirección, combo, los vinos, precio
+  de venta, costo y ganancia. Llega en el mismo momento que el mail.
+  Se arma una sola vez (unos 10 minutos): los pasos están en
+  planilla/LEEME-planilla.txt. Al final te da un link que termina en
+  /exec: se lo pasás a Claude y lo carga en datos.js (planilla: "...").
+  Mientras ese link esté vacío, no se manda nada a ninguna planilla.
 
 
 ---------------------------------------------------------------------
@@ -962,7 +977,7 @@ Leela una vez de punta a punta; después usala como consulta.
         (clic derecho > Abrir con > Bloc de notas).
      b. Menú Edición > Reemplazar (Ctrl + R o Ctrl + H, según la
         versión de Windows).
-        Buscar:          v=202611033
+        Buscar:          v=202611041
         Reemplazar con:  v=  y la fecha de hoy, por ejemplo
                          v=20261115   (año, mes, día, todo junto;
                          si cambiás dos veces el mismo día, agregá

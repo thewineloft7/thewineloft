@@ -3,11 +3,22 @@ THE WINE LOFT · CÓMO CONECTAR LA PLANILLA DEL CLUB
 
 Para qué sirve
 --------------
-Cada perfil nuevo y cada pedido que hacen desde la página caen solos en una
-planilla de Google tuya. Cuando un cliente te paga, tildás «Pagado» en su
-fila. Esa caja le suma en «Mi perfil», y cuando llega a 5 le aparece el
-regalo. Funciona en cualquier celular: si el cliente cambia de teléfono,
-entra con su número de WhatsApp y ve todo de nuevo.
+Cada pedido que hacen desde la página cae solo en una planilla de Google
+tuya, CON EL FORMATO DE TU EXCEL («ALTO EXCEL DE WINELOFT»): un bloque por
+pedido con cliente, dirección, combo, los 4 vinos, precio de venta, costo
+y ganancia por botella y por combo.
+  · Cajas del mes → pestaña «CONMBOS MENSUALES» (o «COMBOS MENSUALES»)
+  · Dúos          → pestaña «DIARIOS»
+  · Espumantes, «Caja x 6»  → pestaña «ESPUMANTES»
+  · Espumantes, «Comprar 1» → pestaña «BOTELLAS SOLAS»
+Llega en el mismo momento en que te llega el mail del pedido, sin que
+nadie tenga que leer el mail ni copiar nada.
+
+Además, cada perfil nuevo y cada pedido quedan en «Socios» y «Pedidos».
+Cuando un cliente te paga, tildás «Pagado» en su fila. Esa caja le suma en
+«Mi perfil», y cuando llega a 5 le aparece el regalo. Funciona en
+cualquier celular: si el cliente cambia de teléfono, entra con su número
+de WhatsApp y ve todo de nuevo.
 
 Es gratis. Lo hacés una sola vez y tarda unos 10 minutos.
 
@@ -16,6 +27,9 @@ PASO 1 · Crear la planilla
 --------------------------
 1. Entrá a https://sheets.new con tu Gmail del club.
 2. Ponele de nombre «The Wine Loft · Club» (arriba a la izquierda).
+   (Si preferís seguir en tu Excel con las filas que ya tenés: subilo a
+   Google Drive y abrilo con Hojas de cálculo de Google; los pedidos nuevos
+   se agregan abajo de tus filas, en las mismas pestañas.)
 
 
 PASO 2 · Pegar el código
@@ -24,6 +38,10 @@ PASO 2 · Pegar el código
 2. Borrá todo lo que aparece escrito ahí.
 3. Abrí el archivo planilla/Codigo.gs de esta carpeta, copiá TODO y pegalo.
 4. Tocá el ícono del disquete (Guardar).
+5. Arriba, en la lista de funciones, elegí «preparar» y tocá «Ejecutar».
+   (Te pide permiso la primera vez: mirá el paso 3, punto 5.) Se crean
+   todas las pestañas, con «VINOS DEL MES» y «COSTOS» ya cargadas con lo
+   que tenía tu Excel.
 
 
 PASO 3 · Publicarlo
@@ -48,11 +66,40 @@ Mandale ese link a Claude en el chat del proyecto y lo carga él.
 (O, si lo hacés vos: en datos.js, en la línea  planilla: "",  pegá el link
 entre las comillas y publicá como siempre.)
 
-Las hojas «Pedidos» y «Socios» se crean solas con el primer perfil o pedido.
+Si no ejecutaste «preparar», las pestañas se crean solas con el primer
+perfil o pedido.
 
 
 CÓMO SE USA TODOS LOS MESES
 ---------------------------
+· Pestaña «VINOS DEL MES»: qué 4 vinos lleva cada caja. Una fila por vino:
+     COMBO     RESERVA o CLASICO (los dúos: ORIGEN o AUTOR)
+     VARIANTE  según lo que acepta el cliente en las sorpresas:
+               TINTOS            no quiere ni blancos ni rosados
+               ROSADO Y BLANCO   acepta los dos
+               SOLO ROSADO       no quiere blancos
+               SOLO BLANCO       no quiere rosados
+               (los dúos van sin variante)
+     VINO      el nombre, como lo querés ver en la planilla
+  Cada mes cambiás los vinos de esta pestaña y listo. Si una variante no
+  está cargada (hoy faltan SOLO ROSADO y SOLO BLANCO de la Clásica), el
+  pedido llega con los 2 vinos anunciados y «sorpresa (completar)» para
+  que los escribas a mano.
+  Igual que en tu Excel: si la caja es solo de tintos se completan las
+  columnas D a K; si lleva rosado o blanco, la columna L dice qué acepta
+  (SI, SI R/NO B o NO R/SI B) y se completan M a T.
+· Pestaña «COSTOS»: el costo de cada vino (VINO y COSTO). El costo, la
+  ganancia por botella y la del combo se calculan solos buscando el vino
+  acá, así que el nombre tiene que ser igual al de «VINOS DEL MES» (da
+  igual mayúsculas o minúsculas, pero no los acentos). Si un vino no tiene
+  costo, su ganancia queda vacía hasta que lo cargues. Faltan los costos
+  de los vinos de los dúos y de 3 espumantes.
+· En cada bloque, la nota de la celda del cliente (el triangulito) tiene
+  su WhatsApp, la fecha, lo que no quiere recibir, los adicionales y, si
+  es para regalo, a quién va.
+· En «ESPUMANTES» y «BOTELLAS SOLAS» el cliente queda como «Por WhatsApp
+  (ver el chat)»: esos botones abren WhatsApp directo y la página no le
+  pide el nombre. Completalo cuando te escriba.
 · Hoja «Pedidos»: una fila por cada combo pedido. Cuando te pagan, tildá la
   casilla «Pagado». Solo las cajas pagadas suman para el regalo.
 · Hoja «Socios»: una fila por cliente, con «Cajas pagadas» y «Total pagado»
