@@ -15,6 +15,20 @@
    - «Socios»: cada perfil, con el total de cajas pagadas y de plata.
    No hace falta tocar nada de este código. */
 
+/* Para correr desde el editor: reemplaza en «VINOS DEL MES» las filas de las
+   cajas (RESERVA y CLASICO) por las de VINOS_INICIALES y actualiza los costos.
+   Las filas de los dúos y de otros combos no se tocan. */
+function actualizarVinos() {
+  var h = hojaVinos(), vals = h.getDataRange().getValues();
+  var cajas = { "RESERVA": 1, "CLASICO": 1 };
+  var quedan = vals.slice(1).filter(function (r) { return !cajas[norm(r[0])] && String(r.join("")).trim(); });
+  var nuevas = VINOS_INICIALES.slice(1).filter(function (r) { return cajas[r[0]]; });
+  var todas = nuevas.concat(quedan);
+  if (vals.length > 1) h.getRange(2, 1, vals.length - 1, 3).clearContent();
+  h.getRange(2, 1, todas.length, 3).setValues(todas.map(function (r) { return [r[0], r[1], r[2]]; }));
+  actualizarCostos();
+}
+
 /* Para correr desde el editor: pone en «COSTOS» los costos de COSTOS_INICIALES
    (agrega los vinos que falten y no toca los que no están en la lista) */
 function actualizarCostos() {
@@ -204,32 +218,43 @@ var CAB_BOTELLAS = ["CLIENTE", "DIRECCION", "VINOS", "CANTIDAD", "PRECIO VTA", "
 var ALIAS = { "reserva": "RESERVA", "clasica": "CLASICO", "duo-clasico": "ORIGEN", "duo-reserva": "AUTOR" };
 
 /* Lo que ya tenía tu Excel: se copia a «VINOS DEL MES» y «COSTOS» la primera vez */
+/* Vinos de noviembre 2026. Las cajas llevan un rosado y un blanco; si el cliente
+   no quiere uno, entra el primer tinto suplente; si no quiere ninguno, entran los dos.
+   Clásica: suplentes garnacha negra y ponce de leon. Reserva: tukma y las perdices reserva. */
 var VINOS_INICIALES = [
   ["COMBO", "VARIANTE", "VINO"],
+  ["RESERVA", "ROSADO Y BLANCO", "mi terruño petit verdot"],
+  ["RESERVA", "ROSADO Y BLANCO", "coordenada cabernet sauvignon"],
+  ["RESERVA", "ROSADO Y BLANCO", "CORAZON VALIENTE TRAMINER"],
+  ["RESERVA", "ROSADO Y BLANCO", "LAS PERDICES CLASSIQUE ROSE"],
+  ["RESERVA", "SOLO ROSADO", "mi terruño petit verdot"],
+  ["RESERVA", "SOLO ROSADO", "coordenada cabernet sauvignon"],
+  ["RESERVA", "SOLO ROSADO", "LAS PERDICES CLASSIQUE ROSE"],
+  ["RESERVA", "SOLO ROSADO", "tukma reserva tannat"],
+  ["RESERVA", "SOLO BLANCO", "mi terruño petit verdot"],
+  ["RESERVA", "SOLO BLANCO", "coordenada cabernet sauvignon"],
+  ["RESERVA", "SOLO BLANCO", "CORAZON VALIENTE TRAMINER"],
+  ["RESERVA", "SOLO BLANCO", "tukma reserva tannat"],
   ["RESERVA", "TINTOS", "mi terruño petit verdot"],
   ["RESERVA", "TINTOS", "coordenada cabernet sauvignon"],
   ["RESERVA", "TINTOS", "tukma reserva tannat"],
   ["RESERVA", "TINTOS", "las perdices reserva malbec"],
-  ["RESERVA", "ROSADO Y BLANCO", "LAS PERDICES CLASSIQUE ROSE"],
-  ["RESERVA", "ROSADO Y BLANCO", "GATA FLORA RESERVA TORRONTES"],
-  ["RESERVA", "ROSADO Y BLANCO", "coordenada cabernet sauvignon"],
-  ["RESERVA", "ROSADO Y BLANCO", "tukma reserva tannat"],
-  ["RESERVA", "SOLO ROSADO", "LAS PERDICES CLASSIQUE ROSE"],
-  ["RESERVA", "SOLO ROSADO", "coordenada cabernet sauvignon"],
-  ["RESERVA", "SOLO ROSADO", "tukma reserva tannat"],
-  ["RESERVA", "SOLO ROSADO", "las perdices reserva malbec"],
-  ["RESERVA", "SOLO BLANCO", "mi terruño petit verdot"],
-  ["RESERVA", "SOLO BLANCO", "GATA FLORA RESERVA TORRONTES"],
-  ["RESERVA", "SOLO BLANCO", "coordenada cabernet sauvignon"],
-  ["RESERVA", "SOLO BLANCO", "tukma reserva tannat"],
-  ["CLASICO", "TINTOS", "pala corazon malbec"],
-  ["CLASICO", "TINTOS", "abismal destino malbec"],
-  ["CLASICO", "TINTOS", "ponce de leon reserva bonarda"],
-  ["CLASICO", "TINTOS", "francisco stocco reserva cabernet"],
   ["CLASICO", "ROSADO Y BLANCO", "pala corazon malbec"],
   ["CLASICO", "ROSADO Y BLANCO", "abismal destino malbec"],
   ["CLASICO", "ROSADO Y BLANCO", "GOYENECHEA MERLOT ROSE"],
-  ["CLASICO", "ROSADO Y BLANCO", "CORAZON VALIENTE TRAMINER"],
+  ["CLASICO", "ROSADO Y BLANCO", "GATA FLORA RESERVA TORRONTES"],
+  ["CLASICO", "SOLO ROSADO", "pala corazon malbec"],
+  ["CLASICO", "SOLO ROSADO", "abismal destino malbec"],
+  ["CLASICO", "SOLO ROSADO", "GOYENECHEA MERLOT ROSE"],
+  ["CLASICO", "SOLO ROSADO", "garnacha negra"],
+  ["CLASICO", "SOLO BLANCO", "pala corazon malbec"],
+  ["CLASICO", "SOLO BLANCO", "abismal destino malbec"],
+  ["CLASICO", "SOLO BLANCO", "GATA FLORA RESERVA TORRONTES"],
+  ["CLASICO", "SOLO BLANCO", "garnacha negra"],
+  ["CLASICO", "TINTOS", "pala corazon malbec"],
+  ["CLASICO", "TINTOS", "abismal destino malbec"],
+  ["CLASICO", "TINTOS", "garnacha negra"],
+  ["CLASICO", "TINTOS", "ponce de leon reserva bonarda"],
   ["ORIGEN", "", "bodega niven tinta criolla"],
   ["ORIGEN", "", "tepeyac reserva malbec"],
   ["AUTOR", "", "marioneta malbec"],
@@ -247,6 +272,7 @@ var COSTOS_INICIALES = [
   ["pala corazon malbec", 9081],
   ["abismal destino malbec", 9425],
   ["ponce de leon reserva bonarda", 9550],
+  ["garnacha negra", 8385],
   ["francisco stocco reserva cabernet", 8835],
   ["GOYENECHEA MERLOT ROSE", 6667],
   ["CORAZON VALIENTE TRAMINER", 11940],
