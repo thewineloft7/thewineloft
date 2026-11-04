@@ -46,7 +46,7 @@ window.__BRAND__ = {
   // socio en su perfil, en cualquier celular. Pegá acá el link que termina
   // en /exec (pasos en planilla/LEEME-planilla.txt). Vacío ("") = el perfil
   // queda guardado solo en el celular de cada cliente, como hasta ahora.
-  planilla: "",
+  planilla: "https://script.google.com/macros/s/AKfycbyYiqZfv8KTgY9lO6SekFLVnjvkFMBsiaP5th9v5Z8QTZunShEPu2L2_8BvkF33X3uUDQ/exec",
 
   // Franja rosa de arriba de todo. Vacío ("") = no se muestra.
   aviso: "",
