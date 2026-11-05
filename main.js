@@ -1576,6 +1576,8 @@
             vinos: ci.vinos.map(function (v) { return [str(v.nombre), str(v.varietal)].filter(Boolean).join(" "); }),
             prefs: ci.tipo === "caja" ? prefLabels(it.prefs).join(", ") : "",
             adicionales: ad === "ninguno" ? "" : ad,
+            /* todo lo que lleva, también lo que va incluido en el regalo */
+            lleva: ["charcuteria", "cristaleria"].filter(function (k) { return estadoAdic(k, it) === "incl" || adicCobrados(it).indexOf(k) >= 0; }),
             dir: [it.dir, it.loc, it.zona].filter(Boolean).join(", "),
             regalo: it.regalo ? { para: it.gNom, dir: [it.gDir, it.gLoc].filter(Boolean).join(", ") } : null };
         }) });

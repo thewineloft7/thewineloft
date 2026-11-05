@@ -207,12 +207,15 @@ var HOJA_COSTOS = "COSTOS";
 
 var CAB_CAJAS = ["CLIENTE", "DIRECCION", "COMBO", "VINOS", "CANTIDAD", "PRECIO VTA", "COSTO", "GANANCIA P/BOTELLA",
   "PRECIO COMBO", "COSTO COMBO", "GANANCIA COMBO", "¿QUIERE ROSADO O BLANCO?", "COMBO R/B", "CANTIDAD", "PRECIO VTA",
-  "COSTO", "GANANCIA P/BOTELLA", "PRECIO COMBO", "COSTO COMBO", "GANANCIA COMBO"];
+  "COSTO", "GANANCIA P/BOTELLA", "PRECIO COMBO", "COSTO COMBO", "GANANCIA COMBO", "TIPO DE COMPRA", "¿CHARCUTERÍA O CRISTALERÍA?", "¿ES PARA REGALO?"];
 var CAB_DIARIOS = ["CLIENTE", "DIRECCION", "COMBO", "VINOS", "CANTIDAD", "PRECIO VTA", "COSTO", "GANANCIA P/BOTELLA",
-  "PRECIO COMBO", "COSTO COMBO", "GANANCIA COMBO"];
+  "PRECIO COMBO", "COSTO COMBO", "GANANCIA COMBO", "TIPO DE COMPRA", "¿CHARCUTERÍA O CRISTALERÍA?", "¿ES PARA REGALO?"];
 var CAB_ESPUMANTES = ["CLIENTE", "DIRECCION", "COMBO", "ESPUMANTE", "CANTIDAD", "PRECIO VTA", "COSTO", "GANANCIA P/BOTELLA",
-  "PRECIO COMBO", "COSTO COMBO", "GANANCIA COMBO"];
-var CAB_BOTELLAS = ["CLIENTE", "DIRECCION", "VINOS", "CANTIDAD", "PRECIO VTA", "COSTO", "GANANCIA P/BOTELLA"];
+  "PRECIO COMBO", "COSTO COMBO", "GANANCIA COMBO", "TIPO DE COMPRA", "¿CHARCUTERÍA O CRISTALERÍA?", "¿ES PARA REGALO?"];
+var CAB_BOTELLAS = ["CLIENTE", "DIRECCION", "VINOS", "CANTIDAD", "PRECIO VTA", "COSTO", "GANANCIA P/BOTELLA", "TIPO DE COMPRA", "¿CHARCUTERÍA O CRISTALERÍA?", "¿ES PARA REGALO?"];
+
+/* Cómo se ve cada combo en la columna «TIPO DE COMPRA» */
+var TIPOS = { "RESERVA": "CAJA RESERVA", "CLASICO": "CAJA CLÁSICA", "ORIGEN": "COMBO ORIGEN", "AUTOR": "COMBO AUTOR" };
 
 /* Cómo se llama cada combo de la página en tu Excel */
 var ALIAS = { "reserva": "RESERVA", "clasica": "CLASICO", "duo-clasico": "ORIGEN", "duo-reserva": "AUTOR" };
@@ -298,7 +301,7 @@ function hojaFormato(nombres, cab) {
   nombres = [].concat(nombres);
   for (var i = 0; i < nombres.length; i++) {
     var h0 = ss.getSheetByName(nombres[i]);
-    if (h0) return h0;
+    if (h0) { cabecerasFaltantes(h0, cab); return h0; }
   }
   var h = ss.insertSheet(nombres[nombres.length - 1]);
   h.getRange(1, 1, 1, cab.length).setValues([cab]).setFontWeight("bold")
@@ -306,6 +309,16 @@ function hojaFormato(nombres, cab) {
   h.setRowHeight(1, 44);
   h.setFrozenRows(1);
   return h;
+}
+
+/* Si la pestaña ya existía, le agrega al final los títulos de las columnas nuevas */
+function cabecerasFaltantes(h, cab) {
+  var n = cab.length, fila = h.getRange(1, 1, 1, n).getValues()[0];
+  for (var c = 0; c < n; c++) {
+    if (String(fila[c]).trim()) continue;
+    h.getRange(1, c + 1).setValue(cab[c]).setFontWeight("bold").setHorizontalAlignment("center")
+      .setVerticalAlignment("middle").setWrap(true);
+  }
 }
 
 function hojaVinos() {
@@ -397,7 +410,7 @@ function nota(d, it) {
 
 /* Escribe un bloque: una fila por vino, con las fórmulas de tu Excel.
    col = primera columna del grupo (VINOS en D, o COMBO R/B en M). */
-function bloque(h, d, it, comboTxt, vinos, col) {
+function bloque(h, d, it, comboTxt, vinos, col, desde) {
   var n = vinos.length, f0 = h.getLastRow() + 1, f1 = f0 + n - 1;
   var cant = Math.max(1, Math.min(10, Number(it.n) || 1));
   var precio = Number(it.precio) || 0;
@@ -414,8 +427,10 @@ function bloque(h, d, it, comboTxt, vinos, col) {
   h.getRange(f0, col + 7).setFormula("=" + cI + f0 + "-" + cJ + f0);
   h.getRange(f0, col + 2, n, 6).setNumberFormat(PLATA);
   [1, 2, 3, col + 5, col + 6, col + 7].forEach(function (c) { unirCeldas(h, f0, c, n); });
-  h.getRange(f0, 1, n, h.getLastColumn() || 20).setBorder(true, true, true, true, false, false);
   h.getRange(f0, 1).setNote(nota(d, it));
+  h.getRange(f0, desde, 1, 3).setValues([columnasCompra(TIPOS[comboTxt] || comboTxt, it)]);
+  [desde, desde + 1, desde + 2].forEach(function (c) { unirCeldas(h, f0, c, n); });
+  h.getRange(f0, 1, n, desde + 2).setBorder(true, true, true, true, false, false);
   var x = extras(it);
   if (x) h.getRange(f0, 3).setValue(comboTxt + "\n⚠ Lleva " + x + " (precio a definir)").setBackground("#fff2a8").setWrap(true);
   return { fila: f0, filas: n };
@@ -424,11 +439,25 @@ function bloque(h, d, it, comboTxt, vinos, col) {
 /* Charcutería, cristalería y regalo todavía no tienen precio: no se suman
    al precio ni al costo, pero quedan marcados en amarillo en la celda COMBO */
 function extras(it) {
-  var a = norm(it && it.adicionales), l = [];
-  if (a.indexOf("CHARCUTERIA") >= 0) l.push("charcutería");
-  if (a.indexOf("CRISTALERIA") >= 0) l.push("cristalería");
+  var l = lleva(it).map(function (k) { return k === "charcuteria" ? "charcutería" : "cristalería"; });
   if (it && it.regalo) l.push("regalo");
   return l.length > 1 ? l.slice(0, -1).join(", ") + " y " + l[l.length - 1] : l.join("");
+}
+
+/* Charcutería y cristalería que lleva el combo (también la que va incluida en el regalo) */
+function lleva(it) {
+  if (it && Array.isArray(it.lleva)) return ["charcuteria", "cristaleria"].filter(function (k) { return it.lleva.indexOf(k) >= 0; });
+  var a = norm(it && it.adicionales), l = [];
+  if (a.indexOf("CHARCUTERIA") >= 0) l.push("charcuteria");
+  if (a.indexOf("CRISTALERIA") >= 0) l.push("cristaleria");
+  return l;
+}
+
+/* Las tres columnas del final: tipo de compra, charcutería/cristalería y regalo */
+function columnasCompra(tipo, it) {
+  var l = lleva(it);
+  var adic = l.length === 2 ? "CHARCUTERÍA Y CRISTALERÍA" : l[0] === "charcuteria" ? "CHARCUTERÍA" : l[0] === "cristaleria" ? "CRISTALERÍA" : "NO";
+  return [tipo, adic, it && it.regalo ? "SI" : "NO"];
 }
 
 function unirCeldas(h, f0, c, n) {
@@ -445,7 +474,7 @@ function bloqueCaja(d, it) {
   var vinos = vinosDe(clave, v.clave, it.vinos, it.botellas);
   /* Solo tintos: columnas D a K. Con rosado o blanco: M a T (como en tu Excel) */
   var col = v.clave === "TINTOS" ? 4 : 13;
-  var b = bloque(h, d, it, clave, vinos, col);
+  var b = bloque(h, d, it, clave, vinos, col, CAB_CAJAS.length - 2);
   h.getRange(b.fila, 12).setValue(v.texto);
   unirCeldas(h, b.fila, 12, b.filas);
 }
@@ -455,7 +484,7 @@ function bloqueDuo(d, it) {
   var h = hojaFormato(HOJA_DIARIOS, CAB_DIARIOS);
   var clave = claveCombo(it);
   var vinos = vinosDe(clave, "", it.vinos, it.botellas || 2);
-  bloque(h, d, it, clave, vinos, 4);
+  bloque(h, d, it, clave, vinos, 4, CAB_DIARIOS.length - 2);
 }
 
 /* Espumantes: caja de 6 → «ESPUMANTES»; una botella → «BOTELLAS SOLAS» */
@@ -469,15 +498,17 @@ function guardarEspumante(d) {
     h.getRange(f, 1, 1, 11).setValues([[cliente(d), direccion(d), nombre, nombre, 6, Number(d.precio6) || "", costo("D" + f),
       '=IF(G' + f + '="","",F' + f + "-G" + f + ")", "=E" + f + "*F" + f,
       '=IF(G' + f + '="","",E' + f + "*G" + f + ")", '=IF(J' + f + '="","",I' + f + "-J" + f + ")"]]);
+    h.getRange(f, 12, 1, 3).setValues([columnasCompra("ESPUMANTE CAJA x 6", d)]).setHorizontalAlignment("center").setFontWeight("bold");
     h.getRange(f, 6, 1, 6).setNumberFormat(PLATA);
-    h.getRange(f, 1, 1, 11).setBorder(true, true, true, true, false, false);
+    h.getRange(f, 1, 1, 14).setBorder(true, true, true, true, false, false);
     h.getRange(f, 1).setNote(nota(d));
   } else {
     var hb = hojaFormato(HOJA_BOTELLAS, CAB_BOTELLAS), fb = hb.getLastRow() + 1;
     hb.getRange(fb, 1, 1, 7).setValues([[cliente(d), direccion(d), nombre, 1, Number(d.precio) || "", costo("C" + fb),
       '=IF(F' + fb + '="","",E' + fb + "-F" + fb + ")"]]);
+    hb.getRange(fb, 8, 1, 3).setValues([columnasCompra("BOTELLA INDIVIDUAL", d)]).setHorizontalAlignment("center").setFontWeight("bold");
     hb.getRange(fb, 5, 1, 3).setNumberFormat(PLATA);
-    hb.getRange(fb, 1, 1, 7).setBorder(true, true, true, true, false, false);
+    hb.getRange(fb, 1, 1, 10).setBorder(true, true, true, true, false, false);
     hb.getRange(fb, 1).setNote(nota(d));
   }
 }
