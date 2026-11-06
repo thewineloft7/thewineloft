@@ -263,27 +263,28 @@ var VINOS_INICIALES = [
   ["AUTOR", "", "marioneta malbec"],
   ["AUTOR", "", "13 cles malbec"]
 ];
-/* Costos: lista de CATALINO Distribuciones, septiembre 2026 (columna PRECIO) */
+/* Costos: lista de CATALINO Distribuciones, noviembre 2026 (columna PRECIO).
+   Marioneta Malbec no figura en la de noviembre: queda el de septiembre. */
 var COSTOS_INICIALES = [
   ["VINO", "COSTO"],
-  ["mi terruño petit verdot", 16345],
-  ["coordenada cabernet sauvignon", 10224],
-  ["tukma reserva tannat", 13264],
+  ["mi terruño petit verdot", 17162],
+  ["coordenada cabernet sauvignon", 10633],
+  ["tukma reserva tannat", 15275],
   ["las perdices reserva malbec", 9425],
   ["LAS PERDICES CLASSIQUE ROSE", 12025],
-  ["GATA FLORA RESERVA TORRONTES", 11140],
-  ["pala corazon malbec", 9081],
+  ["GATA FLORA RESERVA TORRONTES", 11050],
+  ["pala corazon malbec", 9425],
   ["abismal destino malbec", 9425],
   ["ponce de leon reserva bonarda", 9550],
-  ["garnacha negra", 8385],
+  ["garnacha negra", 8710],
   ["francisco stocco reserva cabernet", 8835],
   ["GOYENECHEA MERLOT ROSE", 6667],
-  ["CORAZON VALIENTE TRAMINER", 11940],
-  ["bodega niven tinta criolla", 5467],
+  ["CORAZON VALIENTE TRAMINER", 12350],
+  ["bodega niven tinta criolla", 5655],
   ["tepeyac reserva malbec", 7008],
   ["marioneta malbec", 7180],
   ["13 cles malbec", 6815],
-  ["Mastroeni Extra Brut", 7116],
+  ["Mastroeni Extra Brut", 8100],
   ["Las Perdices Champenoise Joven Extra Brut", 6825],
   ["Keo Extra Brut 100% Pinot Noir", 11946],
   ["Chañarmuyo Champenoise Brut Nature", 15022]
