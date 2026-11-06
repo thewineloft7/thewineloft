@@ -15,6 +15,54 @@
    - «Socios»: cada perfil, con el total de cajas pagadas y de plata.
    No hace falta tocar nada de este código. */
 
+/* Una vez, desde el editor: pasa a «Pedidos» y «Socios» las compras que ya están en
+   COMBOS MENSUALES, DIARIOS, ESPUMANTES y BOTELLAS SOLAS y no figuraban (por ejemplo, las
+   que llegaron sin WhatsApp válido). No duplica: compara cuántas compras de cada tipo
+   tiene cada nombre en las pestañas y en «Pedidos». También actualiza las fórmulas de «Socios». */
+var NOMBRE_COMBO = { "RESERVA": "Caja Reserva", "CLASICO": "Caja Clásica", "ORIGEN": "Combo Origen", "AUTOR": "Combo Autor" };
+function completarPedidosYSocios() {
+  var ss = libro(), compras = [];
+  function leer(nombres, tipoDe, comboDe, cantCol, montoCol) {
+    nombres = [].concat(nombres);
+    var h = null;
+    for (var i = 0; i < nombres.length && !h; i++) h = ss.getSheetByName(nombres[i]);
+    if (!h || h.getLastRow() < 2) return;
+    var v = h.getRange(1, 1, h.getLastRow(), Math.max(montoCol, cantCol, 4)).getValues();
+    var notas = h.getRange(1, 1, h.getLastRow(), 1).getNotes();
+    for (var r = 1; r < v.length; r++) {
+      var nom = String(v[r][0]).trim();
+      if (!nom || /^PRUEBA/i.test(nom)) continue;
+      var nt = notas[r][0] || "", fecha = (nt.match(/(\d\d)\/(\d\d)\/(\d{4})/) || []);
+      compras.push({ nombre: nom === "Por WhatsApp (ver el chat)" ? "" : nom, tel: telKey((nt.match(/WhatsApp: (.*)/) || [])[1]),
+        mes: (nt.match(/Caja de: (.*)/) || [])[1] || (fecha[2] ? MESES[Number(fecha[2]) - 1] : mesActual()),
+        fecha: fecha[3] ? new Date(Number(fecha[3]), Number(fecha[2]) - 1, Number(fecha[1])) : new Date(),
+        tipo: tipoDe, combo: comboDe(v[r]), cant: Number(v[r][cantCol - 1]) || 1, monto: Number(v[r][montoCol - 1]) || 0 });
+    }
+  }
+  function combo(c) { c = String(c).split("\n")[0].trim(); return NOMBRE_COMBO[c] || c; }
+  leer(HOJA_CAJAS, "caja", function (f) { return combo(f[2]); }, 6, 10);
+  leer(HOJA_DIARIOS, "dúo", function (f) { return combo(f[2]); }, 5, 9);
+  leer(HOJA_ESPUMANTES, "espumante", function (f) { return f[3] + " (caja x 6)"; }, 5, 9);
+  leer(HOJA_BOTELLAS, "botella", function (f) { return f[2] + " (1 botella)"; }, 4, 5);
+  /* Cuántas ya hay en «Pedidos» por nombre y tipo */
+  var hp = hoja(HOJA_PEDIDOS, COL_PEDIDOS), pv = hp.getDataRange().getValues(), hay = {};
+  for (var i = 1; i < pv.length; i++) { var key = norm(pv[i][2]) + "|" + pv[i][6]; hay[key] = (hay[key] || 0) + 1; }
+  compras.forEach(function (c, n) {
+    var key = norm(c.nombre || "Por WhatsApp (ver el chat)") + "|" + c.tipo;
+    if (hay[key] > 0) { hay[key]--; return; }
+    var k = telDelSocio(c.tel, c.nombre), f = hp.getLastRow() + 1;
+    hp.getRange(f, 1, 1, 10).setValues([[c.fecha, k, c.nombre || "Por WhatsApp (ver el chat)", c.mes, c.combo, c.cant, c.tipo,
+      c.monto, false, "planilla-" + Date.now() + "-" + n]]);
+    hp.getRange(f, 9).insertCheckboxes();
+    hp.getRange(f, 8).setNumberFormat("$ #,##0");
+    if (c.nombre || k) guardarSocio(k, { nombre: c.nombre, accion: "planilla" });
+  });
+  /* Fórmulas nuevas (y columnas «Compras» y «Total comprado») para todos los socios */
+  var hs = hoja(HOJA_SOCIOS, COL_SOCIOS);
+  cabecerasFaltantes(hs, COL_SOCIOS);
+  for (var s = 2; s <= hs.getLastRow(); s++) if (String(hs.getRange(s, 2).getValue()).trim()) formulasSocio(hs, s);
+}
+
 /* Una sola vez, desde el editor: pasa «COMBOS MENSUALES» del formato anterior
    (tintos en D–K, «¿QUIERE ROSADO O BLANCO?» en L, rosado/blanco en M–T, compra en U–W)
    al nuevo (D = ¿QUIERE…?, E–L = vinos, M–O = compra). No borra pedidos. */
@@ -83,7 +131,8 @@ function libro() {
 var HOJA_PEDIDOS = "Pedidos";
 var HOJA_SOCIOS = "Socios";
 var COL_PEDIDOS = ["Fecha", "WhatsApp", "Nombre", "Mes", "Combo", "Cantidad", "Tipo", "Monto", "Pagado", "Id"];
-var COL_SOCIOS = ["WhatsApp", "Nombre", "Email", "Zona", "No quiere recibir", "Alta", "Cajas pagadas", "Total pagado"];
+var COL_SOCIOS = ["WhatsApp", "Nombre", "Email", "Zona", "No quiere recibir", "Alta", "Cajas pagadas", "Total pagado",
+  "Compras", "Total comprado"];
 
 /* Mismo criterio que la página: 10 dígitos, sin 54, sin 9, sin 0 */
 function telKey(t) {
@@ -146,6 +195,7 @@ function doGet(e) {
   for (var j = 1; j < ped.length; j++) {
     var r = ped[j];
     if (telKey(r[1]) !== k) continue;
+    if (String(r[6]) !== "caja" && String(r[6]) !== "dúo") continue; /* botellas y espumantes no cuentan para el regalo */
     pedidos.push({ m: String(r[3]), c: String(r[4]), n: Number(r[5]) || 1, mensual: String(r[6]) !== "dúo",
       price: Number(r[7]) || 0, pagado: esPagado(r[8]), id: String(r[9]) });
   }
@@ -172,33 +222,81 @@ function doPost(e) {
 
 function txt(v, max) { return String(v == null ? "" : v).slice(0, max || 200); }
 
-function guardarSocio(k, d) {
-  var h = hoja(HOJA_SOCIOS, COL_SOCIOS);
-  var vals = h.getDataRange().getValues();
+function nombreDe(d) { return txt(d.nombre || d.cliente, 80).trim(); }
+
+/* Fila del socio en «Socios»: por WhatsApp y, si no hay o no coincide, por nombre */
+function filaSocio(vals, k, nombre) {
+  var n = norm(nombre), porNombre = 0;
   for (var i = 1; i < vals.length; i++) {
-    if (telKey(vals[i][0]) === k) {
-      /* Ya existe: solo se actualiza lo que no quiere recibir y la zona */
-      if (d.accion !== "perfil") return;
-      if (d.zona) h.getRange(i + 1, 4).setValue(txt(d.zona));
-      h.getRange(i + 1, 5).setValue(txt(d.prefs));
-      return;
-    }
+    if (k && telKey(vals[i][0]) === k) return i + 1;
+    if (!porNombre && n && norm(vals[i][1]) === n) porNombre = i + 1;
   }
-  var fila = h.getLastRow() + 1;
-  h.getRange(fila, 1, 1, 6).setValues([[k, txt(d.nombre, 80), txt(d.email, 120), txt(d.zona), txt(d.prefs), new Date()]]);
-  h.getRange(fila, 7).setFormula('=SUMIFS(' + HOJA_PEDIDOS + '!F:F,' + HOJA_PEDIDOS + '!B:B,A' + fila + ',' +
-    HOJA_PEDIDOS + '!G:G,"caja",' + HOJA_PEDIDOS + '!I:I,TRUE)');
-  h.getRange(fila, 8).setFormula('=SUMIFS(' + HOJA_PEDIDOS + '!H:H,' + HOJA_PEDIDOS + '!B:B,A' + fila + ',' +
-    HOJA_PEDIDOS + '!I:I,TRUE)').setNumberFormat("$ #,##0");
+  return porNombre;
+}
+
+/* Si el pedido no trae un WhatsApp válido pero el nombre ya es socio, usa el de él */
+function telDelSocio(k, nombre) {
+  if (k || !nombre) return k;
+  var vals = hoja(HOJA_SOCIOS, COL_SOCIOS).getDataRange().getValues(), f = filaSocio(vals, "", nombre);
+  return f ? telKey(vals[f - 1][0]) : "";
+}
+
+/* Totales del socio: suma sus pedidos por WhatsApp y también los que quedaron sin WhatsApp a su nombre */
+function formulasSocio(h, f) {
+  var P = HOJA_PEDIDOS + "!";
+  function suma(col, extra) {
+    return 'IF(A' + f + '="",0,SUMIFS(' + P + col + ':' + col + ',' + P + 'B:B,A' + f + extra + '))+SUMIFS(' + P + col + ':' + col +
+      ',' + P + 'B:B,"",' + P + 'C:C,B' + f + extra + ')';
+  }
+  function cuenta(extra) {
+    return 'IF(A' + f + '="",0,COUNTIFS(' + P + 'B:B,A' + f + extra + '))+COUNTIFS(' + P + 'B:B,"",' + P + 'C:C,B' + f + extra + ')';
+  }
+  var pag = ',' + P + 'I:I,TRUE';
+  h.getRange(f, 7, 1, 4).setFormulas([["=" + suma("F", ',' + P + 'G:G,"caja"' + pag), "=" + suma("H", pag),
+    "=" + cuenta(',' + P + 'C:C,"<>"'), "=" + suma("H", "")]]);
+  h.getRange(f, 8).setNumberFormat("$ #,##0");
+  h.getRange(f, 10).setNumberFormat("$ #,##0");
+}
+
+function guardarSocio(k, d) {
+  var nombre = nombreDe(d);
+  if (!k && !nombre) return;
+  var h = hoja(HOJA_SOCIOS, COL_SOCIOS);
+  cabecerasFaltantes(h, COL_SOCIOS);
+  var f = filaSocio(h.getDataRange().getValues(), k, nombre);
+  if (f) {
+    /* Ya existe: se completa el WhatsApp si no lo tenía; el perfil actualiza zona y preferencias */
+    if (k && !telKey(h.getRange(f, 1).getValue())) h.getRange(f, 1).setValue(k);
+    if (d.accion === "perfil") {
+      if (d.zona) h.getRange(f, 4).setValue(txt(d.zona));
+      h.getRange(f, 5).setValue(txt(d.prefs));
+    }
+    formulasSocio(h, f);
+    return;
+  }
+  f = h.getLastRow() + 1;
+  h.getRange(f, 1, 1, 6).setValues([[k, nombre, txt(d.email, 120), txt(d.zona), txt(d.prefs), new Date()]]);
+  formulasSocio(h, f);
+}
+
+/* Anota filas en «Pedidos»: [mes, combo, cantidad, tipo, monto] por cada compra */
+function anotarPedidos(k, nombre, id, compras) {
+  if (!compras.length) return;
+  var h = hoja(HOJA_PEDIDOS, COL_PEDIDOS), ahora = new Date();
+  var filas = compras.map(function (c, n) {
+    return [ahora, k, nombre || "Por WhatsApp (ver el chat)", c[0], c[1], c[2], c[3], c[4], false, id + "-" + n];
+  });
+  var desde = h.getLastRow() + 1;
+  h.getRange(desde, 1, filas.length, filas[0].length).setValues(filas);
+  h.getRange(desde, 9, filas.length, 1).insertCheckboxes();
+  h.getRange(desde, 8, filas.length, 1).setNumberFormat("$ #,##0");
 }
 
 function guardarPedido(k, d) {
   var h = hoja(HOJA_PEDIDOS, COL_PEDIDOS);
-  var id = txt(d.id, 40);
-  if (id) {
-    var ids = h.getLastRow() > 1 ? h.getRange(2, 10, h.getLastRow() - 1, 1).getValues() : [];
-    for (var i = 0; i < ids.length; i++) if (String(ids[i][0]).indexOf(id + "-") === 0) return; /* ya llegó */
-  }
+  var id = txt(d.id, 40) || "p" + Date.now();
+  var ids = h.getLastRow() > 1 ? h.getRange(2, 10, h.getLastRow() - 1, 1).getValues() : [];
+  for (var i = 0; i < ids.length; i++) if (String(ids[i][0]).indexOf(id + "-") === 0) return; /* ya llegó */
   var items = Array.isArray(d.items) ? d.items.slice(0, 20) : [];
   if (!items.length) return;
   /* Primero, con el formato de tu Excel */
@@ -207,18 +305,20 @@ function guardarPedido(k, d) {
       if (it.mensual === false) bloqueDuo(d, it); else bloqueCaja(d, it);
     } catch (err) { /* si falla el formato, igual queda en «Pedidos» */ }
   });
-  if (!k) return; /* sin un WhatsApp válido no puede sumar para el regalo */
-  var ahora = new Date();
-  var filas = items.map(function (it, n) {
-    return [ahora, k, txt(d.nombre, 80), txt(it.m, 30), txt(it.c, 120), Math.max(1, Math.min(10, Number(it.n) || 1)),
-      it.mensual === false ? "dúo" : "caja", Number(it.price) || 0, false, id + "-" + n];
-  });
-  var desde = h.getLastRow() + 1;
-  h.getRange(desde, 1, filas.length, filas[0].length).setValues(filas);
-  h.getRange(desde, 9, filas.length, 1).insertCheckboxes();
-  h.getRange(desde, 8, filas.length, 1).setNumberFormat("$ #,##0");
-  /* Si pidió sin perfil, igual queda en «Socios» para ver su total */
+  /* Todos los pedidos van a «Pedidos» y «Socios», aunque el WhatsApp venga mal */
+  var nombre = nombreDe(d);
+  k = telDelSocio(k, nombre);
+  anotarPedidos(k, nombre, id, items.map(function (it) {
+    return [txt(it.m, 30), txt(it.c, 120), Math.max(1, Math.min(10, Number(it.n) || 1)),
+      it.mensual === false ? "dúo" : "caja", Number(it.price) || 0];
+  }));
   guardarSocio(k, d);
+}
+
+/* Mes en que se compró (para botellas y espumantes) */
+var MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+function mesActual() {
+  return MESES[(Number(Utilities.formatDate(new Date(), "America/Argentina/Buenos_Aires", "M")) || 1) - 1];
 }
 
 
@@ -522,6 +622,11 @@ function guardarEspumante(d) {
   if (!nombre) return;
   hojaCostos();
   var cant = Number(d.cantidad) === 6 ? 6 : 1;
+  /* También a «Pedidos» y «Socios» (no suman para el regalo de las cajas) */
+  var k = telDelSocio(telKey(d.tel), nombreDe(d));
+  anotarPedidos(k, nombreDe(d), "e" + Date.now(), [[mesActual(), nombre + (cant === 6 ? " (caja x 6)" : " (1 botella)"), cant,
+    cant === 6 ? "espumante" : "botella", cant === 6 ? (Number(d.precio6) || 0) * 6 : Number(d.precio) || 0]]);
+  guardarSocio(k, d);
   if (cant === 6) {
     var h = hojaFormato(HOJA_ESPUMANTES, CAB_ESPUMANTES), f = h.getLastRow() + 1;
     h.getRange(f, 1, 1, 11).setValues([[cliente(d), direccion(d), nombre, nombre, 6, Number(d.precio6) || "", costo("D" + f),
