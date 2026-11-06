@@ -15,6 +15,36 @@
    - «Socios»: cada perfil, con el total de cajas pagadas y de plata.
    No hace falta tocar nada de este código. */
 
+/* Una sola vez, desde el editor: pasa «COMBOS MENSUALES» del formato anterior
+   (tintos en D–K, «¿QUIERE ROSADO O BLANCO?» en L, rosado/blanco en M–T, compra en U–W)
+   al nuevo (D = ¿QUIERE…?, E–L = vinos, M–O = compra). No borra pedidos. */
+function migrarCombos() {
+  var ss = libro(), h = ss.getSheetByName(HOJA_CAJAS[0]) || ss.getSheetByName(HOJA_CAJAS[1]);
+  if (!h || norm(h.getRange(1, 21).getValue()) !== norm("TIPO DE COMPRA")) return; /* ya está migrada */
+  var ult = h.getLastRow(), a = h.getRange(1, 1, ult, 23).getValues();
+  var inicios = [];
+  for (var r = 2; r <= ult; r++) if (String(a[r - 1][0]).trim()) inicios.push(r);
+  inicios.forEach(function (f0, i) {
+    var n = (i + 1 < inicios.length ? inicios[i + 1] : ult + 1) - f0;
+    var fila = a[f0 - 1];
+    var vacioE = !String(fila[4]).trim(), conM = String(fila[12]).trim();
+    if (vacioE && conM) {          /* rosado/blanco del formato anterior */
+      h.getRange(f0, 4).setValue(fila[11]);
+      h.getRange(f0, 13, n, 8).copyTo(h.getRange(f0, 5, n, 8));
+    }
+    unirCeldas(h, f0, 4, n);
+    if (!String(fila[20]).trim()) {  /* sin las columnas de compra: se completan */
+      var c = String(fila[2]).split("\n")[0].trim(), nt = h.getRange(f0, 1).getNote();
+      var ad = (nt.match(/Adicionales: (.*)/) || [])[1] || "";
+      var it = { adicionales: ad, regalo: /Regalo para/.test(nt) ? {} : null };
+      h.getRange(f0, 21, 1, 3).setValues([columnasCompra(TIPOS[c] || c, it)]);
+      [21, 22, 23].forEach(function (cc) { unirCeldas(h, f0, cc, n); });
+    }
+  });
+  h.getRange(1, 1, 1, 12).setValues([CAB_CAJAS.slice(0, 12)]);
+  h.deleteColumns(13, 8);
+}
+
 /* Para correr desde el editor: reemplaza en «VINOS DEL MES» las filas de las
    cajas (RESERVA y CLASICO) por las de VINOS_INICIALES y actualiza los costos.
    Las filas de los dúos y de otros combos no se tocan. */
@@ -205,9 +235,9 @@ var HOJA_BOTELLAS = "BOTELLAS SOLAS";
 var HOJA_VINOS = "VINOS DEL MES";
 var HOJA_COSTOS = "COSTOS";
 
-var CAB_CAJAS = ["CLIENTE", "DIRECCION", "COMBO", "VINOS", "CANTIDAD", "PRECIO VTA", "COSTO", "GANANCIA P/BOTELLA",
-  "PRECIO COMBO", "COSTO COMBO", "GANANCIA COMBO", "¿QUIERE ROSADO O BLANCO?", "COMBO R/B", "CANTIDAD", "PRECIO VTA",
-  "COSTO", "GANANCIA P/BOTELLA", "PRECIO COMBO", "COSTO COMBO", "GANANCIA COMBO", "TIPO DE COMPRA", "¿CHARCUTERÍA O CRISTALERÍA?", "¿ES PARA REGALO?"];
+/* Cajas: un solo grupo de vinos (E a L) y «¿QUIERE ROSADO O BLANCO?» en D */
+var CAB_CAJAS = ["CLIENTE", "DIRECCION", "COMBO", "¿QUIERE ROSADO O BLANCO?", "VINOS", "CANTIDAD", "PRECIO VTA", "COSTO",
+  "GANANCIA P/BOTELLA", "PRECIO COMBO", "COSTO COMBO", "GANANCIA COMBO", "TIPO DE COMPRA", "¿CHARCUTERÍA O CRISTALERÍA?", "¿ES PARA REGALO?"];
 var CAB_DIARIOS = ["CLIENTE", "DIRECCION", "COMBO", "VINOS", "CANTIDAD", "PRECIO VTA", "COSTO", "GANANCIA P/BOTELLA",
   "PRECIO COMBO", "COSTO COMBO", "GANANCIA COMBO", "TIPO DE COMPRA", "¿CHARCUTERÍA O CRISTALERÍA?", "¿ES PARA REGALO?"];
 var CAB_ESPUMANTES = ["CLIENTE", "DIRECCION", "COMBO", "ESPUMANTE", "CANTIDAD", "PRECIO VTA", "COSTO", "GANANCIA P/BOTELLA",
@@ -473,11 +503,9 @@ function bloqueCaja(d, it) {
   var v = variante(it.prefs);
   var clave = claveCombo(it);
   var vinos = vinosDe(clave, v.clave, it.vinos, it.botellas);
-  /* Solo tintos: columnas D a K. Con rosado o blanco: M a T (como en tu Excel) */
-  var col = v.clave === "TINTOS" ? 4 : 13;
-  var b = bloque(h, d, it, clave, vinos, col, CAB_CAJAS.length - 2);
-  h.getRange(b.fila, 12).setValue(v.texto);
-  unirCeldas(h, b.fila, 12, b.filas);
+  var b = bloque(h, d, it, clave, vinos, 5, CAB_CAJAS.length - 2);
+  h.getRange(b.fila, 4).setValue(v.texto);
+  unirCeldas(h, b.fila, 4, b.filas);
 }
 
 function bloqueDuo(d, it) {
