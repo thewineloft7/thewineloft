@@ -424,11 +424,17 @@
     });
   }
 
+  /* El número de WhatsApp escrito como se lee: +54 9 343 505-8743 */
+  function telVisible() {
+    var m = /^549(\d{3})(\d{3})(\d{4})$/.exec(WA);
+    return m ? "+54 9 " + m[1] + " " + m[2] + "-" + m[3] : "+" + WA;
+  }
+
   function applyContactos() {
     var ig = str(data.instagram).replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/^@/, "").replace(/[/?#].*$/, "");
     var email = str(data.email);
     var items = {
-      whatsapp: hasWA ? { href: waLink(MENSAJES("consulta")), text: "WhatsApp", blank: true } : null,
+      whatsapp: hasWA ? { href: waLink(MENSAJES("consulta")), text: "WhatsApp " + telVisible(), blank: true } : null,
       instagram: ig ? { href: "https://instagram.com/" + encodeURIComponent(ig), text: "@" + ig, blank: true } : null,
       email: email.indexOf("@") > 0 ? { href: "mailto:" + email, text: email } : null
     };
