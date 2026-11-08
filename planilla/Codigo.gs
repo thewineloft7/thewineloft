@@ -9,7 +9,8 @@
    - «VINOS DEL MES»: qué 4 vinos lleva cada caja según lo que quiere
      recibir el cliente. La cambiás vos cada mes.
    - «COSTOS»: el costo de cada vino. Los costos y ganancias se calculan
-     solos desde acá.
+     solos desde acá. Cada venta guarda el costo que tenía ese día: cuando
+     cambian los costos, las ventas anteriores no cambian.
    - «Pedidos»: cada pedido que llega desde la página. Vos tildás «Pagado»
      cuando te paga. Solo las cajas pagadas suman para el regalo.
    - «Socios»: cada perfil, con el total de cajas pagadas y de plata.
@@ -110,6 +111,7 @@ function actualizarVinos() {
 /* Para correr desde el editor: pone en «COSTOS» los costos de COSTOS_INICIALES
    (agrega los vinos que falten y no toca los que no están en la lista) */
 function actualizarCostos() {
+  congelarCostos(); /* las ventas anteriores se quedan con el costo viejo */
   var h = hojaCostos(), vals = h.getDataRange().getValues(), fila = {};
   for (var i = 1; i < vals.length; i++) fila[norm(vals[i][0])] = i + 1;
   COSTOS_INICIALES.slice(1).forEach(function (c) {
@@ -523,6 +525,29 @@ function vinosDe(clave, varClave, anunciados, botellas) {
   return l;
 }
 
+/* Congela el costo de las ventas: donde la fórmula que busca en «COSTOS» ya
+   encontró el vino, deja el número fijo. Si el vino todavía no está (por ejemplo
+   «sorpresa (completar)»), la fórmula queda hasta que se complete. */
+function congelar(r) {
+  SpreadsheetApp.flush();
+  var fo = r.getFormulas(), va = r.getValues();
+  for (var i = 0; i < fo.length; i++) for (var j = 0; j < fo[i].length; j++) {
+    if (fo[i][j].indexOf("'" + HOJA_COSTOS + "'!") >= 0 && typeof va[i][j] === "number") {
+      r.getCell(i + 1, j + 1).setValue(va[i][j]);
+    }
+  }
+}
+
+/* Para correr desde el editor (y lo corre solo actualizarCostos antes de cargar
+   costos nuevos): congela el costo de todas las ventas ya anotadas. */
+function congelarCostos() {
+  var ss = libro();
+  [].concat(HOJA_CAJAS, HOJA_DIARIOS, HOJA_ESPUMANTES, HOJA_BOTELLAS).forEach(function (n) {
+    var h = ss.getSheetByName(n);
+    if (h && h.getLastRow() > 1) congelar(h.getRange(2, 1, h.getLastRow() - 1, h.getLastColumn()));
+  });
+}
+
 function costo(celda) { return '=IFERROR(VLOOKUP(' + celda + ",'" + HOJA_COSTOS + "'!$A:$B,2,FALSE),\"\")"; }
 function cliente(d) { return txt(d.cliente || d.nombre, 80) || "Por WhatsApp (ver el chat)"; }
 function direccion(d, it) {
@@ -556,6 +581,7 @@ function bloque(h, d, it, comboTxt, vinos, col, desde) {
   h.getRange(f0, col + 5).setValue(precio * cant);
   h.getRange(f0, col + 6).setFormula("=SUMPRODUCT(" + cE + f0 + ":" + cE + f1 + "," + cG + f0 + ":" + cG + f1 + ")");
   h.getRange(f0, col + 7).setFormula("=" + cI + f0 + "-" + cJ + f0);
+  congelar(h.getRange(f0, col + 3, n, 1));
   h.getRange(f0, col + 2, n, 6).setNumberFormat(PLATA);
   [1, 2, 3, col + 5, col + 6, col + 7].forEach(function (c) { unirCeldas(h, f0, c, n); });
   h.getRange(f0, 1).setNote(nota(d, it));
@@ -633,6 +659,7 @@ function guardarEspumante(d) {
       '=IF(G' + f + '="","",F' + f + "-G" + f + ")", "=E" + f + "*F" + f,
       '=IF(G' + f + '="","",E' + f + "*G" + f + ")", '=IF(J' + f + '="","",I' + f + "-J" + f + ")"]]);
     h.getRange(f, 12, 1, 3).setValues([columnasCompra("ESPUMANTE CAJA x 6", d)]).setHorizontalAlignment("center").setFontWeight("bold");
+    congelar(h.getRange(f, 7));
     h.getRange(f, 6, 1, 6).setNumberFormat(PLATA);
     h.getRange(f, 1, 1, 14).setBorder(true, true, true, true, false, false);
     h.getRange(f, 1).setNote(nota(d));
@@ -641,6 +668,7 @@ function guardarEspumante(d) {
     hb.getRange(fb, 1, 1, 7).setValues([[cliente(d), direccion(d), nombre, 1, Number(d.precio) || "", costo("C" + fb),
       '=IF(F' + fb + '="","",E' + fb + "-F" + fb + ")"]]);
     hb.getRange(fb, 8, 1, 3).setValues([columnasCompra("BOTELLA INDIVIDUAL", d)]).setHorizontalAlignment("center").setFontWeight("bold");
+    congelar(hb.getRange(fb, 6));
     hb.getRange(fb, 5, 1, 3).setNumberFormat(PLATA);
     hb.getRange(fb, 1, 1, 10).setBorder(true, true, true, true, false, false);
     hb.getRange(fb, 1).setNote(nota(d));

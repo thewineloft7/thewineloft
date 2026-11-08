@@ -94,6 +94,10 @@ CÓMO SE USA TODOS LOS MESES
   igual mayúsculas o minúsculas, pero no los acentos). Si un vino no tiene
   costo, su ganancia queda vacía hasta que lo cargues. Faltan los costos
   de los vinos de los dúos y de 3 espumantes.
+  Cada venta guarda fijo el costo que tenía el día de la compra: cuando
+  llega una lista nueva de Catalino, los costos nuevos valen solo para las
+  ventas de ahí en adelante (actualizarCostos congela primero las
+  anteriores; congelarCostos lo hace a mano).
 · En cada bloque, la nota de la celda del cliente (el triangulito) tiene
   su WhatsApp, la fecha, lo que no quiere recibir, los adicionales y, si
   es para regalo, a quién va.
