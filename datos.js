@@ -36,8 +36,8 @@ window.__BRAND__ = {
   // Cobro por transferencia (sin comisión): al terminar el pedido, la
   // página muestra el alias y el titular, con un botón para copiar el alias.
   // Vacío ("") = no se muestra.
-  aliasMP: "",
-  titularMP: "",
+  aliasMP: "Wineloft26.pesos",
+  titularMP: "Tomás Canepa",
 
   instagram: "",   // Solo el usuario, sin @. Ejemplo: "thewineloft"
   email: "",       // Ejemplo: "hola@thewineloft.com.ar"
