@@ -1623,7 +1623,7 @@
     }
     $("#dBody").innerHTML = '<div class="done"><img src="assets/img/logo.webp" alt=""><h4>' + titulo + "</h4><p>" + texto + "</p>" +
       (accion.tipo !== "avisame" && gift ? '<p class="hand">¡Y esta trae tu regalo sorpresa!</p>' : "") +
-      extra + finEncargue() + "</div>";
+      (accion.tipo !== "avisame" ? bloquePago() : "") + extra + finEncargue() + "</div>";
     $("#dFoot").innerHTML = "<span></span>" + (user ? '<button type="button" class="btn" id="seeProfile">Ver mi perfil</button>' : '<button type="button" class="btn" id="closeDone">Cerrar</button>');
     var sp = $("#seeProfile");
     if (sp) sp.addEventListener("click", function () { closeOrder(); setTimeout(function () { go("perfil", true); }, 400); });
@@ -1631,6 +1631,33 @@
     if (cd) cd.addEventListener("click", closeOrder);
     var fe = $("[data-fin-encargue]");
     if (fe) fe.addEventListener("click", closeOrder);
+    var cp = $("[data-copiar-alias]");
+    if (cp) cp.addEventListener("click", function () { copiarAlias(cp); });
+  }
+
+  /* Al final del pedido: alias de Mercado Pago para pagar por transferencia */
+  var ALIAS = str(data.aliasMP).trim(), TITULAR = str(data.titularMP).trim();
+  function bloquePago() {
+    if (!ALIAS) return "";
+    return '<div class="pago"><p class="pago__t">Pagá por transferencia a nuestro Mercado Pago</p>' +
+      '<p class="pago__alias"><span>Alias</span><strong>' + esc(ALIAS) + "</strong></p>" +
+      (TITULAR ? '<p class="pago__tit"><span>A nombre de</span><strong>' + esc(TITULAR) + "</strong></p>" : "") +
+      '<button type="button" class="btn pago__btn" data-copiar-alias>Copiar alias</button>' +
+      '<p class="pago__nota">Sin comisión. Mandanos el comprobante por WhatsApp.</p></div>';
+  }
+  function copiarAlias(btn) {
+    function listo() { btn.textContent = "¡Alias copiado!"; setTimeout(function () { btn.textContent = "Copiar alias"; }, 2500); }
+    function aMano() {
+      var t = doc.createElement("textarea");
+      t.value = ALIAS; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0";
+      doc.body.appendChild(t); t.select();
+      try { doc.execCommand("copy"); listo(); } catch (e) { btn.textContent = ALIAS; }
+      doc.body.removeChild(t);
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ALIAS).then(listo, aMano);
+      else aMano();
+    } catch (e) { aMano(); }
   }
 
   /* Al final del pedido, un acceso a «Por encargue» */

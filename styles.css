@@ -816,6 +816,15 @@ html:not(.views-on) .needs-js { display: none !important; }
 .done .btn { margin-top: 1.5rem; }
 .done .small { margin-top: 2rem; font-size: 0.82rem; }
 .done .done__enc { margin-top: 1.75rem; }
+.done .pago { margin: 1.75rem auto 0; max-width: 22rem; padding: 1.25rem 1.25rem 1.1rem; border: 1.5px solid var(--accent); border-radius: 14px; text-align: center; }
+.done .pago p { margin-top: 0; }
+.done .pago .pago__t { font-weight: 600; color: inherit; }
+.done .pago .pago__alias, .done .pago .pago__tit { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.15rem; }
+.done .pago span { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.done .pago strong { font-size: 1.35rem; color: inherit; word-break: break-all; }
+.done .pago .pago__tit strong { font-size: 1.05rem; }
+.done .pago .pago__btn { margin-top: 1rem; width: 100%; }
+.done .pago .pago__nota { margin-top: 0.75rem; font-size: 0.82rem; }
 .done__enc a { color: var(--accent); font-family: var(--f-hand); font-size: 1.45rem; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
 .done__enc a:hover { color: var(--crema); }
 .linkish { padding: 0; border: 0; background: none; color: var(--fg); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }

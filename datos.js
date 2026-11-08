@@ -33,6 +33,12 @@ window.__BRAND__ = {
   // Ejemplo para Paraná (343): "5493434123456"
   whatsapp: "5493435058743",
 
+  // Cobro por transferencia (sin comisión): al terminar el pedido, la
+  // página muestra el alias y el titular, con un botón para copiar el alias.
+  // Vacío ("") = no se muestra.
+  aliasMP: "",
+  titularMP: "",
+
   instagram: "",   // Solo el usuario, sin @. Ejemplo: "thewineloft"
   email: "",       // Ejemplo: "hola@thewineloft.com.ar"
 
