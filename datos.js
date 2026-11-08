@@ -39,8 +39,8 @@ window.__BRAND__ = {
   aliasMP: "Wineloft26.pesos",
   titularMP: "Tomás Canepa",
 
-  instagram: "",   // Solo el usuario, sin @. Ejemplo: "thewineloft"
-  email: "",       // Ejemplo: "hola@thewineloft.com.ar"
+  instagram: "thewineloft_", // Solo el usuario, sin @. Ejemplo: "thewineloft"
+  email: "thewineloft7@gmail.com", // Ejemplo: "hola@thewineloft.com.ar"
 
   // Avisos a tu mail: cada perfil nuevo, cada cambio de «no quiero
   // recibir» y una copia de cada pedido. Pegá acá la clave («Access Key»)
