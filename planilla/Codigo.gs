@@ -733,9 +733,21 @@ function cierreDeCaja() {
   /* A–D: lo que hay que mirar para cerrar la caja. E–I: control. J–P: de dónde vino. */
   var cab = ["MES", "TOTAL COBRADO", "TOTAL COSTO", "GANANCIA BRUTA", "TOTAL VENDIDO", "FALTA COBRAR", "MARGEN",
     "GASTOS", "GANANCIA NETA", "COMBOS MENSUALES", "COMBOS DIARIOS", "ESPUMANTES / CHAMPÁN", "VINO SUELTO"]
-    .concat(EX.map(function (k) { return NOMBRE_EXTRAS[k] + (PRECIO_EXTRAS[k] ? "" : " (cantidad, falta precio)"); }));
+    .concat(EX.map(function (k) { return NOMBRE_EXTRAS[k] + (PRECIO_EXTRAS[k] ? "" : " (cantidad, falta precio)"); }), ["ESTADO"]);
   var h = ss.getSheetByName(HOJA_CIERRE) || ss.insertSheet(HOJA_CIERRE, 0);
+  /* Los meses ya cerrados no se vuelven a calcular: se copian tal como quedaron */
+  var cerrados = {}, viejo = h.getLastRow() > 1 ? h.getRange(1, 1, h.getLastRow(), h.getLastColumn()).getValues() : [];
+  var cEst = viejo.length ? viejo[0].map(norm).indexOf("ESTADO") : -1;
+  for (var q = 1; q < viejo.length && cEst >= 0; q++) {
+    if (norm(viejo[q][cEst]) !== "CERRADO") continue;
+    var km = viejo[q][0] instanceof Date ? clave(viejo[q][0]) : String(viejo[q][0]);
+    cerrados[km] = [km].concat(viejo[q].slice(1, cab.length));
+  }
+  Object.keys(cerrados).forEach(function (k) { if (orden.indexOf(k) < 0) orden.push(k); });
+  var hoy = new Date(), Y = Number(Utilities.formatDate(hoy, "America/Argentina/Buenos_Aires", "yyyy"));
+  var M = Number(Utilities.formatDate(hoy, "America/Argentina/Buenos_Aires", "M"));
   h.clear();
+  h.getRange("A:A").setNumberFormat("@");
   h.getRange(1, 1, 1, cab.length).setValues([cab]).setFontWeight("bold").setWrap(true);
   h.getRange(1, 2, 1, 3).setBackground("#f4cccc");
   h.setFrozenRows(1); h.setFrozenColumns(1);
@@ -743,7 +755,9 @@ function cierreDeCaja() {
     function n(k) { var p = k.split(" "); return p.length < 2 ? 1e9 : Number(p[1]) * 12 + MESES.indexOf(p[0]); }
     return n(a) - n(b);
   });
+  function pasado(k) { var p = k.split(" "); return p.length === 2 && Number(p[1]) * 12 + MESES.indexOf(p[0]) < Y * 12 + M - 1; }
   var filas = orden.map(function (k, i) {
+    if (cerrados[k]) return cerrados[k];
     var m = meses[k], f = i + 2, extras = EX.map(function (e) { return m.ex[e] * (PRECIO_EXTRAS[e] || 1); });
     var plataEx = EX.reduce(function (t, e) { return t + m.ex[e] * (PRECIO_EXTRAS[e] || 0); }, 0);
     var vendido = m.v[0] + m.v[1] + m.v[2] + m.v[3] + plataEx;
@@ -752,7 +766,7 @@ function cierreDeCaja() {
       G + "A:A,\"<\"&DATE(" + an + "," + (mi + 1) + ",1))";
     return [k, m.cobrado, m.costo, "=E" + f + "-C" + f, vendido, "=E" + f + "-B" + f,
       "=IF(E" + f + "=0,\"\",D" + f + "/E" + f + ")", gastos, "=D" + f + "-H" + f,
-      m.v[0], m.v[1], m.v[2], m.v[3]].concat(extras);
+      m.v[0], m.v[1], m.v[2], m.v[3]].concat(extras, [k === "Sin fecha" ? "REVISAR" : pasado(k) ? "CERRADO" : "ABIERTO"]);
   });
   if (filas.length) {
     h.getRange(2, 1, filas.length, cab.length).setValues(filas);
@@ -768,8 +782,25 @@ function cierreDeCaja() {
     h.getRange(2, 8, t - 1, 6).setNumberFormat(PLATA);
     EX.forEach(function (e, j) { h.getRange(2, 14 + j, t - 1, 1).setNumberFormat(PRECIO_EXTRAS[e] ? PLATA : "0"); });
     h.getRange(2, 2, t - 1, 3).setFontWeight("bold").setFontSize(12);
+    /* Mes terminado: queda congelado (números fijos, sin fórmulas) */
+    SpreadsheetApp.flush();
+    filas.forEach(function (fila, j) {
+      if (fila[cab.length - 1] !== "CERRADO") return;
+      var r = h.getRange(j + 2, 1, 1, cab.length);
+      r.setValues(r.getValues()).setBackground("#eeeeee");
+    });
   }
   h.getRange(1, 1).setNote("Actualizado: " + Utilities.formatDate(new Date(), "America/Argentina/Buenos_Aires", "dd/MM/yyyy HH:mm") +
     "\nTotal cobrado: pedidos con «Pagado» tildado. Costo y ventas: COMBOS MENSUALES, DIARIOS, ESPUMANTES y" +
     " BOTELLAS SOLAS, por fecha del pedido. Gastos: hoja GASTOS.");
+}
+
+/* Una vez, desde el editor: corre cierreDeCaja todas las noches. Así el mes en curso
+   se va actualizando solo y, al terminar el mes, queda CERRADO (congelado). */
+function instalarCierreAutomatico() {
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === "cierreDeCaja") ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger("cierreDeCaja").timeBased().everyDays(1).atHour(3).create();
+  cierreDeCaja();
 }
