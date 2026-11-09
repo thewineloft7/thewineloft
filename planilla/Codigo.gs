@@ -674,3 +674,89 @@ function guardarEspumante(d) {
     hb.getRange(fb, 1).setNote(nota(d));
   }
 }
+
+/* ===== CIERRE DE CAJA =====
+   Para correr desde el editor (o cuando quieran cerrar el mes): arma la hoja
+   «CIERRE DE CAJA», una fila por mes, con lo que entró, lo que costaron los vinos
+   y la ganancia. Los números de ventas y costos quedan fijos (se recalculan solo
+   cuando se vuelve a correr). Los gastos se anotan a mano en la hoja «GASTOS»
+   (Fecha · Concepto · Monto) y se restan solos. */
+var HOJA_CIERRE = "CIERRE DE CAJA";
+var HOJA_GASTOS = "GASTOS";
+var CANT_SOCIOS = 3;
+var CAB_CIERRE = ["MES", "COMBOS MENSUALES", "DIARIOS", "ESPUMANTES", "BOTELLAS SOLAS", "VENTAS TOTALES",
+  "COBRADO", "FALTA COBRAR", "COSTO VINOS", "GANANCIA BRUTA", "MARGEN", "GASTOS", "GANANCIA NETA",
+  "POR SOCIO (÷" + CANT_SOCIOS + ")"];
+
+function cierreDeCaja() {
+  var ss = libro(), meses = {}, orden = [];
+  function mes(k) {
+    if (!meses[k]) { meses[k] = { v: [0, 0, 0, 0], costo: 0, cobrado: 0, pedidos: 0 }; orden.push(k); }
+    return meses[k];
+  }
+  function clave(fecha) {
+    if (fecha instanceof Date) return MESES[fecha.getMonth()] + " " + fecha.getFullYear();
+    var m = String(fecha || "").match(/(\d\d)\/(\d\d)\/(\d{4})/);
+    return m ? MESES[Number(m[2]) - 1] + " " + m[3] : "Sin fecha";
+  }
+  [[HOJA_CAJAS, 0], [HOJA_DIARIOS, 1], [HOJA_ESPUMANTES, 2], [HOJA_BOTELLAS, 3]].forEach(function (x) {
+    var h = null;
+    [].concat(x[0]).forEach(function (n) { h = h || ss.getSheetByName(n); });
+    if (!h || h.getLastRow() < 2) return;
+    var v = h.getDataRange().getValues(), notas = h.getRange(1, 1, v.length, 1).getNotes();
+    var cab = v[0].map(norm), c = function (n) { return cab.indexOf(norm(n)); };
+    var cV = c("PRECIO COMBO"), cC = c("COSTO COMBO"), cP = c("PRECIO VTA"), cK = c("COSTO"), cN = c("CANTIDAD");
+    for (var r = 1; r < v.length; r++) {
+      if (!String(v[r][0]).trim()) continue; /* solo la primera fila de cada pedido */
+      var venta = cV >= 0 ? Number(v[r][cV]) || 0 : (Number(v[r][cP]) || 0) * (Number(v[r][cN]) || 1);
+      var costo = cC >= 0 ? Number(v[r][cC]) || 0 : (Number(v[r][cK]) || 0) * (Number(v[r][cN]) || 1);
+      var m = mes(clave(notas[r][0]));
+      m.v[x[1]] += venta; m.costo += costo;
+    }
+  });
+  var hp = ss.getSheetByName(HOJA_PEDIDOS);
+  if (hp && hp.getLastRow() > 1) {
+    hp.getRange(2, 1, hp.getLastRow() - 1, 9).getValues().forEach(function (p) {
+      if (p[8] === true) mes(clave(p[0])).cobrado += Number(p[7]) || 0;
+    });
+  }
+  var g = ss.getSheetByName(HOJA_GASTOS);
+  if (!g) {
+    g = ss.insertSheet(HOJA_GASTOS);
+    g.getRange(1, 1, 2, 3).setValues([["FECHA", "CONCEPTO", "MONTO"], [new Date(), "Suscripción Claude Pro", ""]]);
+    g.getRange(1, 1, 1, 3).setFontWeight("bold"); g.setFrozenRows(1);
+    g.getRange("A:A").setNumberFormat("dd/MM/yyyy"); g.getRange("C:C").setNumberFormat(PLATA);
+  }
+  var h = ss.getSheetByName(HOJA_CIERRE) || ss.insertSheet(HOJA_CIERRE, 0);
+  h.clear();
+  h.getRange(1, 1, 1, CAB_CIERRE.length).setValues([CAB_CIERRE]).setFontWeight("bold").setWrap(true);
+  h.setFrozenRows(1);
+  orden.sort(function (a, b) {
+    function n(k) { var p = k.split(" "); return p.length < 2 ? 1e9 : Number(p[1]) * 12 + MESES.indexOf(p[0]); }
+    return n(a) - n(b);
+  });
+  var filas = orden.map(function (k, i) {
+    var m = meses[k], f = i + 2, tot = m.v[0] + m.v[1] + m.v[2] + m.v[3];
+    var mi = MESES.indexOf(k.split(" ")[0]) + 1, an = k.split(" ")[1], G = "'" + HOJA_GASTOS + "'!";
+    var gastos = k === "Sin fecha" ? 0 : "=SUMIFS(" + G + "C:C," + G + "A:A,\">=\"&DATE(" + an + "," + mi + ",1)," +
+      G + "A:A,\"<\"&DATE(" + an + "," + (mi + 1) + ",1))";
+    return [k, m.v[0], m.v[1], m.v[2], m.v[3], tot, m.cobrado, "=F" + f + "-G" + f, m.costo,
+      "=F" + f + "-I" + f, "=IF(F" + f + "=0,\"\",J" + f + "/F" + f + ")", gastos, "=J" + f + "-L" + f,
+      "=M" + f + "/" + CANT_SOCIOS];
+  });
+  if (filas.length) {
+    h.getRange(2, 1, filas.length, CAB_CIERRE.length).setValues(filas);
+    var t = filas.length + 2;
+    h.getRange(t, 1).setValue("TOTAL").setFontWeight("bold");
+    ["B", "C", "D", "E", "F", "G", "H", "I", "J", "L", "M", "N"].forEach(function (l) {
+      h.getRange(l + t).setFormula("=SUM(" + l + "2:" + l + (t - 1) + ")").setFontWeight("bold");
+    });
+    h.getRange("K" + t).setFormula("=IF(F" + t + "=0,\"\",J" + t + "/F" + t + ")").setFontWeight("bold");
+    h.getRange(2, 2, t - 1, 10).setNumberFormat(PLATA);
+    h.getRange(2, 12, t - 1, 3).setNumberFormat(PLATA);
+    h.getRange(2, 11, t - 1, 1).setNumberFormat("0%");
+  }
+  h.getRange(1, 1).setNote("Actualizado: " + Utilities.formatDate(new Date(), "America/Argentina/Buenos_Aires", "dd/MM/yyyy HH:mm") +
+    "\nVentas y costos salen de COMBOS MENSUALES, DIARIOS, ESPUMANTES y BOTELLAS SOLAS (por fecha del pedido)." +
+    "\nCobrado: pedidos con «Pagado» tildado. Gastos: hoja GASTOS.");
+}
