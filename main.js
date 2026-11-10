@@ -337,6 +337,18 @@
     return { tipo: "abierto", texto: "Reservas abiertas hasta el " + dia(hasta) + " de " + MESES[mesNum(hasta) - 1], prox: proxMes };
   })();
 
+  /* Después de la entrega: vinos en «?», aviso y descuento para la caja
+     del mes siguiente (proximaCaja y descuentoProxima en datos.js) */
+  var PROXIMA = /^s/i.test(str(data.proximaCaja).trim());
+  var DESC = PROXIMA ? Math.min(90, num(data.descuentoProxima)) : 0;
+  var MES_PROX = estado.prox || MES;
+  var MES_ENTREGADO = MESES[(MESES.indexOf(MES_PROX) + 11) % 12] || "este mes";
+  if (DESC) CAJAS.forEach(function (c) {
+    c.precioAntes = c.precio;
+    c.precio = Math.round(c.precio * (100 - DESC) / 10000) * 100;
+  });
+  function selloDesc() { return DESC ? '<span class="sello" aria-hidden="true"><b>' + DESC + "%</b>OFF</span>" : ""; }
+
   function MENSAJES(clave, vals) {
     var m = data.mensajes || {};
     var base = typeof m[clave] === "string" && m[clave].trim() ? m[clave] : MENSAJES_BASE[clave] || "";
@@ -464,6 +476,11 @@
      ------------------------------------------------------------------ */
 
   function pours(c) {
+    if (PROXIMA && c.tipo === "caja") {
+      var q = "";
+      for (var n = 1; n <= c.botellas; n++) q += '<li class="pours__q"><span class="pours__meta">N.º ' + n + "</span><b>?</b></li>";
+      return q;
+    }
     var html = c.vinos.map(function (v, i) {
       var meta = ["N.º " + (i + 1), str(v.varietal), str(v.region)].filter(Boolean).join(" · ");
       return "<li><span class=\"pours__meta\">" + esc(meta) + "</span><b>" + esc(v.nombre) + "</b>" +
@@ -480,6 +497,10 @@
   }
 
   function figura(c) {
+    if (PROXIMA && c.tipo === "caja" && !c.agotado) {
+      return '<div class="qwrap"><div class="qbox" role="img" aria-label="Los vinos de ' + esc(MES_PROX) + ' son sorpresa"><span class="qbox__q">?</span>' +
+        '<span class="qbox__t">la caja de ' + esc(MES_PROX) + "</span></div>" + selloDesc() + "</div>";
+    }
     return (c.foto
       ? '<img src="' + esc(c.foto) + '" alt="' + esc(c.fotoTexto || ("Los vinos de " + c.nombre)) + '">'
       : placeholder(c.fotoTexto || ("Los vinos de " + c.nombre))) +
@@ -498,13 +519,15 @@
     box.innerHTML = CAJAS.map(function (c) {
       var boton = "";
       if (!c.agotado) {
-        boton = '<a class="btn' + (primera ? "" : " btn--line") + '" href="#club" data-order="' + c.id + '">Reservar ' + esc(c.nombre) + "</a>";
+        boton = '<a class="btn' + (primera ? "" : " btn--line") + '" href="#club" data-order="' + c.id + '">' +
+          (PROXIMA ? "Reservar la de " + esc(MES_PROX) + (DESC ? " con " + DESC + "% off" : "") : "Reservar " + esc(c.nombre)) + "</a>";
         primera = false;
       }
       return '<article class="flight rv' + (c.agotado ? " is-soldout" : "") + '" data-flight="' + c.id + '">' +
         '<figure class="slot flight__media">' + figura(c) + "</figure>" +
         (c.agotado ? '<span class="tag tag--soldout">Sold out</span>' : c.destacado ? '<span class="tag">' + esc(c.destacado) + "</span>" : "") +
-        '<p class="flight__price">' + money(c.precio) + "</p>" +
+        (PROXIMA && !c.agotado ? '<p class="flight__aviso">Ya entregamos las cajas de ' + esc(MES_ENTREGADO) + ". Reservá la de " + esc(MES_PROX) + (DESC ? " con " + DESC + "% off" : "") + ".</p>" : "") +
+        '<p class="flight__price">' + (c.precioAntes ? '<s class="flight__antes">' + money(c.precioAntes) + "</s> " : "") + money(c.precio) + "</p>" +
         "<h3>" + esc(c.nombre) + "</h3>" +
         (c.descripcion ? '<p class="flight__desc">' + format(c.descripcion) + "</p>" : "") +
         '<p class="flight__per">' + c.botellas + " vinos · " + money(c.precio / c.botellas) + " c/u</p>" +
@@ -1215,7 +1238,7 @@
           '><label for="o-' + x.id + '"><span><b>' + esc(x.nombre) + (x.agotado ? '<span class="opt__tag">Sold out</span>' : "") + "</b><small>" + x.botellas + " vinos" +
           (x.tipo === "caja" ? " · entrega del " + esc(ENTREGAS) : " · cualquier día del mes") + '</small></span><span class="pr">' + money(x.precio) + "</span></label></div>";
       };
-      body.innerHTML = '<div class="pane"><p>La caja de ' + esc(MES) + " trae dos tintos anunciados y dos sorpresas. Los dúos van por fuera del club: se piden cualquier día del mes.</p>" +
+      body.innerHTML = '<div class="pane"><p>La caja de ' + esc(MES) + " trae " + (PROXIMA ? "cuatro vinos sorpresa" + (DESC ? ", con " + DESC + "% off" : "") : "dos tintos anunciados y dos sorpresas") + ". Los dúos van por fuera del club: se piden cualquier día del mes.</p>" +
         (CAJAS.length ? '<div class="opt-group">Cajas del mes</div>' + CAJAS.map(opt).join("") : "") +
         (DUOS.length ? '<div class="opt-group">Dúos de todos los días</div>' + DUOS.map(opt).join("") : "") + "</div>";
       $$("input[name=combo]", body).forEach(function (r) {
@@ -1225,11 +1248,13 @@
     }
 
     if (s === "prefs") {
-      body.innerHTML = '<div class="pane"><h4>' + esc(c.nombre) + "</h4><p>Estos dos ya los conocés:</p>" +
+      body.innerHTML = '<div class="pane"><h4>' + esc(c.nombre) + "</h4>" +
+        (PROXIMA && c.tipo === "caja" ? '<div class="mini-wines"><div><b>' + c.botellas + " sorpresas</b><span>la caja de " + esc(MES_PROX) + "</span></div></div>"
+        : "<p>Estos dos ya los conocés:</p>" +
         '<div class="mini-wines">' + c.vinos.map(function (x) {
           return "<div><b>" + esc(x.nombre) + "</b><span>" + esc(str(x.varietal)) + "</span></div>";
         }).join("") +
-        (c.botellas > c.vinos.length ? "<div><b>" + (c.botellas - c.vinos.length) + " sorpresas</b><span>elegidas por nosotros</span></div>" : "") + "</div>" +
+        (c.botellas > c.vinos.length ? "<div><b>" + (c.botellas - c.vinos.length) + " sorpresas</b><span>elegidas por nosotros</span></div>" : "") + "</div>") +
         (PREFS.length ? '<h4 style="font-size:1.3rem">¿Hay algo que no quieras recibir?</h4><p style="margin-bottom:0">Marcalo y lo dejamos afuera de tus sorpresas.</p><div class="chips" id="orderPrefs"></div>' : "") +
         (user ? '<label class="check" style="margin-top:1.25rem"><input type="checkbox" id="savePrefs" checked> Guardar en mi perfil para los próximos meses</label>'
           : '<p class="note">Con un perfil, tus preferencias quedan guardadas y tus cajas suman para el regalo.</p>') + "</div>";

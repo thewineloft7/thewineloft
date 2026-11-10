@@ -73,6 +73,13 @@ window.__BRAND__ = {
   pago: "hasta el 6",       // hasta qué día se puede pagar
   entregas: "7 al 10",      // días de entrega
 
+  // Después de entregar las cajas del mes: los vinos de las cajas se
+  // muestran como «?», aparece el aviso «Ya entregamos las cajas de…» y
+  // se reserva la caja del mes siguiente con descuento (sello en la foto).
+  // "si" = activado. "" = las cajas se ven normales, con sus vinos.
+  proximaCaja: "si",
+  descuentoProxima: "10",   // % de descuento para la caja del mes siguiente ("" = sin descuento)
+
   // Cada cuántas cajas del mes llega el regalo sorpresa.
   regaloCada: "5",
 

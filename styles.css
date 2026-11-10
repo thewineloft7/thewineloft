@@ -279,6 +279,34 @@ html:not(.views-on) .needs-js { display: none !important; }
 .pours__surprise b { font-style: italic; color: var(--accent); }
 .pours__x { color: var(--muted); font-size: 0.86rem; }
 .flight .btn { margin-top: 1.5rem; }
+/* Entre una caja y la otra: vinos en «?», aviso y sello de descuento */
+.flight__aviso { margin: 0 auto 1rem; max-width: 26rem; color: var(--accent-soft); font-size: 0.92rem; }
+.flight__antes { display: block; margin-bottom: 0.35rem; color: var(--muted); font-size: 0.42em; text-decoration-thickness: 1px; }
+.pours__q b { color: var(--accent); font-size: 1.7rem; }
+.qbox {
+  position: relative; display: grid; place-content: center; justify-items: center; gap: 0.25rem;
+  aspect-ratio: 3 / 4; width: 100%;
+  background: var(--surface, #1A2540); border: 1px solid var(--line); text-align: center;
+}
+.qbox__q { font-family: var(--f-display); font-size: clamp(7rem, 16vw, 11rem); font-weight: 300; line-height: 1; color: var(--accent); }
+.qbox__t { font-family: "Caveat", cursive; font-size: 1.6rem; color: var(--fg, #F1E7D3); }
+.qwrap { position: relative; width: min(100%, 360px); margin-inline: auto; }
+.menu__fig .qwrap { width: min(80%, calc((100svh - var(--hd) - 120px) * 0.75)); }
+.sello {
+  position: absolute; top: -14px; right: -14px; z-index: 2;
+  display: grid; place-content: center; width: 92px; height: 92px; border-radius: 50%;
+  background: var(--accent); color: var(--ink); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; line-height: 1; text-align: center;
+  transform: rotate(12deg);
+}
+.sello b { display: block; margin-bottom: 0.2rem; font-family: var(--f-display); font-size: 2rem; font-weight: 500; letter-spacing: 0; }
+.menu__fig .sello { top: -22px; right: -22px; width: 110px; height: 110px; }
+.menu__fig .sello b { font-size: 2.4rem; }
+@media (max-width: 900px) {
+  .flight__media .sello { width: 80px; height: 80px; top: -12px; right: -8px; }
+  .flight__media .sello b { font-size: 1.7rem; }
+}
+
 .menu__foot { margin-top: clamp(3rem, 6vw, 4rem); padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.86rem; }
 
 @media (max-width: 900px) {
