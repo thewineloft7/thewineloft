@@ -216,6 +216,7 @@ function doPost(e) {
     if (d.accion === "perfil") guardarSocio(k, d);
     else if (d.accion === "pedido") guardarPedido(k, d);
     else if (d.accion === "espumante") guardarEspumante(d);
+    if (d.accion !== "perfil") { try { cierreDeCaja(); } catch (err) { /* el pedido ya quedó anotado */ } }
   } finally {
     lock.releaseLock();
   }
@@ -800,8 +801,22 @@ function cierreDeCaja() {
    se va actualizando solo y, al terminar el mes, queda CERRADO (congelado). */
 function instalarCierreAutomatico() {
   ScriptApp.getProjectTriggers().forEach(function (t) {
-    if (t.getHandlerFunction() === "cierreDeCaja") ScriptApp.deleteTrigger(t);
+    var f = t.getHandlerFunction();
+    if (f === "cierreDeCaja" || f === "alEditarPlanilla") ScriptApp.deleteTrigger(t);
   });
   ScriptApp.newTrigger("cierreDeCaja").timeBased().everyDays(1).atHour(3).create();
+  ScriptApp.newTrigger("alEditarPlanilla").forSpreadsheet(libro()).onEdit().create();
   cierreDeCaja();
+}
+
+/* Se corre sola cuando alguien cambia algo en la planilla: si fue en Pedidos
+   (por ejemplo, tildar «Pagado»), en GASTOS o en las hojas de ventas, recalcula
+   el CIERRE DE CAJA en el momento. */
+function alEditarPlanilla(e) {
+  var n = e && e.range ? e.range.getSheet().getName() : "";
+  var hojas = [HOJA_PEDIDOS, HOJA_GASTOS, HOJA_ESPUMANTES, HOJA_BOTELLAS].concat(HOJA_CAJAS);
+  if (hojas.indexOf(n) < 0) return;
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) return;
+  try { cierreDeCaja(); } finally { lock.releaseLock(); }
 }
