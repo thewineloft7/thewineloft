@@ -690,7 +690,7 @@ var NOMBRE_EXTRAS = { charcuteria: "CHARCUTERÍA", cristaleria: "CRISTALERÍA", 
 function cierreDeCaja() {
   var ss = libro(), meses = {}, orden = [], EX = ["charcuteria", "cristaleria", "regalo"];
   function mes(k) {
-    if (!meses[k]) { meses[k] = { v: [0, 0, 0, 0], costo: 0, cobrado: 0, ex: { charcuteria: 0, cristaleria: 0, regalo: 0 } }; orden.push(k); }
+    if (!meses[k]) { meses[k] = { v: [0, 0, 0], costo: 0, cobrado: 0, ex: { charcuteria: 0, cristaleria: 0, regalo: 0 } }; orden.push(k); }
     return meses[k];
   }
   function clave(fecha) {
@@ -698,7 +698,8 @@ function cierreDeCaja() {
     var m = String(fecha || "").match(/(\d\d)\/(\d\d)\/(\d{4})/);
     return m ? MESES[Number(m[2]) - 1] + " " + m[3] : "Sin fecha";
   }
-  [[HOJA_CAJAS, 0], [HOJA_DIARIOS, 1], [HOJA_ESPUMANTES, 2], [HOJA_BOTELLAS, 3]].forEach(function (x) {
+  /* Los dúos (DIARIOS) no cuentan para el cierre: así lo pidió el dueño */
+  [[HOJA_CAJAS, 0], [HOJA_ESPUMANTES, 1], [HOJA_BOTELLAS, 2]].forEach(function (x) {
     var h = null;
     [].concat(x[0]).forEach(function (n) { h = h || ss.getSheetByName(n); });
     if (!h || h.getLastRow() < 2) return;
@@ -720,7 +721,7 @@ function cierreDeCaja() {
   var hp = ss.getSheetByName(HOJA_PEDIDOS);
   if (hp && hp.getLastRow() > 1) {
     hp.getRange(2, 1, hp.getLastRow() - 1, 9).getValues().forEach(function (p) {
-      if (p[8] === true) mes(clave(p[0])).cobrado += Number(p[7]) || 0;
+      if (p[8] === true && norm(p[6]) !== "DUO") mes(clave(p[0])).cobrado += Number(p[7]) || 0;
     });
   }
   var g = ss.getSheetByName(HOJA_GASTOS);
@@ -732,7 +733,7 @@ function cierreDeCaja() {
   }
   /* A–D: lo que hay que mirar para cerrar la caja. E–I: control. J–P: de dónde vino. */
   var cab = ["MES", "TOTAL COBRADO", "TOTAL COSTO", "GANANCIA BRUTA", "TOTAL VENDIDO", "FALTA COBRAR", "MARGEN",
-    "GASTOS", "GANANCIA NETA", "COMBOS MENSUALES", "COMBOS DIARIOS", "ESPUMANTES / CHAMPÁN", "VINO SUELTO"]
+    "GASTOS", "GANANCIA NETA", "COMBOS MENSUALES", "ESPUMANTES / CHAMPÁN", "VINO SUELTO"]
     .concat(EX.map(function (k) { return NOMBRE_EXTRAS[k] + (PRECIO_EXTRAS[k] ? "" : " (cantidad, falta precio)"); }), ["ESTADO"]);
   var h = ss.getSheetByName(HOJA_CIERRE) || ss.insertSheet(HOJA_CIERRE, 0);
   /* Los meses ya cerrados no se vuelven a calcular: se copian tal como quedaron */
@@ -760,13 +761,13 @@ function cierreDeCaja() {
     if (cerrados[k]) return cerrados[k];
     var m = meses[k], f = i + 2, extras = EX.map(function (e) { return m.ex[e] * (PRECIO_EXTRAS[e] || 1); });
     var plataEx = EX.reduce(function (t, e) { return t + m.ex[e] * (PRECIO_EXTRAS[e] || 0); }, 0);
-    var vendido = m.v[0] + m.v[1] + m.v[2] + m.v[3] + plataEx;
+    var vendido = m.v[0] + m.v[1] + m.v[2] + plataEx;
     var mi = MESES.indexOf(k.split(" ")[0]) + 1, an = k.split(" ")[1], G = "'" + HOJA_GASTOS + "'!";
     var gastos = k === "Sin fecha" ? 0 : "=SUMIFS(" + G + "C:C," + G + "A:A,\">=\"&DATE(" + an + "," + mi + ",1)," +
       G + "A:A,\"<\"&DATE(" + an + "," + (mi + 1) + ",1))";
     return [k, m.cobrado, m.costo, "=E" + f + "-C" + f, vendido, "=E" + f + "-B" + f,
       "=IF(E" + f + "=0,\"\",D" + f + "/E" + f + ")", gastos, "=D" + f + "-H" + f,
-      m.v[0], m.v[1], m.v[2], m.v[3]].concat(extras, [k === "Sin fecha" ? "REVISAR" : pasado(k) ? "CERRADO" : "ABIERTO"]);
+      m.v[0], m.v[1], m.v[2]].concat(extras, [k === "Sin fecha" ? "REVISAR" : pasado(k) ? "CERRADO" : "ABIERTO"]);
   });
   if (filas.length) {
     h.getRange(2, 1, filas.length, cab.length).setValues(filas);
@@ -779,8 +780,8 @@ function cierreDeCaja() {
     h.getRange(t, 1, 1, cab.length).setFontWeight("bold").setBorder(true, null, null, null, null, null);
     h.getRange(2, 2, t - 1, 5).setNumberFormat(PLATA);
     h.getRange(2, 7, t - 1, 1).setNumberFormat("0%");
-    h.getRange(2, 8, t - 1, 6).setNumberFormat(PLATA);
-    EX.forEach(function (e, j) { h.getRange(2, 14 + j, t - 1, 1).setNumberFormat(PRECIO_EXTRAS[e] ? PLATA : "0"); });
+    h.getRange(2, 8, t - 1, 5).setNumberFormat(PLATA);
+    EX.forEach(function (e, j) { h.getRange(2, 13 + j, t - 1, 1).setNumberFormat(PRECIO_EXTRAS[e] ? PLATA : "0"); });
     h.getRange(2, 2, t - 1, 3).setFontWeight("bold").setFontSize(12);
     /* Mes terminado: queda congelado (números fijos, sin fórmulas) */
     SpreadsheetApp.flush();
@@ -791,8 +792,8 @@ function cierreDeCaja() {
     });
   }
   h.getRange(1, 1).setNote("Actualizado: " + Utilities.formatDate(new Date(), "America/Argentina/Buenos_Aires", "dd/MM/yyyy HH:mm") +
-    "\nTotal cobrado: pedidos con «Pagado» tildado. Costo y ventas: COMBOS MENSUALES, DIARIOS, ESPUMANTES y" +
-    " BOTELLAS SOLAS, por fecha del pedido. Gastos: hoja GASTOS.");
+    "\nTotal cobrado: pedidos con «Pagado» tildado (sin dúos). Costo y ventas: COMBOS MENSUALES, ESPUMANTES y" +
+    " BOTELLAS SOLAS, por fecha del pedido (los dúos de DIARIOS no se cuentan). Gastos: hoja GASTOS.");
 }
 
 /* Una vez, desde el editor: corre cierreDeCaja todas las noches. Así el mes en curso
