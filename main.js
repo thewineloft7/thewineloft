@@ -523,11 +523,21 @@
           (PROXIMA ? "Reservar la de " + esc(MES_PROX) + (DESC ? " con " + DESC + "% off" : "") : "Reservar " + esc(c.nombre)) + "</a>";
         primera = false;
       }
+      if (PROXIMA && !c.agotado) {
+        /* Caja del mes siguiente: precio, nombre, la imagen del «?» y los textos */
+        return '<article class="flight flight--prox rv" data-flight="' + c.id + '">' +
+          (c.destacado ? '<span class="tag">' + esc(c.destacado) + "</span>" : "") +
+          '<p class="flight__price">' + (c.precioAntes ? '<s class="flight__antes">' + money(c.precioAntes) + "</s> " : "") + money(c.precio) + "</p>" +
+          "<h3>" + esc(c.nombre) + "</h3>" +
+          '<figure class="slot flight__media">' + figura(c) + "</figure>" +
+          '<p class="flight__aviso">Ya entregamos las cajas de ' + esc(MES_ENTREGADO) + ". Reservá la de " + esc(MES_PROX) + (DESC ? " con " + DESC + "% off" : "") + ".</p>" +
+          (c.descripcion ? '<p class="flight__desc">' + format(c.descripcion) + "</p>" : "") +
+          boton + "</article>";
+      }
       return '<article class="flight rv' + (c.agotado ? " is-soldout" : "") + '" data-flight="' + c.id + '">' +
         '<figure class="slot flight__media">' + figura(c) + "</figure>" +
         (c.agotado ? '<span class="tag tag--soldout">Sold out</span>' : c.destacado ? '<span class="tag">' + esc(c.destacado) + "</span>" : "") +
-        (PROXIMA && !c.agotado ? '<p class="flight__aviso">Ya entregamos las cajas de ' + esc(MES_ENTREGADO) + ". Reservá la de " + esc(MES_PROX) + (DESC ? " con " + DESC + "% off" : "") + ".</p>" : "") +
-        '<p class="flight__price">' + (c.precioAntes ? '<s class="flight__antes">' + money(c.precioAntes) + "</s> " : "") + money(c.precio) + "</p>" +
+        '<p class="flight__price">' + money(c.precio) + "</p>" +
         "<h3>" + esc(c.nombre) + "</h3>" +
         (c.descripcion ? '<p class="flight__desc">' + format(c.descripcion) + "</p>" : "") +
         '<p class="flight__per">' + c.botellas + " vinos · " + money(c.precio / c.botellas) + " c/u</p>" +

@@ -280,7 +280,9 @@ html:not(.views-on) .needs-js { display: none !important; }
 .pours__x { color: var(--muted); font-size: 0.86rem; }
 .flight .btn { margin-top: 1.5rem; }
 /* Entre una caja y la otra: vinos en «?», aviso y sello de descuento */
-.flight__aviso { margin: 0 auto 1rem; max-width: 26rem; color: var(--accent-soft); font-size: 0.92rem; }
+.flight--prox .flight__aviso { margin-top: 1rem; }
+.flight--prox .flight__media { margin: 1.5rem auto 0.25rem; }
+.flight__aviso { margin: 0 auto 0.5rem; max-width: 26rem; color: var(--accent-soft); font-size: 0.92rem; }
 .flight__antes { display: block; margin-bottom: 0.35rem; color: var(--muted); font-size: 0.42em; text-decoration-thickness: 1px; }
 .pours__q b { color: var(--accent); font-size: 1.7rem; }
 .qbox {
