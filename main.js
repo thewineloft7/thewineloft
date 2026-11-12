@@ -2151,7 +2151,8 @@
      «Encargar» abre WhatsApp con el mensaje y manda una copia al mail.
      ------------------------------------------------------------------ */
 
-  /* Espumantes destacados: por botella o por caja de 6 */
+  /* Espumantes destacados: por botella o por caja (de 6, o la que diga «caja») */
+  function cajaEsp(v) { var n = num(v.caja); return n > 1 ? n : 6; }
   function applyEspumantes() {
     var grid = $("[data-espumantes]"), sec = $("#espumantes");
     if (!grid || !Array.isArray(data.espumantes)) return;
@@ -2162,33 +2163,33 @@
       return;
     }
     grid.innerHTML = lista.map(function (v, i) {
-      var p1 = num(v.precio), p6 = num(v.precio6), foto = rutaFoto(v.foto);
+      var p1 = num(v.precio), p6 = num(v.precio6), n = cajaEsp(v), foto = rutaFoto(v.foto);
       var media = foto
         ? '<img src="' + esc(foto) + '" alt="' + esc(str(v.nombre)) + '" loading="lazy">'
         : '<span class="enc__mono" aria-hidden="true">' + esc(inicial(v.nombre)) + "</span>";
       var botones = hasWA
         ? '<div class="esp__btns"><a class="btn btn--sm btn--line" href="#" target="_blank" rel="noopener" data-esp="' + i + '" data-cant="1">Comprar 1</a>' +
-          (p6 ? '<a class="btn btn--sm" href="#" target="_blank" rel="noopener" data-esp="' + i + '" data-cant="6">Caja x 6</a>' : "") + "</div>"
+          (p6 ? '<a class="btn btn--sm" href="#" target="_blank" rel="noopener" data-esp="' + i + '" data-cant="' + n + '">Caja x ' + n + "</a>" : "") + "</div>"
         : '<p class="esp__pronto">Muy pronto lo vas a poder comprar por WhatsApp.</p>';
       return '<article class="esp rv"><figure class="esp__media">' + media + "</figure>" +
         '<div class="esp__body"><h3>' + esc(str(v.nombre)) + "</h3>" +
         '<div class="esp__precios"><p class="esp__uno"><span>Unidad</span><b>' + money(p1) + "</b></p>" +
-        (p6 ? '<p class="esp__seis"><span>Por 6</span><b>' + money(p6) + " c/u</b><small>" + money(p6 * 6) + " la caja</small></p>" : "") +
+        (p6 ? '<p class="esp__seis"><span>Por ' + n + "</span><b>" + money(p6) + " c/u</b><small>" + money(p6 * n) + " la caja</small></p>" : "") +
         "</div>" + botones + "</div></article>";
     }).join("");
     if (!hasWA) return;
     $$("[data-esp]", grid).forEach(function (a) {
-      var v = lista[parseInt(a.getAttribute("data-esp"), 10)], seis = a.getAttribute("data-cant") === "6";
-      var total = seis ? num(v.precio6) * 6 : num(v.precio);
-      a.href = waLink(MENSAJES("espumante", { cantidad: seis ? "una caja de 6" : "1 botella", vino: str(v.nombre), total: money(total) }));
+      var v = lista[parseInt(a.getAttribute("data-esp"), 10)], n = cajaEsp(v), seis = a.getAttribute("data-cant") !== "1";
+      var total = seis ? num(v.precio6) * n : num(v.precio);
+      a.href = waLink(MENSAJES("espumante", { cantidad: seis ? "una caja de " + n : "1 botella", vino: str(v.nombre), total: money(total) }));
       a.addEventListener("click", function () {
-        pixel("Purchase", { value: total, currency: "ARS", content_type: "product", content_ids: ["espumante-" + slug(v.nombre)], num_items: seis ? 6 : 1 });
-        if (!user || !user.demo) planillaEnviar({ accion: "espumante", producto: str(v.nombre), cantidad: seis ? 6 : 1,
+        pixel("Purchase", { value: total, currency: "ARS", content_type: "product", content_ids: ["espumante-" + slug(v.nombre)], num_items: seis ? n : 1 });
+        if (!user || !user.demo) planillaEnviar({ accion: "espumante", producto: str(v.nombre), cantidad: seis ? n : 1,
           precio: num(v.precio), precio6: num(v.precio6), nombre: user ? user.name : "", tel: user ? user.tel || "" : "" });
-        avisar("Espumante: " + str(v.nombre) + (seis ? " (caja de 6)" : ""), {
-          "Qué hizo": "Tocó «" + (seis ? "Caja x 6" : "Comprar 1") + "» en Espumantes: se le abrió WhatsApp con el mensaje para mandártelo.",
+        avisar("Espumante: " + str(v.nombre) + (seis ? " (caja de " + n + ")" : ""), {
+          "Qué hizo": "Tocó «" + (seis ? "Caja x " + n : "Comprar 1") + "» en Espumantes: se le abrió WhatsApp con el mensaje para mandártelo.",
           "Vino": str(v.nombre),
-          "Cantidad": seis ? "Caja de 6" : "1 botella",
+          "Cantidad": seis ? "Caja de " + n : "1 botella",
           "Total": money(total),
           "Perfil en la página": user && !user.demo ? user.name + (user.tel ? " · " + user.tel : "") : "",
           "Fecha": ahora()

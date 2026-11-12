@@ -207,15 +207,18 @@ window.__BRAND__ = {
      Se venden por botella o por caja de 6 del mismo espumante.
      precio: una botella. precio6: cada botella llevando la caja de 6
      (el total de la caja se calcula solo). Sin puntos ni $.
+     caja: cuántas botellas trae la caja, si no son 6 (ej.: caja: "3").
      foto: la botella recortada, sin fondo, en assets/img.
      Para sacar uno, borrá su línea. Lista vacía = la sección no se ve.
      ------------------------------------------------------------------ */
 
   espumantes: [
-    { nombre: "Mastroeni Extra Brut", precio: "10800", precio6: "9800", foto: "esp-mastroeni.webp" },
     { nombre: "Las Perdices Champenoise Joven Extra Brut", precio: "10500", precio6: "9500", foto: "esp-las-perdices.webp" },
     { nombre: "Keo Extra Brut 100% Pinot Noir", precio: "20600", precio6: "19600", foto: "esp-keo.webp" },
     { nombre: "Chañarmuyo Champenoise Brut Nature", precio: "26300", precio6: "25300", foto: "esp-chanarmuyo.webp" },
+    { nombre: "Las Perdices Nuit Brut Nature", precio: "36000", precio6: "35000", caja: "3", foto: "esp-las-perdices-nuit.webp" },
+    { nombre: "Chañarmuyo Champenoise Extra Brut Rosé", precio: "25000", precio6: "24000", foto: "esp-chamas-honnorat-rose.webp" },
+    { nombre: "Criolla Argentina Pet Nat", precio: "15100", precio6: "14100", foto: "esp-criolla-petnat.webp" },
   ],
 
   /* ------------------------------------------------------------------
@@ -299,7 +302,7 @@ window.__BRAND__ = {
     // Espumantes destacados (parte 3 C)
     espumantesEtiqueta: "Selección de la casa",
     espumantesTitulo: "Espumantes *destacados.*",
-    espumantesNota: "«Por 6» es el precio de cada botella llevando la caja de 6 del mismo espumante.",
+    espumantesNota: "«Por 6» o «Por 3» es el precio de cada botella llevando la caja completa del mismo espumante.",
 
     // Por encargue (el catálogo de vinos a pedido, parte 3 B).
     // En compu va al final de la página; en el celular, después de los Dúos.
