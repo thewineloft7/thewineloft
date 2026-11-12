@@ -43,7 +43,7 @@ function completarPedidosYSocios() {
   function combo(c) { c = String(c).split("\n")[0].trim(); return NOMBRE_COMBO[c] || c; }
   leer(HOJA_CAJAS, "caja", function (f) { return combo(f[2]); }, 6, 10);
   leer(HOJA_DIARIOS, "dúo", function (f) { return combo(f[2]); }, 5, 9);
-  leer(HOJA_ESPUMANTES, "espumante", function (f) { return f[3] + " (caja x 6)"; }, 5, 9);
+  leer(HOJA_ESPUMANTES, "espumante", function (f) { return f[3] + " (caja x " + (Number(f[4]) || 6) + ")"; }, 5, 9);
   leer(HOJA_BOTELLAS, "botella", function (f) { return f[2] + " (1 botella)"; }, 4, 5);
   /* Cuántas ya hay en «Pedidos» por nombre y tipo */
   var hp = hoja(HOJA_PEDIDOS, COL_PEDIDOS), pv = hp.getDataRange().getValues(), hay = {};
@@ -420,7 +420,11 @@ var COSTOS_INICIALES = [
   ["Mastroeni Extra Brut", 8100],
   ["Las Perdices Champenoise Joven Extra Brut", 6825],
   ["Keo Extra Brut 100% Pinot Noir", 11946],
-  ["Chañarmuyo Champenoise Brut Nature", 15022]
+  ["Chañarmuyo Champenoise Brut Nature", 15022],
+  /* Espumantes nuevos (desde el 12/11/2026) */
+  ["Las Perdices Nuit Brut Nature", 24050],
+  ["Chañarmuyo Champenoise Extra Brut Rosé", 15022],
+  ["Criolla Argentina Pet Nat", 9425]
 ];
 
 var PLATA = "$ #,##0";
@@ -648,18 +652,19 @@ function guardarEspumante(d) {
   var nombre = txt(d.producto, 120);
   if (!nombre) return;
   hojaCostos();
-  var cant = Number(d.cantidad) === 6 ? 6 : 1;
+  /* Caja de 6 o de 3 (según el espumante) o una botella */
+  var cant = [3, 6].indexOf(Number(d.cantidad)) >= 0 ? Number(d.cantidad) : 1;
   /* También a «Pedidos» y «Socios» (no suman para el regalo de las cajas) */
   var k = telDelSocio(telKey(d.tel), nombreDe(d));
-  anotarPedidos(k, nombreDe(d), "e" + Date.now(), [[mesActual(), nombre + (cant === 6 ? " (caja x 6)" : " (1 botella)"), cant,
-    cant === 6 ? "espumante" : "botella", cant === 6 ? (Number(d.precio6) || 0) * 6 : Number(d.precio) || 0]]);
+  anotarPedidos(k, nombreDe(d), "e" + Date.now(), [[mesActual(), nombre + (cant > 1 ? " (caja x " + cant + ")" : " (1 botella)"), cant,
+    cant > 1 ? "espumante" : "botella", cant > 1 ? (Number(d.precio6) || 0) * cant : Number(d.precio) || 0]]);
   guardarSocio(k, d);
-  if (cant === 6) {
+  if (cant > 1) {
     var h = hojaFormato(HOJA_ESPUMANTES, CAB_ESPUMANTES), f = h.getLastRow() + 1;
-    h.getRange(f, 1, 1, 11).setValues([[cliente(d), direccion(d), nombre, nombre, 6, Number(d.precio6) || "", costo("D" + f),
+    h.getRange(f, 1, 1, 11).setValues([[cliente(d), direccion(d), nombre, nombre, cant, Number(d.precio6) || "", costo("D" + f),
       '=IF(G' + f + '="","",F' + f + "-G" + f + ")", "=E" + f + "*F" + f,
       '=IF(G' + f + '="","",E' + f + "*G" + f + ")", '=IF(J' + f + '="","",I' + f + "-J" + f + ")"]]);
-    h.getRange(f, 12, 1, 3).setValues([columnasCompra("ESPUMANTE CAJA x 6", d)]).setHorizontalAlignment("center").setFontWeight("bold");
+    h.getRange(f, 12, 1, 3).setValues([columnasCompra("ESPUMANTE CAJA x " + cant, d)]).setHorizontalAlignment("center").setFontWeight("bold");
     congelar(h.getRange(f, 7));
     h.getRange(f, 6, 1, 6).setNumberFormat(PLATA);
     h.getRange(f, 1, 1, 14).setBorder(true, true, true, true, false, false);
