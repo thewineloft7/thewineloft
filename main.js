@@ -1248,7 +1248,7 @@
           '><label for="o-' + x.id + '"><span><b>' + esc(x.nombre) + (x.agotado ? '<span class="opt__tag">Sold out</span>' : "") + "</b><small>" + x.botellas + " vinos" +
           (x.tipo === "caja" ? " · entrega del " + esc(ENTREGAS) : " · cualquier día del mes") + '</small></span><span class="pr">' + money(x.precio) + "</span></label></div>";
       };
-      body.innerHTML = '<div class="pane"><p>La caja de ' + esc(MES) + " trae " + (PROXIMA ? "cuatro vinos sorpresa" + (DESC ? ", con " + DESC + "% off" : "") : "dos tintos anunciados y dos sorpresas") + ". Los dúos van por fuera del club: se piden cualquier día del mes.</p>" +
+      body.innerHTML = '<div class="pane"><p>La caja de ' + esc(MES) + " trae " + (CAJAS.every(function (k) { return k.vinos.length; }) ? "dos tintos anunciados y dos sorpresas" : "cuatro vinos sorpresa") + (DESC ? ", con " + DESC + "% off" : "") + ". Los dúos van por fuera del club: se piden cualquier día del mes.</p>" +
         (CAJAS.length ? '<div class="opt-group">Cajas del mes</div>' + CAJAS.map(opt).join("") : "") +
         (DUOS.length ? '<div class="opt-group">Dúos de todos los días</div>' + DUOS.map(opt).join("") : "") + "</div>";
       $$("input[name=combo]", body).forEach(function (r) {
@@ -1259,7 +1259,7 @@
 
     if (s === "prefs") {
       body.innerHTML = '<div class="pane"><h4>' + esc(c.nombre) + "</h4>" +
-        (PROXIMA && c.tipo === "caja" ? '<div class="mini-wines"><div><b>' + c.botellas + " sorpresas</b><span>la caja de " + esc(MES_PROX) + "</span></div></div>"
+        (c.tipo === "caja" && !c.vinos.length ? '<div class="mini-wines"><div><b>' + c.botellas + " sorpresas</b><span>la caja de " + esc(MES_PROX) + "</span></div></div>"
         : "<p>Estos dos ya los conocés:</p>" +
         '<div class="mini-wines">' + c.vinos.map(function (x) {
           return "<div><b>" + esc(x.nombre) + "</b><span>" + esc(str(x.varietal)) + "</span></div>";
@@ -1344,7 +1344,7 @@
       var mensual = c.tipo === "caja";
       var pr = prefLabels(order.prefs);
       var items = todos(), varios = cart.length > 0 || order.cant > 1;
-      var tp = cuentaPedido(), ci = cuenta(order);
+      var tp = cuentaPedido(), ci = cuenta(order), tbot = totalBot();
       var cajasN = unidades(items, "caja");
       var algunaCerrada = items.some(function (it) { return cerradoPara(combo(it.combo)); });
       body.innerHTML = '<div class="pane">' +
@@ -1365,7 +1365,9 @@
         '<output id="qCant" aria-live="polite">' + order.cant + "</output>" +
         '<button type="button" id="qMas" aria-label="Uno más"' + (order.cant >= MAXCANT ? " disabled" : "") + ">+</button></span></div>" +
         (varios ? '<div class="tot tot--sub"><span>Este combo' + (order.cant > 1 ? " × " + order.cant : "") + "</span><b>" + money(ci.total) + "</b></div>" : "") +
-        '<div class="tot"><span>' + (varios ? "Total del pedido" : "Total") + (tp.aConfirmar ? " (sin lo que falta confirmar)" : "") + "</span><b>" + money(tp.total) + "</b></div></div></div>" +
+        (tbot.n ? '<div class="tot tot--sub"><span>Botellas</span><b>' + money(tbot.total) + "</b></div>" : "") +
+        '<div class="tot"><span>' + (varios || tbot.n ? "Total del pedido" : "Total") + (tp.aConfirmar || tbot.falta ? " (sin lo que falta confirmar)" : "") + "</span><b>" + money(tp.total + tbot.total) + "</b></div></div></div>" +
+        (tbot.n ? '<div class="cart" style="margin-top:1.25rem"><p class="opt-group">También en tu pedido</p>' + lineasHtml(false) + "</div>" : "") +
         '<button type="button" class="btn btn--line btn--add" id="addMore">+ Agregar otro combo a la compra</button>' +
         (tp.aConfirmar ? '<p class="note">El precio de ' + esc(tp.aConfirmar) + " te lo confirmamos por WhatsApp.</p>" : "") +
         (algunaCerrada ? '<p class="note">Hoy las reservas de las cajas están cerradas: abren del ' + esc(RESERVAS) + " de " + esc(estado.prox) + "." +
@@ -1444,7 +1446,7 @@
       if (hasWA) return { tipo: "avisame", label: "Avisame cuando abra", cls: "" };
       return { tipo: "nada", nota: "Las reservas abren del " + esc(RESERVAS) + " de " + esc(estado.prox) + "." };
     }
-    var simple = items.length === 1 && order.cant === 1 && !order.regalo && !adicCobrados().length;
+    var simple = items.length === 1 && order.cant === 1 && !order.regalo && !adicCobrados().length && !BOT.length;
     if (simple && c.linkPago) return { tipo: "mp", label: "Pagar con Mercado Pago", cls: "mp" };
     if (hasWA) return { tipo: "wa", label: "Enviar pedido por WhatsApp", cls: "wa" };
     return { tipo: "nada", nota: simple ? "Escribinos para pedir este combo." : "Escribinos para armar este pedido." };
@@ -1525,6 +1527,12 @@
       "   Entrega: " + [it.dir, it.loc, it.zona].filter(Boolean).join(", ") + ".";
   }
   function mensajePedido() {
+    if (!BOT.length) return mensajeCombos();
+    var cp = cuentaPedido(), tb = totalBot();
+    return mensajeCombos() + "\n\nY estas botellas (" + totalTextoBot() + "):\n" + textoBotellas() +
+      "\n\nTotal del pedido: " + money(cp.total + tb.total) + (cp.aConfirmar || tb.falta ? " + lo que falta confirmar" : "");
+  }
+  function mensajeCombos() {
     var items = todos(), cp = cuentaPedido();
     var total = money(cp.total) + (cp.aConfirmar ? " + " + cp.aConfirmar + ", precio a confirmar" : "");
     if (items.length > 1) {
@@ -1596,8 +1604,10 @@
     /* Meta: el botón «Enviar pedido por WhatsApp» también cuenta como «Contacto» */
     if (accion.tipo === "wa") pixel("Contact");
     if (accion.tipo === "wa" || accion.tipo === "mp") {
-      pixel("Purchase", { value: cuentaPedido().total, currency: "ARS", content_type: "product",
-        content_ids: items.map(function (it) { return it.combo; }), num_items: totalN });
+      var tbF = totalBot();
+      pixel("Purchase", { value: cuentaPedido().total + tbF.total, currency: "ARS", content_type: "product",
+        content_ids: items.map(function (it) { return it.combo; }).concat(lineasBot().map(function (x) { return x.b.id; })), num_items: totalN + tbF.n });
+      if (BOT.length) { planillaBotellas(); BOT = []; pintarCarrito(); }
     }
     var pedidoId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     var renglones = items.map(function (it, n) {
@@ -1721,6 +1731,7 @@
     if (!perfil && v && v !== "inicio" && !target) v = "inicio";
     var antes = current;
     current = perfil ? "perfil" : "inicio";
+    root.classList.toggle("en-perfil", perfil);
     $$(".view").forEach(function (el) { el.classList.toggle("active", el.getAttribute("data-view") === current); });
     $$(".hd__nav a").forEach(function (a) { a.classList.toggle("cur", a.getAttribute("href") === "#" + v); });
     if (push) { try { history.pushState(null, "", "#" + (v || "inicio")); } catch (e) { /* file:// viejo */ } }
@@ -1736,7 +1747,7 @@
       /* Si algo cambió de alto mientras bajaba, termina de acomodar */
       clearTimeout(go._t);
       go._t = setTimeout(function corregir() {
-        var hd = $("#hd"), alto = hd ? hd.getBoundingClientRect().height : 64;
+        var hd = $("#hd"), sn = $(".t-secnav"), alto = (hd ? hd.getBoundingClientRect().height : 64) + (sn && sn.offsetHeight ? sn.offsetHeight : 0);
         var off = target.getBoundingClientRect().top - alto;
         if (Math.abs(off) > 6) { try { target.scrollIntoView({ behavior: "instant", block: "start" }); } catch (e) { target.scrollIntoView(); } }
       }, suave ? 1100 : 120);
@@ -2151,118 +2162,522 @@
      «Encargar» abre WhatsApp con el mensaje y manda una copia al mail.
      ------------------------------------------------------------------ */
 
-  /* Espumantes destacados: por botella o por caja (de 6, o la que diga «caja») */
+  /* Espumantes: por botella o por caja (de 6, o la que diga «caja») */
   function cajaEsp(v) { var n = num(v.caja); return n > 1 ? n : 6; }
-  function applyEspumantes() {
-    var grid = $("[data-espumantes]"), sec = $("#espumantes");
-    if (!grid || !Array.isArray(data.espumantes)) return;
-    var lista = data.espumantes.filter(function (v) { return v && filled(v.nombre) && num(v.precio); });
-    if (!lista.length) {
-      if (sec) sec.hidden = true;
-      $$('a[href="#espumantes"]').forEach(function (a) { (a.closest("li") || a).hidden = true; });
-      return;
-    }
-    grid.innerHTML = lista.map(function (v, i) {
-      var p1 = num(v.precio), p6 = num(v.precio6), n = cajaEsp(v), foto = rutaFoto(v.foto);
-      var media = foto
-        ? '<img src="' + esc(foto) + '" alt="' + esc(str(v.nombre)) + '" loading="lazy">'
-        : '<span class="enc__mono" aria-hidden="true">' + esc(inicial(v.nombre)) + "</span>";
-      var botones = hasWA
-        ? '<div class="esp__btns"><a class="btn btn--sm btn--line" href="#" target="_blank" rel="noopener" data-esp="' + i + '" data-cant="1">Comprar 1</a>' +
-          (p6 ? '<a class="btn btn--sm" href="#" target="_blank" rel="noopener" data-esp="' + i + '" data-cant="' + n + '">Caja x ' + n + "</a>" : "") + "</div>"
-        : '<p class="esp__pronto">Muy pronto lo vas a poder comprar por WhatsApp.</p>';
-      return '<article class="esp rv"><figure class="esp__media">' + media + "</figure>" +
-        '<div class="esp__body"><h3>' + esc(str(v.nombre)) + "</h3>" +
-        '<div class="esp__precios"><p class="esp__uno"><span>Unidad</span><b>' + money(p1) + "</b></p>" +
-        (p6 ? '<p class="esp__seis"><span>Por ' + n + "</span><b>" + money(p6) + " c/u</b><small>" + money(p6 * n) + " la caja</small></p>" : "") +
-        "</div>" + botones + "</div></article>";
-    }).join("");
-    if (!hasWA) return;
-    $$("[data-esp]", grid).forEach(function (a) {
-      var v = lista[parseInt(a.getAttribute("data-esp"), 10)], n = cajaEsp(v), seis = a.getAttribute("data-cant") !== "1";
-      var total = seis ? num(v.precio6) * n : num(v.precio);
-      a.href = waLink(MENSAJES("espumante", { cantidad: seis ? "una caja de " + n : "1 botella", vino: str(v.nombre), total: money(total) }));
-      a.addEventListener("click", function () {
-        pixel("Purchase", { value: total, currency: "ARS", content_type: "product", content_ids: ["espumante-" + slug(v.nombre)], num_items: seis ? n : 1 });
-        if (!user || !user.demo) planillaEnviar({ accion: "espumante", producto: str(v.nombre), cantidad: seis ? n : 1,
-          precio: num(v.precio), precio6: num(v.precio6), nombre: user ? user.name : "", tel: user ? user.tel || "" : "" });
-        avisar("Espumante: " + str(v.nombre) + (seis ? " (caja de " + n + ")" : ""), {
-          "Qué hizo": "Tocó «" + (seis ? "Caja x " + n : "Comprar 1") + "» en Espumantes: se le abrió WhatsApp con el mensaje para mandártelo.",
-          "Vino": str(v.nombre),
-          "Cantidad": seis ? "Caja de " + n : "1 botella",
-          "Total": money(total),
-          "Perfil en la página": user && !user.demo ? user.name + (user.tel ? " · " + user.tel : "") : "",
-          "Fecha": ahora()
-        });
-      });
-    });
-  }
-
   function listaEncargue() {
     return (Array.isArray(data.encargue) ? data.encargue : []).filter(function (v) { return v && filled(v.nombre); });
   }
 
-  function applyEncargue() {
-    var grid = $("[data-encargue]"), vacio = $("[data-encargue-vacio]"), art = $("[data-encargue-art]"), sec = $("#encargue");
+  /* ------------------------------------------------------------------
+     11. Tienda (noviembre 2026): carrusel, cajas y dúos en tarjetas,
+         en stock, por encargue, espumantes, bodegas y el carrito de
+         botellas. Las botellas se piden por WhatsApp con los datos de
+         envío; si además se reserva una caja o un dúo, van en el mismo
+         pedido.
+     ------------------------------------------------------------------ */
+
+  function tipoVino(v) { var t = str(v).toLowerCase(); return t === "blanco" || t === "rosado" ? t : "tinto"; }
+  function botella(v, i, grupo, clase) {
+    var p1 = num(v.precio), p6 = num(v.precio6);
+    return {
+      id: grupo + "-" + i + "-" + slug(v.nombre + " " + str(v.varietal)),
+      nombre: str(v.nombre), varietal: str(v.varietal), region: str(v.region),
+      tipo: clase === "espumante" ? "espumante" : tipoVino(v.tipo), estuvo: str(v.estuvo),
+      precio: p1, precio6: p1 ? (p6 || p1) : 0, caja: clase === "espumante" ? cajaEsp(v) : 6,
+      foto: rutaFoto(v.foto), grupo: grupo, clase: clase
+    };
+  }
+  function listaBot(arr, grupo, clase) {
+    return (Array.isArray(arr) ? arr : []).filter(function (v) { return v && filled(v.nombre); })
+      .map(function (v, i) { return botella(v, i, grupo, clase); });
+  }
+  var B_STOCK = listaBot(data.stock, "stock", "vino");
+  var B_ENC = listaBot(data.encargue, "enc", "vino");
+  var B_ESP = listaBot(data.espumantes, "esp", "espumante").filter(function (b) { return b.precio; });
+  var B_TODAS = B_STOCK.concat(B_ENC, B_ESP);
+  function bot(id) { for (var i = 0; i < B_TODAS.length; i++) if (B_TODAS[i].id === id) return B_TODAS[i]; return null; }
+  var formato = {};          /* id de la botella → "u" (botella) o "c" (caja) */
+  var filtros = { stock: "todos", enc: "todos" };
+  var BOT = [];              /* el carrito: { key, id, f, cant } */
+
+  function nombreBot(b) { return b.nombre + (b.varietal ? " " + b.varietal : ""); }
+  function precioLinea(b, f) { return !b.precio ? 0 : f === "c" ? b.precio6 * b.caja : b.precio; }
+  function detalleF(b, f) { return f === "c" ? "caja de " + b.caja : b.clase === "espumante" ? "1 botella" : "1 botella"; }
+
+  function htmlSeg(b) {
+    var f = formato[b.id] || "u";
+    var a = b.clase === "espumante" ? "Botella" : "Unidad";
+    return '<div class="t-seg" role="group" aria-label="Formato de ' + esc(b.nombre) + '">' +
+      '<button type="button" data-t-seg="' + b.id + '" data-f="u" aria-pressed="' + (f === "u") + '">' + a + "</button>" +
+      '<button type="button" data-t-seg="' + b.id + '" data-f="c" aria-pressed="' + (f === "c") + '">Caja x' + b.caja + "</button></div>";
+  }
+  function htmlPrecio(b) {
+    var f = formato[b.id] || "u";
+    if (!b.precio) return '<p class="t-pz t-pz--conf">Precio a confirmar<small>' + (f === "u" ? "por botella" : "caja de " + b.caja + " botellas") + "</small></p>";
+    var igual = b.precio6 === b.precio;
+    return '<p class="t-pz">' + (f === "u"
+      ? money(b.precio) + "<small>la botella" + (igual ? "" : " · " + money(b.precio6) + " c/u llevando " + b.caja) + "</small>"
+      : money(b.precio6 * b.caja) + "<small>caja de " + b.caja + " · " + money(b.precio6) + " c/u</small>") + "</p>";
+  }
+  /* Botella dibujada para un vino sin foto */
+  function dibujoBotella(b) {
+    var vidrio = { tinto: "#3A121B", blanco: "#C9BE86", rosado: "#E3A2A8" }[b.tipo] || "#3A121B";
+    var capsula = { tinto: "#8E2232", blanco: "#A88C45", rosado: "#D9727F" }[b.tipo] || "#8E2232";
+    return '<svg viewBox="0 0 400 500" aria-hidden="true"><rect width="400" height="500" fill="#18223A"/><ellipse cx="200" cy="478" rx="78" ry="8" fill="#0B111E"/>' +
+      '<path d="M182 150 C182 200 140 214 140 262 L140 466 Q140 476 150 476 L250 476 Q260 476 260 466 L260 262 C260 214 218 200 218 150 Z" fill="' + vidrio + '"/>' +
+      '<rect x="182" y="44" width="36" height="112" rx="4" fill="' + vidrio + '"/><rect x="179" y="38" width="42" height="56" rx="5" fill="' + capsula + '"/>' +
+      '<rect x="150" y="304" width="100" height="116" rx="3" fill="#F1E7D3"/><text x="200" y="368" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="26" fill="#151E31">' +
+      esc(inicial(b.nombre)) + "</text></svg>";
+  }
+  function htmlBotella(b) {
+    var oscura = b.grupo === "enc";
+    var media = b.foto ? '<img src="' + esc(b.foto) + '" alt="Botella de ' + esc(b.nombre) + '" loading="lazy">' : (oscura ? dibujoBotella(b) : '<span class="enc__mono" style="position:absolute;inset:0;display:grid;place-items:center" aria-hidden="true">' + esc(inicial(b.nombre)) + "</span>");
+    var chip = b.grupo === "stock" ? '<span class="t-chip t-chip--stock">En stock</span>' : '<span class="t-chip">Por encargue</span>';
+    var meta = b.clase === "espumante" ? "Espumante" : [b.varietal, b.region].filter(Boolean).join(" · ");
+    var accion = hasWA ? '<button class="t-btn ' + (oscura ? "" : "t-btn--ink") + '" type="button" data-t-add="' + b.id + '">' + (b.grupo === "stock" ? "Agregar" : "Encargar") + "</button>"
+      : '<p class="t-meta">Muy pronto lo vas a poder pedir por WhatsApp.</p>';
+    return '<article class="t-prod' + (oscura ? " t-prod--dk" : "") + ' rv" data-t-card="' + b.id + '"><figure class="t-prod__fig">' + media + chip + "</figure>" +
+      '<div class="t-body"><h3>' + esc(b.nombre) + "</h3>" + (meta ? '<p class="t-meta">' + esc(meta) + "</p>" : "") +
+      (b.estuvo ? '<p class="hand">estuvo en ' + esc(b.estuvo) + "</p>" : "") +
+      htmlSeg(b) + htmlPrecio(b) + accion + "</div></article>";
+  }
+  function pintarFiltros(grupo, lista) {
+    var el = $('[data-t-filtros="' + (grupo === "enc" ? "encargue" : grupo) + '"]');
+    if (!el) return;
+    var cuenta = function (t) { return lista.filter(function (b) { return b.tipo === t; }).length; };
+    var tipos = [["tinto", "Tintos"], ["blanco", "Blancos"], ["rosado", "Rosados"]].filter(function (t) { return cuenta(t[0]); });
+    if (tipos.length < 2) { el.innerHTML = ""; return; }
+    el.innerHTML = [["todos", "Todos"]].concat(tipos.map(function (t) { return [t[0], t[1] + " (" + cuenta(t[0]) + ")"]; })).map(function (t) {
+      return '<button type="button" data-t-filtro="' + grupo + '" data-v="' + t[0] + '" aria-pressed="' + (filtros[grupo] === t[0]) + '">' + t[1] + "</button>";
+    }).join("");
+  }
+  function pintarStock() {
+    var sec = $("#stock"), grid = $("[data-t-stock]");
+    if (!sec || !grid) return;
+    sec.hidden = !B_STOCK.length;
+    if (!B_STOCK.length) return;
+    pintarFiltros("stock", B_STOCK);
+    grid.innerHTML = B_STOCK.filter(function (b) { return filtros.stock === "todos" || b.tipo === filtros.stock; }).map(htmlBotella).join("");
+  }
+  function pintarEncargue() {
+    var grid = $("[data-t-encargue]");
     if (!grid) return;
-    var lista = listaEncargue();
-    if (!lista.length) {
-      /* Todavía sin vinos: el cartel «Próximamente» y, con WhatsApp, el botón para consultar */
-      grid.hidden = true;
-      if (vacio) vacio.hidden = false;
-      if (art) art.hidden = false;
-      var wa = $("[data-encargue-wa]");
-      if (wa && hasWA) {
-        wa.href = waLink(MENSAJES("encargueConsulta", {}));
-        wa.hidden = false;
-        wa.addEventListener("click", function () {
-          pixel("Contact", {});
-          avisar("Consulta por encargue", {
-            "Qué hizo": "Tocó «Consultar por WhatsApp» en «Por encargue» (todavía sin vinos cargados).",
-            "Perfil en la página": user && !user.demo ? user.name + (user.tel ? " · " + user.tel : "") : "",
-            "Fecha": ahora()
-          });
-        });
-      }
+    var consulta = hasWA ? '<a class="t-btn t-btn--line" href="' + esc(waLink(MENSAJES("encargueConsulta", {}))) + '" target="_blank" rel="noopener" data-t-consulta>Consultar por WhatsApp</a>' : "";
+    if (!B_ENC.length) {
+      var nota = $("[data-t-enc-nota]"); if (nota) nota.hidden = true;
+      grid.innerHTML = '<div class="t-vacio"><p><span class="encargue__pronto">' + esc(str(TX.encarguePronto) || "Próximamente") + '</span></p><p class="t-vacio__t">' +
+        format(str(TX.encargueVacio) || "Vinos especiales que traemos a pedido. Muy pronto vas a poder elegirlos acá.") + "</p>" + consulta + "</div>";
       return;
     }
-    if (vacio) vacio.hidden = true;
-    if (art) art.hidden = true;
-    if (sec) sec.classList.add("is-lista");
-    grid.hidden = false;
-    function nombreLargo(v) {
-      return str(v.nombre) + (filled(v.bodega) ? " de " + str(v.bodega) : "") + (filled(v.varietal) ? " (" + str(v.varietal) + ")" : "");
+    pintarFiltros("enc", B_ENC);
+    grid.innerHTML = B_ENC.filter(function (b) { return filtros.enc === "todos" || b.tipo === filtros.enc; }).map(htmlBotella).join("") +
+      '<div class="t-vacio"><p>¿Buscás otro vino, o una botella Magnum? También lo traemos a pedido.</p>' + consulta + "</div>";
+  }
+  function applyEspumantes() {
+    var sec = $("#espumantes"), grid = $("[data-t-espumantes]");
+    if (!grid) return;
+    if (!B_ESP.length) {
+      if (sec) sec.hidden = true;
+      $$('a[href="#espumantes"]').forEach(function (a) { a.hidden = true; });
+      return;
     }
-    grid.innerHTML = lista.map(function (v, i) {
-      var precio = num(v.precio), foto = rutaFoto(v.foto);
-      var meta = [v.bodega, v.varietal, v.region].map(str).filter(Boolean).join(" · ");
-      var media = foto
-        ? '<img src="' + esc(foto) + '" alt="' + esc(str(v.nombre)) + '" loading="lazy">'
-        : '<span class="enc__mono" aria-hidden="true">' + esc(inicial(v.nombre)) + "</span>";
-      var accion = hasWA
-        ? '<a class="btn btn--sm enc__btn" href="' + esc(waLink(MENSAJES("encargue", { vino: nombreLargo(v) }))) + '" target="_blank" rel="noopener" data-encargar="' + i + '">Encargar</a>'
-        : '<span class="enc__nota">Escribinos para encargarlo.</span>';
-      return '<article class="enc rv"><figure class="enc__media">' + media + "</figure>" +
-        '<div class="enc__body">' + (meta ? '<p class="enc__meta">' + esc(meta) + "</p>" : "") +
-        "<h3>" + esc(str(v.nombre)) + "</h3>" +
-        (filled(v.nota) ? '<p class="enc__note hand">' + esc(str(v.nota)) + "</p>" : "") +
-        '<div class="enc__row"><span class="enc__price">' + (precio ? money(precio) : "Consultar precio") + "</span>" + accion + "</div>" +
+    grid.innerHTML = B_ESP.map(htmlBotella).join("");
+  }
+  function applyEncargue() { pintarStock(); pintarEncargue(); }
+
+  /* Cajas del mes en tarjetas */
+  function applyCajas() {
+    var box = $("[data-t-cajas]");
+    if (!box) return;
+    var titulo = $("[data-t-cajas-titulo]"), texto = $("[data-t-cajas-texto]"), reglas = $("[data-t-reglas]");
+    if (titulo) titulo.innerHTML = "Cajas de <em>" + esc(MES) + ".</em>";
+    var conVinos = CAJAS.every(function (c) { return c.vinos.length; });
+    if (texto) texto.innerHTML = PROXIMA
+      ? "Ya entregamos las cajas de " + esc(MES_ENTREGADO) + ". Reservá la de " + esc(MES) + (DESC ? " con " + DESC + "% off" : "") + (conVinos ? ": cuatro vinos, dos que te contamos y dos sorpresa." : ".")
+      : format(str(TX.cajaTexto) || "Cada mes elegimos cuatro vinos por vos y te los llevamos a casa.");
+    if (reglas) reglas.innerHTML = (PAGO === RESERVAS ? ["Reservás y pagás " + RESERVAS] : ["Reservás " + RESERVAS, "Pagás " + PAGO])
+      .concat(["Entrega del " + ENTREGAS, "Suma para el regalo del club"]).map(function (t) { return "<b>" + esc(t) + "</b>"; }).join("");
+    if (!CAJAS.length) { box.innerHTML = ""; return; }
+    box.innerHTML = CAJAS.map(function (c) {
+      var fig = c.foto ? '<img src="' + esc(c.foto) + '" alt="' + esc(c.fotoTexto || ("Los vinos de la " + c.nombre)) + '">'
+        : '<div class="t-caja__q" role="img" aria-label="Los vinos de ' + esc(MES) + ' son sorpresa"><b>?</b><span>la caja de ' + esc(MES) + "</span></div>";
+      var sorpresas = Math.max(0, c.botellas - c.vinos.length);
+      var vinos = c.vinos.length ? '<ul class="t-vinos">' + c.vinos.map(function (v) {
+        return "<li>" + esc(v.nombre) + "<span>" + esc([str(v.varietal), str(v.region)].filter(Boolean).join(" · ")) + "</span></li>";
+      }).join("") + (sorpresas ? '<li class="t-sorp">+ ' + sorpresas + (sorpresas === 1 ? " sorpresa" : " sorpresas") + "</li>" : "") + "</ul>" : "";
+      return '<article class="t-caja rv"><figure class="t-caja__fig">' + fig +
+        (DESC && !c.agotado ? '<span class="t-sello" aria-hidden="true"><strong>' + DESC + "%</strong>OFF</span>" : "") +
+        (c.agotado ? '<span class="t-soldout">Sold out</span>' : "") + "</figure>" +
+        '<div class="t-body">' + (c.destacado && !c.agotado ? '<span class="t-tag">' + esc(c.destacado) + "</span>" : "") +
+        "<h3>" + esc(c.nombre) + "</h3>" +
+        '<p class="t-precio">' + (c.precioAntes ? "<s>" + money(c.precioAntes) + "</s>" : "") + money(c.precio) + "</p>" +
+        (c.descripcion ? '<p class="t-desc">' + format(c.descripcion) + "</p>" : "") + vinos +
+        '<p class="t-dato">' + c.botellas + " vinos · por reserva · entrega del " + esc(ENTREGAS) + "</p>" +
+        (c.agotado ? '<p class="t-dato">' + format(c.agotadoTexto || "Esta caja ya no se vende.") + "</p>"
+          : '<a class="t-btn t-btn--ink t-btn--w" href="#club" data-order="' + c.id + '">Reservar la de ' + esc(MES) + "</a>") +
         "</div></article>";
     }).join("");
-    $$("[data-encargar]", grid).forEach(function (a) {
-      a.addEventListener("click", function () {
-        var v = lista[parseInt(a.getAttribute("data-encargar"), 10)];
-        if (!v) return;
-        pixel("Lead", { content_name: nombreLargo(v) });
-        avisar("Encargue: " + str(v.nombre), {
-          "Qué hizo": "Tocó «Encargar»: se le abrió WhatsApp con el mensaje para mandártelo.",
-          "Vino": nombreLargo(v),
-          "Precio": num(v.precio) ? money(num(v.precio)) : "a confirmar",
-          "Perfil en la página": user && !user.demo ? user.name + (user.tel ? " · " + user.tel : "") : "",
-          "Fecha": ahora()
+  }
+
+  /* Dúos en tarjetas */
+  function applyDuosTienda() {
+    var box = $("[data-t-duos]"), sec = $("#duos");
+    if (!box) return;
+    if (!DUOS.length) { if (sec) sec.hidden = true; return; }
+    box.innerHTML = DUOS.map(function (c) {
+      var nota = "";
+      c.vinos.some(function (v) { if (filled(v.nota)) { nota = str(v.nota); return true; } return false; });
+      return '<article class="t-duo rv"><figure class="t-duo__fig">' +
+        (c.foto ? '<img src="' + esc(c.foto) + '" alt="' + esc(c.fotoTexto || c.vinos.map(function (v) { return v.nombre; }).join(" y ")) + '" loading="lazy">' : "") +
+        '<div class="t-estados">' + (c.agotado ? '<span class="t-est t-est--hoy">Sold out</span>' : '<span class="t-est">En stock</span><span class="t-est t-est--hoy">Entrega en el día</span>') + "</div></figure>" +
+        '<div class="t-body"><h3>' + esc(c.nombre) + "</h3>" + (c.descripcion ? '<p class="t-desc">' + format(c.descripcion) + "</p>" : "") +
+        '<ul class="t-vinos">' + c.vinos.map(function (v) {
+          return "<li>" + esc(v.nombre) + "<span>" + esc([str(v.varietal), str(v.region)].filter(Boolean).join(" · ")) + "</span></li>";
+        }).join("") + "</ul>" + (nota ? '<p class="hand">' + format(nota) + "</p>" : "") +
+        '<div class="t-pie"><span class="t-precio">' + money(c.precio) + "</span>" +
+        (c.agotado ? "" : '<a class="t-btn" href="#duos" data-order="' + c.id + '" data-paso="1">Comprar</a>') + "</div></div></article>";
+    }).join("");
+  }
+
+  /* Bodegas: dos copias seguidas para que la franja no se corte */
+  function applyBodegas() {
+    var sec = $("#bodegas"), m = $("[data-t-marquee]");
+    if (!m) return;
+    var lista = (Array.isArray(data.bodegas) ? data.bodegas : []).filter(function (b) { return b && filled(b.logo); });
+    if (!lista.length) {
+      if (sec) sec.hidden = true;
+      $$('a[href="#bodegas"]').forEach(function (a) { a.hidden = true; });
+      return;
+    }
+    var ul = function (oculta) {
+      return "<ul" + (oculta ? ' aria-hidden="true"' : "") + ">" + lista.map(function (b) {
+        var src = /^(https?:|data:|\/|assets\/)/.test(str(b.logo)) ? str(b.logo) : "assets/img/bodegas/" + str(b.logo);
+        return '<li><img src="' + esc(src) + '" alt="' + (oculta ? "" : esc(str(b.nombre))) + '" loading="lazy">' +
+          (/^s/i.test(str(b.mes)) ? "<small>este mes</small>" : "") + "</li>";
+      }).join("") + "</ul>";
+    };
+    m.innerHTML = ul(false) + ul(true);
+    function ajustar() {
+      $$("img", m).forEach(function (img) {
+        if (img.naturalWidth && img.naturalHeight) img.style.setProperty("--f", (1 / Math.sqrt(img.naturalWidth / img.naturalHeight)).toFixed(3));
+      });
+      var w = m.scrollWidth / 2;
+      if (w) m.style.setProperty("--dur", Math.max(20, Math.round(w / 42)) + "s");
+    }
+    $$("img", m).forEach(function (img) { img.addEventListener("load", ajustar); });
+    window.addEventListener("load", ajustar);
+    ajustar();
+  }
+
+  /* Franja de avisos que rota, textos de la portada, fotos de «Elegí cómo pedir» */
+  function applyTienda() {
+    var avisos = [
+      CAJAS.length ? "Caja de " + MES + (DESC ? " con " + DESC + "% off" : "") + " · reservás y pagás " + RESERVAS : "",
+      DUOS.length ? "Dúos: entrega en el día" : "",
+      B_ENC.length ? "Nuevo: los vinos de cajas anteriores, por encargue" : ""
+    ].filter(Boolean);
+    var bar = $("[data-t-avisos]");
+    if (bar && avisos.length) {
+      var n = 0;
+      bar.textContent = avisos[0];
+      bar.hidden = false;
+      if (avisos.length > 1) setInterval(function () {
+        bar.classList.add("fade");
+        setTimeout(function () { n = (n + 1) % avisos.length; bar.textContent = avisos[n]; bar.classList.remove("fade"); }, 350);
+      }, 4500);
+    }
+    var t = $("[data-t-slide-titulo]"), p = $("[data-t-slide-texto]");
+    if (t) t.innerHTML = "La caja de " + esc(MES) + (DESC ? ", <em>con " + DESC + "% off.</em>" : ", <em>dos sorpresas.</em>");
+    if (p) p.textContent = (PAGO === RESERVAS ? "Reservás y pagás " + RESERVAS : "Reservás " + RESERVAS + " y pagás " + PAGO) + ". Te la llevamos del " + ENTREGAS + ".";
+    var quitar = { caja: !CAJAS.length, duos: !DUOS.length, encargue: !B_ENC.length };
+    Object.keys(quitar).forEach(function (k) { var s = $('[data-t-slide="' + k + '"]'); if (s && quitar[k]) s.parentNode.removeChild(s); });
+    /* Fotos de «Elegí cómo pedir»: solo las secciones que tienen algo */
+    var ocultas = { stock: !B_STOCK.length, espumantes: !B_ESP.length, duos: !DUOS.length };
+    $$("[data-t-tile]").forEach(function (a) { a.hidden = !!ocultas[a.getAttribute("data-t-tile")]; });
+    $$('[data-t-solo="stock"]').forEach(function (a) { a.hidden = !B_STOCK.length; });
+    var vis = $$("[data-t-tile]").filter(function (a) { return !a.hidden; });
+    var tiles = $("[data-t-tiles]");
+    if (tiles) tiles.style.setProperty("--n", String(vis.length || 1));
+    if (vis.length % 2) vis[vis.length - 1].classList.add("t-tile--ancho");
+    var fab = $("#tFab");
+    if (fab && hasWA) {
+      fab.href = waLink(MENSAJES("consulta"));
+      fab.hidden = false;
+      fab.addEventListener("click", function () { pixel("Contact"); });
+    }
+  }
+
+  /* Carrusel de la portada: se desliza con el dedo, los puntos o las flechas */
+  function initCarrusel() {
+    var track = $("[data-t-track]"), dots = $("[data-t-dots]");
+    if (!track) return;
+    var slides = $$(".t-slide", track);
+    if (slides.length < 2) { if (dots) dots.hidden = true; $$(".t-flecha").forEach(function (b) { b.hidden = true; }); return; }
+    var actual = 0, auto = 0;
+    dots.innerHTML = slides.map(function (s, i) { return '<button type="button" aria-label="Destacado ' + (i + 1) + '" data-t-dot="' + i + '"></button>'; }).join("");
+    function marcar() { $$("button", dots).forEach(function (b, i) { b.classList.toggle("on", i === actual); }); }
+    function ir(i) { actual = (i + slides.length) % slides.length; track.scrollTo({ left: actual * track.clientWidth, behavior: "smooth" }); marcar(); }
+    function parar() { clearInterval(auto); }
+    track.addEventListener("scroll", function () { var i = Math.round(track.scrollLeft / Math.max(1, track.clientWidth)); if (i !== actual) { actual = i; marcar(); } }, { passive: true });
+    dots.addEventListener("click", function (e) { var b = e.target.closest("[data-t-dot]"); if (b) { parar(); ir(+b.getAttribute("data-t-dot")); } });
+    $$("[data-t-ir]").forEach(function (b) { b.addEventListener("click", function () { parar(); ir(actual + parseInt(b.getAttribute("data-t-ir"), 10)); }); });
+    track.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { parar(); ir(actual + 1); }
+      if (e.key === "ArrowLeft") { parar(); ir(actual - 1); }
+    });
+    ["pointerdown", "touchstart", "focusin"].forEach(function (ev) { track.addEventListener(ev, parar, { passive: true }); });
+    marcar();
+    auto = setInterval(function () { if (current === "inicio" && !doc.hidden) ir(actual + 1); }, 6000);
+  }
+
+  /* Menú de secciones: marca la sección que se está viendo */
+  function initSecnav() {
+    var nav = $("[data-t-secnav]");
+    if (!nav || !("IntersectionObserver" in window)) return;
+    var links = $$("a", nav);
+    var obs = new IntersectionObserver(function (es) {
+      es.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var id = en.target.id === "caja" ? "club" : en.target.id;
+        links.forEach(function (a) {
+          var on = a.getAttribute("href") === "#" + id;
+          a.classList.toggle("on", on);
+          if (on) { try { nav.scrollTo({ left: a.offsetLeft - 14, behavior: "smooth" }); } catch (e) { nav.scrollLeft = a.offsetLeft - 14; } }
         });
       });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    ["caja", "duos", "stock", "encargue", "espumantes"].forEach(function (id) { var el = doc.getElementById(id); if (el) obs.observe(el); });
+  }
+
+  /* ---------- El carrito de botellas ---------- */
+  function lineasBot() {
+    return BOT.map(function (l) { var b = bot(l.id); return b ? { l: l, b: b, pu: precioLinea(b, l.f), det: detalleF(b, l.f) } : null; }).filter(Boolean);
+  }
+  function totalBot() {
+    var total = 0, falta = false, n = 0;
+    lineasBot().forEach(function (x) { n += x.l.cant; if (x.pu) total += x.pu * x.l.cant; else falta = true; });
+    return { total: total, falta: falta, n: n };
+  }
+  var tAviso = 0;
+  function avisoCarrito(txt) {
+    var t = $("#tToast");
+    if (!t) { toast(txt); return; }
+    $("[data-t-toast-txt]", t).textContent = txt;
+    t.classList.add("on");
+    clearTimeout(tAviso);
+    tAviso = setTimeout(function () { t.classList.remove("on"); }, 3200);
+  }
+  function pintarCarrito() {
+    var tb = totalBot();
+    $$("[data-t-cart-n]").forEach(function (el) { el.textContent = tb.n ? String(tb.n) : ""; });
+    var bar = $("#tBar");
+    if (bar) {
+      bar.hidden = !tb.n;
+      $("[data-t-bar-total]", bar).textContent = tb.total ? money(tb.total) + (tb.falta ? " + a confirmar" : "") : "Precio a confirmar";
+      $("[data-t-bar-nota]", bar).textContent = tb.n + (tb.n === 1 ? " producto" : " productos") + " en tu pedido";
+    }
+    doc.body.classList.toggle("con-pedido", tb.n > 0);
+  }
+  function agregarBot(id) {
+    var b = bot(id);
+    if (!b) return;
+    var f = formato[id] || "u", key = id + "|" + f, ya = null;
+    BOT.forEach(function (l) { if (l.key === key) ya = l; });
+    if (ya) ya.cant = Math.min(MAXCANT, ya.cant + 1); else BOT.push({ key: key, id: id, f: f, cant: 1 });
+    pintarCarrito();
+    avisoCarrito("Agregaste: " + b.nombre + " · " + detalleF(b, f));
+    pixel("AddToCart", { content_ids: [id], content_name: nombreBot(b), content_type: "product", value: precioLinea(b, f), currency: "ARS" });
+  }
+
+  /* Texto de las botellas para WhatsApp: por grupo, una línea cada una */
+  function textoBotellas() {
+    var xs = lineasBot(), grupos = [["stock", "En stock (entrega en el día)"], ["enc", "Por encargue (¿me confirman la demora?)"], ["esp", "Espumantes por encargue"]];
+    return grupos.map(function (g) {
+      var ls = xs.filter(function (x) { return x.b.grupo === g[0]; });
+      if (!ls.length) return "";
+      return g[1] + ":\n" + ls.map(function (x) {
+        return "• " + x.l.cant + " × " + nombreBot(x.b) + " (" + x.det + ")" + (x.pu ? " — " + money(x.pu * x.l.cant) : " — precio a confirmar");
+      }).join("\n");
+    }).filter(Boolean).join("\n");
+  }
+  function totalTextoBot() { var tb = totalBot(); return money(tb.total) + (tb.falta ? " + lo que falta confirmar" : ""); }
+  function mensajeBotellas() {
+    return MENSAJES("botellas", { total: totalTextoBot(), detalle: textoBotellas(),
+      direccion: [order.dir, order.loc, order.zona].filter(Boolean).join(", "), nombre: order.nom, telefono: order.tel });
+  }
+  /* A la planilla: una fila por botella o por caja (como los espumantes) */
+  function planillaBotellas() {
+    if (!hayPlanilla || (user && user.demo)) return;
+    var envios = 0;
+    lineasBot().forEach(function (x) {
+      for (var i = 0; i < x.l.cant && envios < 24; i++, envios++) {
+        var caja = x.l.f === "c", seis = caja && x.b.caja === 6;
+        planillaEnviar({ accion: "espumante", tipo: x.b.grupo === "stock" ? "stock" : "encargue",
+          producto: nombreBot(x.b) + (caja && !seis ? " (caja de " + x.b.caja + ")" : ""),
+          cantidad: seis ? 6 : 1, precio: caja && !seis ? x.pu : x.b.precio, precio6: x.b.precio6,
+          nombre: user ? user.name : order.nom, cliente: order.nom, tel: order.tel,
+          dir: [order.dir, order.loc, order.zona].filter(Boolean).join(", ") });
+      }
     });
+  }
+
+  /* El panel del pedido, para las botellas solas: lista, envío y resumen */
+  var pasoCarrito = 0, PASOS_CARRITO = ["lista", "envio", "resumen"];
+  function openCarrito() {
+    if (!BOT.length) { avisoCarrito("Todavía no agregaste nada."); return; }
+    if (user) {
+      order.nom = order.nom || (user.demo ? "" : user.name);
+      order.tel = order.tel || user.tel || "";
+      order.zona = order.zona || user.zona || "";
+      order.dir = order.dir || user.dir || "";
+      order.loc = order.loc || user.loc || "";
+    }
+    pasoCarrito = 0;
+    renderCarrito();
+    var d = $("#drawer");
+    if (d.hidden) { scrimOn(); show(d); doc.body.style.overflow = "hidden"; }
+  }
+  function lineasHtml(editable) {
+    var xs = lineasBot();
+    return [["stock", "En stock · entrega en el día"], ["enc", "Por encargue · te confirmamos la demora"], ["esp", "Espumantes · por encargue"]].map(function (g) {
+      var ls = xs.filter(function (x) { return x.b.grupo === g[0]; });
+      if (!ls.length) return "";
+      return '<p class="opt-group">' + esc(g[1]) + "</p>" + ls.map(function (x) {
+        return '<div class="t-linea"><span><b>' + esc(nombreBot(x.b)) + "</b><small>" + esc(x.det) + (editable ? "" : " × " + x.l.cant) + "</small></span>" +
+          '<span class="t-linea__pr">' + (x.pu ? money(x.pu * x.l.cant) : "a confirmar") + "</span>" +
+          (editable ? '<span class="t-linea__ctl"><span class="qty__ctl"><button type="button" data-t-cant="-1" data-key="' + esc(x.l.key) + '" aria-label="Uno menos">−</button><output>' + x.l.cant +
+            '</output><button type="button" data-t-cant="1" data-key="' + esc(x.l.key) + '" aria-label="Uno más"' + (x.l.cant >= MAXCANT ? " disabled" : "") + '>+</button></span>' +
+            '<button type="button" class="linkish" data-t-quitar="' + esc(x.l.key) + '">Quitar</button></span>' : "") + "</div>";
+      }).join("");
+    }).join("");
+  }
+  function renderCarrito() {
+    var paso = PASOS_CARRITO[pasoCarrito], body = $("#dBody"), foot = $("#dFoot"), tb = totalBot();
+    $("#pSteps").innerHTML = PASOS_CARRITO.map(function (_, i) { return '<i class="' + (i <= pasoCarrito ? "on" : "") + '"></i>'; }).join("");
+    $("#dTitle").textContent = { lista: "Tu pedido", envio: "¿Dónde te lo llevamos?", resumen: "Revisá tu pedido" }[paso];
+    var back = pasoCarrito > 0 ? '<button type="button" class="btn btn--line" data-t-atras>Volver</button>' : "<span></span>";
+    var total = '<div class="summary" style="margin-top:1.25rem"><div><div class="tot" style="margin-top:0;padding-top:0;border-top:0"><span>Total' + (tb.falta ? " (sin lo que falta confirmar)" : "") + "</span><b>" + money(tb.total) + "</b></div></div></div>";
+    if (paso === "lista") {
+      body.innerHTML = '<div class="pane">' + lineasHtml(true) + total +
+        (tb.falta ? '<p class="note">El precio de lo que dice «a confirmar» te lo pasamos por WhatsApp.</p>' : "") +
+        '<button type="button" class="btn btn--line btn--add" data-order="">+ Sumar una caja del mes o un dúo</button>' +
+        '<p class="note">Si sumás una caja o un dúo, estas botellas van en el mismo pedido.</p></div>';
+      foot.innerHTML = back + '<button type="button" class="btn" data-t-seguir>Seguir</button>';
+    }
+    if (paso === "envio") {
+      body.innerHTML = '<div class="pane"><p>' + format(filled(TX.envioTexto) ? TX.envioTexto : "Enviamos a Paraná, alrededores y el interior de Entre Ríos.") + "</p>" +
+        '<div class="field"><label for="eZona">Zona</label><select id="eZona"><option value="">Elegí tu zona</option>' +
+        ZONAS.map(function (z) { return "<option" + (order.zona === z ? " selected" : "") + ">" + esc(z) + "</option>"; }).join("") + "</select></div>" +
+        '<div class="row2"><div class="field"><label for="eLoc">Localidad</label><input id="eLoc" value="' + esc(order.loc) + '" placeholder="Ej.: Oro Verde"></div>' +
+        '<div class="field"><label for="eDir">Dirección</label><input id="eDir" value="' + esc(order.dir) + '" placeholder="Calle y número" autocomplete="street-address"></div></div>' +
+        '<div class="row2"><div class="field"><label for="eNom">Nombre y apellido</label><input id="eNom" value="' + esc(order.nom) + '" autocomplete="name"></div>' +
+        '<div class="field"><label for="eTel">WhatsApp</label><input id="eTel" value="' + esc(order.tel) + '" inputmode="tel" placeholder="343 ..." autocomplete="tel"></div></div>' +
+        '<label class="check"><input type="checkbox" id="eAge"' + (order.age ? " checked" : "") + "> Declaro ser mayor de 18 años.</label>" +
+        '<p class="err" id="eErr" aria-live="polite"></p></div>';
+      var z = $("#eZona"), loc = $("#eLoc");
+      if (!order.loc && order.zona === ZONAS[0]) loc.value = ZONAS[0];
+      z.addEventListener("change", function () { if (z.value === ZONAS[0] && !loc.value) loc.value = ZONAS[0]; });
+      foot.innerHTML = back + '<button type="button" class="btn" data-t-seguir>Seguir</button>';
+    }
+    if (paso === "resumen") {
+      body.innerHTML = '<div class="pane">' + lineasHtml(false) + total +
+        '<div class="summary" style="margin-top:1rem"><div><dl><dt>Entrega</dt><dd>' + esc([order.dir, order.loc].filter(Boolean).join(", ")) +
+        "</dd><dt>Nombre</dt><dd>" + esc(order.nom) + "</dd><dt>WhatsApp</dt><dd>" + esc(order.tel) + "</dd><dt>Costo de envío</dt><dd>te lo confirmamos</dd></dl></div></div>" +
+        '<p class="note">Lo encargado lo pedimos cuando nos confirmes por WhatsApp. Te pasamos la demora antes de cobrarte.</p></div>';
+      foot.innerHTML = back + (hasWA ? '<a class="btn wa" id="pay" href="' + esc(waLink(mensajeBotellas())) + '" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a>'
+        : '<span class="note">Escribinos para armar este pedido.</span>');
+      var pay = $("#pay");
+      if (pay) pay.addEventListener("click", function () { setTimeout(finishBotellas, 0); });
+    }
+    body.scrollTop = 0;
+  }
+  function datosEnvio() {
+    order.zona = $("#eZona").value;
+    order.loc = str($("#eLoc").value);
+    order.dir = str($("#eDir").value);
+    order.nom = str($("#eNom").value);
+    order.tel = str($("#eTel").value);
+    order.age = $("#eAge").checked;
+    var miss = [!order.zona && "tu zona", !order.loc && "la localidad", !order.dir && "la dirección", !order.nom && "tu nombre", !order.tel && "tu WhatsApp"].filter(Boolean);
+    if (miss.length) { $("#eErr").textContent = "Falta completar " + miss.join(", ") + "."; return false; }
+    if (!order.age) { $("#eErr").textContent = "Para seguir, confirmá que sos mayor de 18 años."; return false; }
+    if (user) { user.zona = order.zona; user.dir = order.dir; user.loc = order.loc; if (!user.tel) user.tel = order.tel; save(); }
+    return true;
+  }
+  /* Lo que pasa al tocar «Enviar pedido por WhatsApp» con botellas solas */
+  function cierreBotellas(msg, extra) {
+    var tb = totalBot();
+    avisar("Pedido nuevo (botellas): " + order.nom + " (" + money(tb.total) + (tb.falta ? " + a confirmar" : "") + ")", {
+      "Qué hizo": "Tocó «Enviar pedido por WhatsApp» en el carrito: se le abrió WhatsApp con este mensaje para mandártelo.",
+      "Nombre": order.nom, "WhatsApp": order.tel, "Mensaje": msg,
+      "Perfil en la página": user && !user.demo ? user.name : "", "Fecha": ahora()
+    });
+    if (!extra) {
+      pixel("Contact");
+      pixel("Purchase", { value: tb.total, currency: "ARS", content_type: "product",
+        content_ids: lineasBot().map(function (x) { return x.b.id; }), num_items: tb.n });
+    }
+    planillaBotellas();
+  }
+  function finishBotellas() {
+    var msg = mensajeBotellas(), tb = totalBot();
+    cierreBotellas(msg, false);
+    BOT = [];
+    pintarCarrito();
+    $("#pSteps").innerHTML = PASOS_CARRITO.map(function () { return '<i class="on"></i>'; }).join("");
+    $("#dTitle").textContent = "¡Listo!";
+    $("#dBody").innerHTML = '<div class="done"><img src="assets/img/logo.webp" alt=""><h4>Tu pedido está en WhatsApp.</h4>' +
+      "<p>Envialo y te confirmamos la entrega" + (tb.falta ? ", el precio de lo que falta" : "") + " y la demora de lo encargado.</p>" +
+      (tb.total ? bloquePago() : "") +
+      '<a class="btn btn--line" href="' + esc(waLink(msg)) + '" target="_blank" rel="noopener">Abrir WhatsApp de nuevo</a></div>';
+    $("#dFoot").innerHTML = '<span></span><button type="button" class="btn" id="closeDone">Cerrar</button>';
+    $("#closeDone").addEventListener("click", closeOrder);
+    var cp = $("[data-copiar-alias]");
+    if (cp) cp.addEventListener("click", function () { copiarAlias(cp); });
+  }
+
+  /* Todos los botones de la tienda */
+  function initTienda() {
+    doc.addEventListener("click", function (e) {
+      if (!e.target.closest) return;
+      var b = e.target.closest("button, a");
+      if (!b) return;
+      if (b.hasAttribute("data-t-seg")) {
+        var id = b.getAttribute("data-t-seg"), f = b.getAttribute("data-f"), x = bot(id);
+        formato[id] = f;
+        $$('[data-t-seg="' + id + '"]').forEach(function (s) { s.setAttribute("aria-pressed", String(s.getAttribute("data-f") === f)); });
+        var card = b.closest("[data-t-card]"), pz = card && $(".t-pz", card);
+        if (pz && x) pz.outerHTML = htmlPrecio(x);
+      } else if (b.hasAttribute("data-t-add")) {
+        agregarBot(b.getAttribute("data-t-add"));
+      } else if (b.hasAttribute("data-t-filtro")) {
+        filtros[b.getAttribute("data-t-filtro")] = b.getAttribute("data-v");
+        if (b.getAttribute("data-t-filtro") === "stock") pintarStock(); else pintarEncargue();
+        if (io) $$(".rv:not(.in)").forEach(function (el) { el.classList.add("in"); });
+      } else if (b.id === "btnCart" || b.id === "tBar" || b.hasAttribute("data-t-ver-pedido")) {
+        $("#tToast").classList.remove("on");
+        openCarrito();
+      } else if (b.hasAttribute("data-t-cant") || b.hasAttribute("data-t-quitar")) {
+        var key = b.getAttribute("data-key") || b.getAttribute("data-t-quitar");
+        BOT.forEach(function (l) {
+          if (l.key !== key) return;
+          l.cant = b.hasAttribute("data-t-quitar") ? 0 : Math.min(MAXCANT, l.cant + parseInt(b.getAttribute("data-t-cant"), 10));
+        });
+        BOT = BOT.filter(function (l) { return l.cant > 0; });
+        pintarCarrito();
+        if (!BOT.length) closeOrder(); else renderCarrito();
+      } else if (b.hasAttribute("data-t-seguir")) {
+        if (PASOS_CARRITO[pasoCarrito] === "envio" && !datosEnvio()) return;
+        pasoCarrito++; renderCarrito();
+      } else if (b.hasAttribute("data-t-atras")) {
+        if (PASOS_CARRITO[pasoCarrito] === "envio") { try { datosEnvio(); } catch (err) { /* nada */ } $("#eErr") && ($("#eErr").textContent = ""); }
+        pasoCarrito = Math.max(0, pasoCarrito - 1); renderCarrito();
+      } else if (b.hasAttribute("data-t-consulta")) {
+        pixel("Contact");
+        avisar("Consulta por encargue", { "Qué hizo": "Tocó «Consultar por WhatsApp» en «Por encargue».", "Perfil en la página": user && !user.demo ? user.name : "", "Fecha": ahora() });
+      }
+    });
+    pintarCarrito();
   }
 
   /* ------------------------------------------------------------------
@@ -2275,8 +2690,12 @@
     safe(applyContactos, "contacto");
     safe(applyMenu, "caja del mes");
     safe(applyDuos, "dúos");
+    safe(applyCajas, "cajas del mes");
+    safe(applyDuosTienda, "dúos de la tienda");
     safe(applyEspumantes, "espumantes");
-    safe(applyEncargue, "por encargue");
+    safe(applyEncargue, "por encargue y en stock");
+    safe(applyBodegas, "bodegas");
+    safe(applyTienda, "tienda");
     safe(applyEstaciones, "vinos por estación");
     safe(applyClubCard, "tarjeta del club");
     safe(function () { if (user) user.prefs.forEach(function (p) { pagePrefs.push(p); }); }, "preferencias");
@@ -2292,6 +2711,9 @@
     safe(fitWord, "marca");
     safe(initScrollFx, "efectos");
     safe(initGate, "mayoría de edad");
+    safe(initTienda, "carrito");
+    safe(initCarrusel, "carrusel");
+    safe(initSecnav, "menú de secciones");
     if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(function () { safe(fitWord, "marca"); safe(refreshEffects, "efectos"); });
     window.addEventListener("load", function () { safe(refreshEffects, "efectos"); });
   }

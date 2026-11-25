@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The Wine Loft · Club de vinos en Paraná</title>
-  <meta name="description" content="Club de vinos en Paraná, Entre Ríos. Cada mes elegimos cuatro vinos por vos y te los llevamos a casa: dos tintos anunciados y dos sorpresas.">
+  <meta name="description" content="Club de vinos en Paraná, Entre Ríos. Cajas del mes, dúos con entrega en el día, vinos por encargue y espumantes.">
   <meta name="theme-color" content="#151E31">
   <meta name="color-scheme" content="dark">
   <meta property="og:type" content="website">
@@ -12,7 +12,7 @@
   <meta property="og:site_name" content="The Wine Loft">
   <meta property="og:title" content="The Wine Loft · Club de vinos en Paraná">
   <meta property="og:description" content="Un club de vinos con acento del Litoral. Cajas del mes y dúos de todos los días, entregados en tu casa.">
-  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg?v=202611121">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg?v=202611251">
 
   <!-- Hay JavaScript: recién ahí se activan las apariciones y los efectos. -->
   <script>document.documentElement.classList.add("js");</script>
@@ -20,10 +20,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="styles.css?v=202611121">
+  <link rel="stylesheet" href="styles.css?v=202611251">
 
-  <script defer src="datos.js?v=202611121"></script>
-  <script defer src="main.js?v=202611121"></script>
+  <script defer src="datos.js?v=202611251"></script>
+  <script defer src="main.js?v=202611251"></script>
 
   <!-- Meta Pixel Code (píxel de Meta para los anuncios de Facebook e Instagram).
        Se activa solo en la web publicada: no en la vista previa, ni al abrir
@@ -82,6 +82,8 @@ src="https://www.facebook.com/tr?id=1165672275790394&amp;ev=PageView&amp;noscrip
 
 <div class="proto" data-aviso>Sitio en preparación: todavía no se cobra online ni se envían pedidos.</div>
 
+<p class="t-avisos" data-t-avisos aria-live="polite" hidden></p>
+
 <!-- ============================================ ENCABEZADO -->
 <header class="hd" id="hd">
   <div class="hd__in">
@@ -92,55 +94,76 @@ src="https://www.facebook.com/tr?id=1165672275790394&amp;ev=PageView&amp;noscrip
     <nav class="hd__nav" aria-label="Secciones">
       <a href="#club" data-go>El club</a>
       <a href="#como-funciona" data-go>Cómo funciona</a>
-      <a href="#duos" data-go>Dúos</a>
-      <a href="#espumantes" data-go>Espumantes</a>
+      <a href="#regalo" data-go>Regalá</a>
       <a href="#preguntas" data-go>Preguntas</a>
-      <a href="#encargue" data-go>Por encargue</a>
     </nav>
     <div class="hd__act">
       <a class="hd__login" id="btnLogin" href="#perfil" data-go><svg class="hd__ico" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8.5" r="3.8"></circle><path d="M4.8 20c.9-3.6 3.8-5.6 7.2-5.6s6.3 2 7.2 5.6"></path></svg><span class="hd__login-t">Ingresar</span></a>
       <button type="button" class="avatar" id="btnAvatar" hidden aria-label="Mi perfil"></button>
-      <a class="btn btn--line btn--sm" href="#club" data-go data-order="">Reservá tu caja</a>
+      <a class="btn btn--line btn--sm hd__cta" href="#club" data-go data-order="">Reservá tu caja</a>
+      <button type="button" class="hd__cart" id="btnCart" aria-label="Ver tu pedido"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="hd__cart-n" data-t-cart-n></span></button>
       <details class="mnav" id="mnav">
         <summary aria-label="Abrir el menú"><span></span><span></span></summary>
         <nav aria-label="Menú">
           <a href="#perfil" data-go>Mi perfil</a>
-          <a href="#club" data-go><span class="solo-compu">El club</span><span class="solo-cel">Combos mensuales</span></a>
-          <a class="solo-compu" href="#como-funciona" data-go>Cómo funciona</a>
+          <a href="#club" data-go>Cajas del mes</a>
           <a href="#duos" data-go>Dúos</a>
-          <a href="#espumantes" data-go>Espumantes</a>
-          <a class="solo-compu" href="#preguntas" data-go>Preguntas</a>
-          <a class="solo-compu" href="#regalo" data-go>Regalá una caja</a>
+          <a href="#stock" data-go data-t-solo="stock">En stock</a>
           <a href="#encargue" data-go>Por encargue</a>
+          <a href="#espumantes" data-go>Espumantes</a>
+          <a href="#bodegas" data-go>Bodegas</a>
+          <a class="solo-compu" href="#como-funciona" data-go>Cómo funciona</a>
+          <a class="solo-compu" href="#regalo" data-go>Regalá una caja</a>
+          <a class="solo-compu" href="#preguntas" data-go>Preguntas</a>
         </nav>
       </details>
     </div>
   </div>
 </header>
 
+<!-- Menú de secciones de la tienda: queda fijo debajo del encabezado -->
+<nav class="t-secnav" aria-label="Secciones de la tienda">
+  <div class="t-secnav__in" data-t-secnav>
+    <a href="#club" data-go>Cajas del mes</a>
+    <a href="#duos" data-go>Dúos · hoy</a>
+    <a href="#stock" data-go data-t-solo="stock">En stock</a>
+    <a href="#encargue" data-go>Por encargue</a>
+    <a href="#espumantes" data-go>Espumantes</a>
+  </div>
+</nav>
+
 <main id="contenido">
 <div class="view active" data-view="inicio">
 
-  <!-- ============================================ PORTADA -->
-  <section class="hero" id="inicio">
-    <div class="hero__media">
-      <figure class="slot slot--hero" data-slot="portada">
-        <img src="assets/img/portada-vinedo.webp" alt="Viñedo al atardecer, con las hileras de vides hacia el horizonte" width="2400" height="1470">
-      </figure>
+  <!-- ============================================ PORTADA: carrusel (los textos de la caja salen de datos.js) -->
+  <section class="t-hero" id="inicio" aria-roledescription="carrusel" aria-label="Destacados">
+    <div class="t-hero__track" data-t-track tabindex="0">
+      <article class="t-slide" data-t-slide="caja">
+        <img src="assets/img/portada-vinedo.webp" alt="" style="object-position:50% 70%">
+        <span class="t-slide__q" aria-hidden="true">?</span>
+        <div class="t-slide__txt"><span data-t-slide-eyebrow>El club · caja del mes</span><h1 data-t-slide-titulo>La caja del mes</h1><p data-t-slide-texto>Reservás y pagás hasta el 6. Te la llevamos del 7 al 10.</p><a class="t-btn t-btn--rosa" href="#club" data-go>Reservar mi caja</a></div>
+      </article>
+      <article class="t-slide" data-t-slide="duos">
+        <img src="assets/img/momento-duos-fondo.webp" alt="" style="object-position:50% 62%" loading="lazy">
+        <div class="t-slide__txt"><span>Diarios · sin reserva</span><h2>Dúos para <em>esta noche.</em></h2><p>Dos vinos elegidos por nosotros, con entrega en el día.</p><a class="t-btn" href="#duos" data-go>Ver dúos</a></div>
+      </article>
+      <article class="t-slide t-slide--mano" data-t-slide="encargue">
+        <img src="assets/img/hero-encargue-mano.webp" alt="" style="object-position:50% 38%" loading="lazy">
+        <div class="t-slide__txt"><span>Nuevo · por encargue</span><h2>¿Te gustó un vino <em>de la caja?</em></h2><p>Lo pedimos para vos, por unidad o por caja de 6.</p><a class="t-btn" href="#encargue" data-go>Ver por encargue</a></div>
+      </article>
     </div>
-    <div class="hero__copy">
-      <h1 data-texto="portadaTitulo" data-split>Un club de vinos con <em>acento del Litoral.</em></h1>
-      <div class="hero__row rv">
-        <ul class="facts">
-          <li data-dato="ciudad">Paraná, Entre Ríos</li>
-          <li>Reservas y pago <span data-regla="reservas">hasta el 6</span></li>
-          <li>Entregas del <span data-regla="entregas">7 al 10</span></li>
-          <li>Desde <span data-desde>$18.500</span></li>
-        </ul>
-        <a class="btn" href="#club" data-go data-order="">Reservá tu caja</a>
-      </div>
-    </div>
+    <button class="t-flecha t-flecha--prev" type="button" data-t-ir="-1" aria-label="Anterior">‹</button>
+    <button class="t-flecha t-flecha--next" type="button" data-t-ir="1" aria-label="Siguiente">›</button>
+    <div class="t-dots" data-t-dots></div>
   </section>
+
+  <!-- ============================================ FRANJA BORDÓ: lo que hay que saber -->
+  <div class="t-benef"><div class="t-benef__in">
+    <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>Dúos: entrega en el día</p>
+    <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span>Cajas del mes: reservás <span data-regla="reservas">hasta el 6</span></span></p>
+    <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/></svg>Transferencia o Mercado Pago</p>
+    <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Paraná, alrededores e interior de Entre Ríos</p>
+  </div></div>
 
   <!-- ============================================ ACCESO RÁPIDO A MI PERFIL (solo en el celular) -->
   <section class="solo-cel prapido" id="perfil-rapido" aria-label="Tu perfil">
@@ -156,63 +179,81 @@ src="https://www.facebook.com/tr?id=1165672275790394&amp;ev=PageView&amp;noscrip
     </a>
   </section>
 
-  <!-- ============================================ EL CLUB: LA CAJA DEL MES (menú con foto fija) -->
-  <div id="club" class="club-wrap">
-  <section class="menu" id="caja">
-    <div class="menu__media">
-      <div class="menu__sticky">
-        <figure class="slot menu__fig is-on" data-menu-fig="reserva">
-          <img src="assets/img/caja-reserva-terruno-coordenada.webp" alt="Caja Reserva: Mi Terruño Limited Reserve Petit Verdot y Coordenada Cabernet Sauvignon, más dos botellas sorpresa" width="1118" height="1407">
-        </figure>
-        <figure class="slot menu__fig" data-menu-fig="clasica">
-          <img src="assets/img/caja-clasica-pala-abismal.webp" alt="Caja Clásica: Pala Corazón Malbec y Abismal Destino Malbec, más dos botellas sorpresa" width="1118" height="1407">
-        </figure>
-      </div>
-    </div>
-    <div class="menu__col">
-      <div class="menu__in">
-        <p class="eyebrow solo-compu"><span data-texto="cajaEtiqueta">El club · La caja del mes</span> · <span data-mes-anio>Noviembre 2026</span></p>
-        <p class="eyebrow solo-cel"><span data-mes-anio>Noviembre 2026</span></p>
-        <h2 class="solo-cel menu__cel">Combos <em>mensuales.</em></h2>
-        <h2 class="solo-compu" data-texto="cajaTitulo" data-split>Cuatro vinos, <em>dos sorpresas.</em></h2>
-        <p class="menu__lede solo-compu" data-texto="cajaTexto">Cada mes elegimos cuatro vinos por vos y te los llevamos a casa. Dos tintos te los contamos de antemano; los otros dos llegan como sorpresa.</p>
-        <p class="status" data-estado><i></i><span>Reservas hasta el 6 de cada mes</span></p>
-
-        <div class="flights" data-flights>
-          <article class="flight rv" data-flight="reserva">
-            <figure class="slot flight__media"><img src="assets/img/caja-reserva-terruno-coordenada.webp" alt="Caja Reserva: Mi Terruño Limited Reserve Petit Verdot y Coordenada Cabernet Sauvignon, más dos botellas sorpresa"></figure>
-            <span class="tag">La más pedida</span>
-            <p class="flight__price">$70.000</p>
-            <h3>Caja Reserva</h3>
-            <p class="flight__desc">Cuatro vinos con más guarda y más historia.</p>
-            <p class="flight__per">4 vinos · $17.500 c/u</p>
-            <ol class="pours">
-              <li><span class="pours__meta">N.º 1 · Petit Verdot 2018 · Mendoza</span><b>Mi Terruño</b></li>
-              <li><span class="pours__meta">N.º 2 · Cabernet Sauvignon</span><b>Coordenada</b></li>
-              <li class="pours__surprise"><span class="pours__meta">N.º 3 y 4</span><b>Dos sorpresas</b><span class="pours__x">Puede ser tinto, blanco, rosado o espumante.</span></li>
-            </ol>
-            <a class="btn" href="#club" data-order="reserva">Reservar Caja Reserva</a>
-          </article>
-          <article class="flight rv" data-flight="clasica">
-            <figure class="slot flight__media"><img src="assets/img/caja-clasica-pala-abismal.webp" alt="Caja Clásica: Pala Corazón Malbec y Abismal Destino Malbec, más dos botellas sorpresa"></figure>
-            <p class="flight__price">$55.000</p>
-            <h3>Caja Clásica</h3>
-            <p class="flight__desc">Cuatro vinos para todos los días, bien elegidos.</p>
-            <p class="flight__per">4 vinos · $13.750 c/u</p>
-            <ol class="pours">
-              <li><span class="pours__meta">N.º 1 · Malbec · Mendoza</span><b>Pala Corazón</b></li>
-              <li><span class="pours__meta">N.º 2 · Malbec · Valle de Uco</span><b>Abismal Destino</b></li>
-              <li class="pours__surprise"><span class="pours__meta">N.º 3 y 4</span><b>Dos sorpresas</b><span class="pours__x">Puede ser tinto, blanco, rosado o espumante.</span></li>
-            </ol>
-            <a class="btn btn--line" href="#club" data-order="clasica">Reservar Caja Clásica</a>
-          </article>
-        </div>
-        <p class="menu__foot solo-compu" data-texto="cajaNota">Si no querés blancos, rosados o espumantes, lo marcás al reservar y no te tocan.</p>
+  <!-- ============================================ ELEGÍ CÓMO PEDIR (fotos que llevan a cada sección) -->
+  <section class="t-band t-band--noche" aria-labelledby="t-busca">
+    <div class="t-wrap">
+      <div class="t-head"><span>Elegí cómo pedir</span><h2 id="t-busca">¿Qué <em>buscás?</em></h2></div>
+      <div class="t-tiles" data-t-tiles>
+        <a class="t-tile" href="#club" data-go data-t-tile="caja"><img src="assets/img/caja-reserva-octubre.webp" alt="" loading="lazy"><i>Hasta el 6</i><b>Cajas del mes</b><small>Reserva y Clásica</small></a>
+        <a class="t-tile" href="#duos" data-go data-t-tile="duos"><img src="assets/img/duo-reserva-cielo.webp" alt="" loading="lazy"><i>Hoy</i><b>Dúos</b><small>Dos vinos, entrega en el día</small></a>
+        <a class="t-tile" href="#stock" data-go data-t-tile="stock"><img src="assets/img/tile-stock-mesa.webp" alt="" style="object-position:50% 62%" loading="lazy"><i>Hoy</i><b>En stock</b><small>Botellas sueltas, en el día</small></a>
+        <a class="t-tile" href="#encargue" data-go data-t-tile="encargue"><img src="assets/img/tile-encargue-mano.webp" alt="" style="object-position:50% 45%" loading="lazy"><i>A pedido</i><b>Por encargue</b><small>Vinos de cajas anteriores</small></a>
+        <a class="t-tile" href="#espumantes" data-go data-t-tile="espumantes"><img src="assets/img/tile-espumantes.webp" alt="" loading="lazy"><i>A pedido</i><b>Espumantes</b><small>Por botella o por caja</small></a>
       </div>
     </div>
   </section>
 
+  <!-- ============================================ EL CLUB: LAS CAJAS DEL MES (se arman desde datos.js, parte 3) -->
+  <div id="club" class="club-wrap">
+  <section class="t-band t-band--crema" id="caja" aria-labelledby="t-cajas">
+    <div class="t-wrap">
+      <div class="t-head">
+        <span data-texto="cajaEtiqueta">El club · La caja del mes</span>
+        <h2 id="t-cajas" data-t-cajas-titulo>Cajas del <em>mes.</em></h2>
+        <p data-t-cajas-texto>Cada mes elegimos cuatro vinos por vos y te los llevamos a casa.</p>
+        <div class="t-reglas" data-t-reglas></div>
+      </div>
+      <div class="t-cols" data-t-cajas></div>
+      <p class="t-nota" data-texto="cajaNota">Si no querés blancos, rosados o espumantes, lo marcás al reservar y no te tocan.</p>
+    </div>
+  </section>
   </div>
+
+  <!-- ============================================ DÚOS (se arman desde datos.js) -->
+  <section class="t-band t-band--noche" id="duos" aria-labelledby="t-duos">
+    <div class="t-wrap">
+      <div class="t-head"><span data-texto="duosEtiqueta">Diarios · sin reserva</span><h2 id="t-duos" data-texto="duosTitulo">Dúos para <em>hoy.</em></h2>
+        <p data-texto="duosTexto">Dos vinos elegidos por nosotros, para pedir cualquier día del mes.</p></div>
+      <div class="t-cols" data-t-duos></div>
+      <p class="t-nota t-nota--clara solo-compu" data-texto="duosAclaracion">Los dúos van por fuera del club: no tienen fechas de reserva ni sorpresas, y no suman para el regalo sorpresa.</p>
+    </div>
+  </section>
+
+  <!-- ============================================ EN STOCK (datos.js, parte 3 B bis; vacía = no se ve) -->
+  <section class="t-band t-band--papel" id="stock" aria-labelledby="t-stock" hidden>
+    <div class="t-wrap">
+      <div class="t-head"><span data-texto="stockEtiqueta">Individuales · con stock</span><h2 id="t-stock" data-texto="stockTitulo">En stock, <em>para hoy.</em></h2>
+        <p data-texto="stockTexto">Las botellas que tenemos en el loft, por botella o por caja.</p></div>
+      <div class="t-filtros" data-t-filtros="stock"></div>
+      <div class="t-grid" data-t-stock></div>
+    </div>
+  </section>
+
+  <!-- ============================================ POR ENCARGUE (datos.js, parte 3 B) -->
+  <section class="t-band t-band--oscura" id="encargue" aria-labelledby="t-enc">
+    <div class="t-wrap">
+      <div class="t-head"><span data-texto="encargueEtiqueta">Por encargue · sin stock</span><h2 id="t-enc" data-texto="encargueTitulo">¿Te gustó un vino de <em>una caja anterior?</em></h2>
+        <p data-texto="encargueTexto">Lo pedimos para vos, por unidad o por caja de 6.</p></div>
+      <p class="t-aviso-nota" data-t-enc-nota><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><span data-texto="encargueNota">Vinos de las cajas anteriores que todavía se consiguen.</span></p>
+      <div class="t-filtros" data-t-filtros="encargue"></div>
+      <div class="t-grid" data-t-encargue></div>
+    </div>
+  </section>
+
+  <!-- ============================================ ESPUMANTES (datos.js, parte 3 C) -->
+  <section class="t-band t-band--crema" id="espumantes" aria-labelledby="t-esp">
+    <div class="t-wrap">
+      <div class="t-head"><span data-texto="espumantesEtiqueta">Por encargue · selección de la casa</span><h2 id="t-esp" data-texto="espumantesTitulo">Espumantes <em>destacados.</em></h2>
+        <p data-texto="espumantesNota">Por botella o por caja del mismo espumante.</p></div>
+      <div class="t-grid" data-t-espumantes></div>
+    </div>
+  </section>
+
+  <!-- ============================================ BODEGAS (datos.js, parte 3 D) -->
+  <section class="t-bodegas" id="bodegas" aria-labelledby="t-bod">
+    <div class="t-bodegas__hd"><span data-texto="bodegasEtiqueta">En nuestras cajas y dúos</span><h2 id="t-bod" data-texto="bodegasTitulo">Bodegas con las que <em>trabajamos.</em></h2></div>
+    <div class="t-marquee" data-t-marquee></div>
+  </section>
 
   <!-- ============================================ CÓMO FUNCIONA (franja papel, números grandes) -->
   <section class="solo-compu band band--papel rule" id="como-funciona">
@@ -259,127 +300,6 @@ src="https://www.facebook.com/tr?id=1165672275790394&amp;ev=PageView&amp;noscrip
     </div>
   </section>
 
-  <!-- ============================================ DÚOS (lista con foto que sigue al mouse) -->
-  <section class="wines" id="duos">
-    <div class="wrap">
-      <div class="wines__head">
-        <h2><span data-texto="duosTitulo" data-split>Dúos.</span><sup data-duos-count>04</sup></h2>
-        <div class="wines__intro rv solo-compu">
-          <p data-texto="duosTexto">Dos vinos elegidos por nosotros, para pedir cualquier día del mes. También cambian todos los meses.</p>
-          <a class="ulink" href="#club" data-go>Ver la caja del mes</a>
-        </div>
-      </div>
-      <div class="duos-note rv">
-        <span class="duos-note__tag">Todo el mes · Sin reserva</span>
-        <p class="solo-compu" data-texto="duosAclaracion">Los dúos van por fuera del club: no tienen fechas de reserva ni sorpresas, y no suman para el regalo sorpresa. Los pedís cualquier día del mes.</p>
-      </div>
-      <div class="wlist" data-duos>
-        <div class="wgroup rv">
-          <div class="wgroup__head" data-img="assets/img/duo-reserva-cielo.webp">
-            <span class="eyebrow">Combo Autor</span>
-            <span class="wgroup__desc">Dos vinos para una ocasión que lo merece.</span>
-            <b class="wgroup__price">$25.000</b>
-            <a class="btn btn--sm" href="#duos" data-order="duo-reserva" data-paso="1">Comprar</a>
-          </div>
-          <a class="wrow" href="#duos" data-order="duo-reserva" data-paso="1" data-img="assets/img/v-marioneta-recorte.webp">
-            <span class="wrow__n">N.º 1</span><span class="wrow__name">Marioneta</span><span class="wrow__meta">Malbec · Mendoza</span><span class="wrow__note hand">Pide pizza casera.</span><img class="wrow__thumb" src="assets/img/v-marioneta-recorte.webp" alt="">
-          </a>
-          <a class="wrow" href="#duos" data-order="duo-reserva" data-paso="1" data-img="assets/img/v-13cles-recorte.webp">
-            <span class="wrow__n">N.º 2</span><span class="wrow__name">13 Clés</span><span class="wrow__meta">Malbec · Argentina</span><span class="wrow__note hand">Guardalo para el domingo.</span><img class="wrow__thumb" src="assets/img/v-13cles-recorte.webp" alt="">
-          </a>
-        </div>
-        <div class="wgroup rv">
-          <div class="wgroup__head" data-img="assets/img/duo-clasico-cielo.webp">
-            <span class="eyebrow">Combo Origen</span>
-            <span class="wgroup__desc">Dos vinos para la cena de esta noche.</span>
-            <b class="wgroup__price">$18.500</b>
-            <a class="btn btn--sm" href="#duos" data-order="duo-clasico" data-paso="1">Comprar</a>
-          </div>
-          <a class="wrow" href="#duos" data-order="duo-clasico" data-paso="1" data-img="assets/img/v-tepeyac-recorte.webp">
-            <span class="wrow__n">N.º 1</span><span class="wrow__name">Tepeyac Reserva</span><span class="wrow__meta">Malbec · Mendoza</span><span class="wrow__note hand">Para el asado del sábado.</span><img class="wrow__thumb" src="assets/img/v-tepeyac-recorte.webp" alt="">
-          </a>
-          <a class="wrow" href="#duos" data-order="duo-clasico" data-paso="1" data-img="assets/img/v-criolla-recorte.webp">
-            <span class="wrow__n">N.º 2</span><span class="wrow__name">Criolla Argentina</span><span class="wrow__meta">Tinta · Bodega Niven 2025 · Mendoza</span><span class="wrow__note hand">Con algo para picar.</span><img class="wrow__thumb" src="assets/img/v-criolla-recorte.webp" alt="">
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="cursor-img" aria-hidden="true"><img alt=""></div>
-    <div class="pour" aria-hidden="true"></div>
-  </section>
-
-  <!-- ============================================ ESPUMANTES DESTACADOS (se arma desde datos.js, parte 3 C) -->
-  <section class="espumantes" id="espumantes">
-    <div class="wrap">
-      <div class="espumantes__head">
-        <p class="eyebrow" data-texto="espumantesEtiqueta">Selección de la casa</p>
-        <h2 data-texto="espumantesTitulo">Espumantes <em>destacados.</em></h2>
-      </div>
-      <div class="espumantes__grid" data-espumantes>
-        <article class="esp rv">
-          <figure class="esp__media"><img src="assets/img/esp-las-perdices.webp" alt="Las Perdices Champenoise Joven Extra Brut" loading="lazy"></figure>
-          <div class="esp__body">
-            <h3>Las Perdices Champenoise Joven Extra Brut</h3>
-            <div class="esp__precios">
-              <p class="esp__uno"><span>Unidad</span><b>$10.500</b></p>
-              <p class="esp__seis"><span>Por 6</span><b>$9.500 c/u</b><small>$57.000 la caja</small></p>
-            </div>
-          </div>
-        </article>
-        <article class="esp rv">
-          <figure class="esp__media"><img src="assets/img/esp-keo.webp" alt="Keo Extra Brut 100% Pinot Noir" loading="lazy"></figure>
-          <div class="esp__body">
-            <h3>Keo Extra Brut 100% Pinot Noir</h3>
-            <div class="esp__precios">
-              <p class="esp__uno"><span>Unidad</span><b>$20.600</b></p>
-              <p class="esp__seis"><span>Por 6</span><b>$19.600 c/u</b><small>$117.600 la caja</small></p>
-            </div>
-          </div>
-        </article>
-        <article class="esp rv">
-          <figure class="esp__media"><img src="assets/img/esp-chanarmuyo.webp" alt="Chañarmuyo Champenoise Brut Nature" loading="lazy"></figure>
-          <div class="esp__body">
-            <h3>Chañarmuyo Champenoise Brut Nature</h3>
-            <div class="esp__precios">
-              <p class="esp__uno"><span>Unidad</span><b>$26.300</b></p>
-              <p class="esp__seis"><span>Por 6</span><b>$25.300 c/u</b><small>$151.800 la caja</small></p>
-            </div>
-          </div>
-        </article>
-        <article class="esp rv">
-          <figure class="esp__media"><img src="assets/img/esp-las-perdices-nuit.webp" alt="Las Perdices Nuit Brut Nature" loading="lazy"></figure>
-          <div class="esp__body">
-            <h3>Las Perdices Nuit Brut Nature</h3>
-            <div class="esp__precios">
-              <p class="esp__uno"><span>Unidad</span><b>$36.000</b></p>
-              <p class="esp__seis"><span>Por 3</span><b>$35.000 c/u</b><small>$105.000 la caja</small></p>
-            </div>
-          </div>
-        </article>
-        <article class="esp rv">
-          <figure class="esp__media"><img src="assets/img/esp-chamas-honnorat-rose.webp" alt="Chañarmuyo Champenoise Extra Brut Rosé" loading="lazy"></figure>
-          <div class="esp__body">
-            <h3>Chañarmuyo Champenoise Extra Brut Rosé</h3>
-            <div class="esp__precios">
-              <p class="esp__uno"><span>Unidad</span><b>$25.000</b></p>
-              <p class="esp__seis"><span>Por 6</span><b>$24.000 c/u</b><small>$144.000 la caja</small></p>
-            </div>
-          </div>
-        </article>
-        <article class="esp rv">
-          <figure class="esp__media"><img src="assets/img/esp-criolla-petnat.webp" alt="Criolla Argentina Pet Nat" loading="lazy"></figure>
-          <div class="esp__body">
-            <h3>Criolla Argentina Pet Nat</h3>
-            <div class="esp__precios">
-              <p class="esp__uno"><span>Unidad</span><b>$15.100</b></p>
-              <p class="esp__seis"><span>Por 6</span><b>$14.100 c/u</b><small>$84.600 la caja</small></p>
-            </div>
-          </div>
-        </article>
-      </div>
-      <p class="espumantes__nota" data-texto="espumantesNota">«Por 6» o «Por 3» es el precio de cada botella llevando la caja completa del mismo espumante.</p>
-    </div>
-  </section>
 
   <!-- ============================================ VINOS POR ESTACIÓN (ventanas escalonadas) -->
   <section class="solo-compu year" id="estaciones">
@@ -469,27 +389,6 @@ src="https://www.facebook.com/tr?id=1165672275790394&amp;ev=PageView&amp;noscrip
     </div>
   </section>
 
-  <!-- ============================================ POR ENCARGUE (en compu, al final, donde estaba la frase «Abrí uno el jueves…»;
-       en el celular queda justo después de los Dúos). Los vinos se cargan en datos.js, parte 3 B -->
-  <section class="band band--papel encargue" id="encargue">
-    <div class="wrap">
-      <div class="encargue__top">
-        <div class="encargue__head">
-          <p class="eyebrow encargue__eyebrow" data-texto="encargueEtiqueta">Catálogo</p>
-          <h2 data-texto="encargueTitulo">Por <em>encargue.</em></h2>
-          <p class="encargue__lede" data-texto="encargueTexto">Vinos que traemos a pedido. Elegí el tuyo, escribinos y te confirmamos precio y entrega.</p>
-          <div class="encargue__vacio" data-encargue-vacio>
-            <span class="encargue__pronto" data-texto="encarguePronto">Próximamente</span>
-            <p class="encargue__vacio-t" data-texto="encargueVacio">Botellas <em>Magnum</em> y vinos especiales que traemos a pedido. Muy pronto vas a poder elegirlos acá.</p>
-            <p class="hand encargue__vacio-nota" data-texto="encargueVacioNota">¿buscás una botella en particular? preguntanos</p>
-            <a class="btn btn--ink btn--sm encargue__wa" data-encargue-wa href="#" target="_blank" rel="noopener" hidden>Consultar por WhatsApp</a>
-          </div>
-        </div>
-        <figure class="encargue__art" data-encargue-art aria-hidden="true"><svg class="encart" viewBox="0 0 300 372" role="img" aria-label="Una botella común y una botella Magnum, más grande"><line class="encart__floor" x1="18" y1="329" x2="282" y2="329"></line><path class="encart__glass" d="M65 319V188C65 171.88 83 175.52 83 162V100H101V162C101 175.52 119 171.88 119 188V319Q119 328 110 328H74Q65 328 65 319Z"></path><rect class="encart__cap" x="82" y="98" width="20" height="26" rx="2"></rect><rect class="encart__label" x="70" y="219" width="44" height="59" rx="2"></rect><path class="encart__shine" d="M74 194V210.4M74 300V314"></path><path class="encart__glass" d="M180 319V152C180 132.16 203 136.64 203 120V44H225V120C225 136.64 248 132.16 248 152V319Q248 328 239 328H189Q180 328 180 319Z"></path><rect class="encart__cap" x="202" y="42" width="24" height="32" rx="2"></rect><rect class="encart__label" x="186.5" y="191" width="55" height="74" rx="2"></rect><path class="encart__shine" d="M189 158V180.16M189 292.8V314"></path><text class="encart__t" x="92" y="360" text-anchor="middle">75 cl</text><text class="encart__t encart__t--big" x="214" y="360" text-anchor="middle">Magnum · 1,5 L</text></svg></figure>
-      </div>
-      <div class="encargue__grid" data-encargue hidden></div>
-    </div>
-  </section>
 </div>
 
 <!-- ============================================ MI PERFIL (necesita JavaScript) -->
@@ -649,13 +548,13 @@ src="https://www.facebook.com/tr?id=1165672275790394&amp;ev=PageView&amp;noscrip
       <div class="solo-compu">
         <h3>Explorá</h3>
         <ul>
-          <li><a href="#club" data-go>El club</a></li>
-          <li><a href="#como-funciona" data-go>Cómo funciona</a></li>
+          <li><a href="#club" data-go>Cajas del mes</a></li>
           <li><a href="#duos" data-go>Dúos</a></li>
+          <li><a href="#encargue" data-go>Por encargue</a></li>
           <li><a href="#espumantes" data-go>Espumantes</a></li>
+          <li><a href="#como-funciona" data-go>Cómo funciona</a></li>
           <li><a href="#regalo" data-go>Regalá una caja</a></li>
           <li><a href="#preguntas" data-go>Preguntas</a></li>
-          <li><a href="#encargue" data-go>Por encargue</a></li>
         </ul>
       </div>
       <div>
@@ -709,6 +608,11 @@ src="https://www.facebook.com/tr?id=1165672275790394&amp;ev=PageView&amp;noscrip
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ============================================ CARRITO: barra de abajo, aviso «Agregaste» y WhatsApp -->
+<button type="button" class="t-bar" id="tBar" hidden><span><b data-t-bar-total></b><small data-t-bar-nota></small></span><span class="t-btn t-btn--ink">Ver pedido</span></button>
+<div class="t-toast" id="tToast" role="status"><span data-t-toast-txt></span><button type="button" data-t-ver-pedido>Ver pedido</button></div>
+<a class="t-fab" id="tFab" href="#" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp" hidden><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg></a>
 
 </body>
 </html>

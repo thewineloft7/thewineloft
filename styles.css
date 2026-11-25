@@ -1146,3 +1146,239 @@ section.gift .hand { margin-top: 1.5rem; }
   .esp__precios b { font-size: 1.1rem; }
   .esp__btns { grid-template-columns: 1fr; }
 }
+
+/* =============================================================
+   23. Tienda (noviembre 2026): carrusel, «Elegí cómo pedir», cajas y
+       dúos en tarjetas, en stock, por encargue, espumantes, bodegas y
+       el carrito de botellas. Pensado primero para el celular.
+   ============================================================= */
+:root { --t-card: #FBF5E9; --t-sec: 58px; }
+section, .club-wrap { scroll-margin-top: calc(var(--hd) + var(--t-sec)); }
+.t-wrap { max-width: 1180px; margin: 0 auto; }
+.t-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 46px; padding: 0 1.4rem; border: 1px solid var(--crema); border-radius: 999px;
+  background: var(--crema); color: var(--ink); font-size: 0.95rem; font-weight: 600; line-height: 1.2;
+  text-decoration: none; white-space: nowrap; cursor: pointer;
+}
+.t-btn--rosa { background: var(--accent); border-color: var(--accent); }
+.t-btn--ink { background: var(--ink); border-color: var(--ink); color: var(--crema); }
+.t-btn--line { background: transparent; color: inherit; border-color: currentColor; }
+.t-btn--w { width: 100%; }
+
+/* Franja de avisos que rota y menú de secciones fijo */
+.t-avisos { display: grid; place-items: center; min-height: 36px; padding: 0.35rem var(--gutter); background: var(--papel); color: var(--ink); font-size: 0.86rem; font-weight: 600; line-height: 1.35; text-align: center; transition: opacity 0.35s; }
+.t-avisos.fade { opacity: 0; }
+.t-secnav { position: sticky; top: calc(var(--hd) + env(safe-area-inset-top, 0px)); z-index: 45; background: var(--bg); border-bottom: 1px solid var(--line); }
+.t-secnav__in { display: flex; gap: 0.5rem; overflow-x: auto; max-width: 1180px; margin: 0 auto; padding: 0.55rem var(--gutter); scrollbar-width: none; }
+.t-secnav__in::-webkit-scrollbar { display: none; }
+.t-secnav a { flex: none; display: flex; align-items: center; min-height: 40px; padding: 0 0.95rem; border: 1px solid var(--line); border-radius: 999px; font-size: 0.88rem; font-weight: 500; text-decoration: none; white-space: nowrap; }
+.t-secnav a.on { background: var(--crema); border-color: var(--crema); color: var(--ink); }
+.en-perfil .t-secnav, .en-perfil .t-bar, .en-perfil .t-fab { display: none; }
+
+/* Encabezado: carrito y botón de reservar */
+.hd__cart { position: relative; display: inline-grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--fg); }
+.hd__cart-n { position: absolute; top: -4px; right: -5px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px; background: var(--accent); color: var(--ink); font-size: 0.7rem; font-weight: 700; line-height: 19px; text-align: center; }
+.hd__cart-n:empty { display: none; }
+@media (max-width: 520px) { .hd__cta { display: none; } }
+
+/* Carrusel de la portada */
+.t-hero { position: relative; background: var(--band); }
+.t-hero__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; outline: none; }
+.t-hero__track::-webkit-scrollbar { display: none; }
+.t-slide { position: relative; flex: 0 0 100%; display: flex; align-items: flex-end; height: clamp(430px, 64svh, 600px); overflow: hidden; scroll-snap-align: start; }
+.t-slide > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.t-slide::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14, 21, 36, 0.1) 25%, rgba(14, 21, 36, 0.93) 88%); }
+.t-slide__txt { position: relative; z-index: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 var(--gutter) 70px; }
+.t-slide__txt > span { font-size: 0.88rem; font-weight: 600; color: var(--papel); }
+.t-slide__txt { text-shadow: 0 1px 18px rgba(14, 21, 36, 0.55); }
+.t-slide__txt .t-btn { text-shadow: none; }
+.t-slide h1, .t-slide h2 { max-width: 12ch; margin: 0.5rem 0 0.6rem; font-size: clamp(2.4rem, 10vw, 3.9rem); font-weight: 300; line-height: 1.02; }
+.t-slide p { max-width: 36ch; margin: 0 0 1.25rem; color: rgba(241, 231, 211, 0.88); font-size: 1.05rem; }
+.t-slide__q { position: absolute; z-index: 1; top: 8%; right: 6%; font-family: var(--f-display); font-size: clamp(140px, 34vw, 300px); font-weight: 300; line-height: 1; color: var(--accent); opacity: 0.9; }
+.t-dots { position: absolute; left: 0; right: 0; bottom: 16px; z-index: 2; display: flex; justify-content: center; gap: 2px; }
+.t-dots button { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; background: none; }
+.t-dots button::before { content: ""; width: 8px; height: 8px; border-radius: 4px; background: rgba(241, 231, 211, 0.45); transition: width 0.3s; }
+.t-dots button.on::before { width: 24px; background: var(--crema); }
+.t-flecha { display: none; position: absolute; top: 50%; z-index: 2; width: 46px; height: 46px; margin-top: -23px; border: 1px solid var(--line); border-radius: 50%; background: rgba(14, 21, 36, 0.55); color: var(--fg); font-size: 1.3rem; }
+.t-flecha--prev { left: 18px; }
+.t-flecha--next { right: 18px; }
+@media (max-width: 699px) { .t-slide--mano > img { inset: auto 0 0 0; height: 135%; object-position: 50% 100% !important; } }
+@media (min-width: 1000px) { .t-flecha { display: grid; place-items: center; } .t-slide__txt { padding-bottom: 80px; } }
+
+/* Franja bordó */
+.t-benef { background: var(--bordo); color: var(--crema); }
+.t-benef__in { display: flex; gap: 1.6rem; overflow-x: auto; max-width: 1180px; margin: 0 auto; padding: 0.8rem var(--gutter); scrollbar-width: none; }
+.t-benef__in::-webkit-scrollbar { display: none; }
+.t-benef p { flex: none; display: flex; align-items: center; gap: 0.55rem; font-size: 0.88rem; font-weight: 500; white-space: nowrap; }
+.t-benef svg { flex: none; width: 20px; height: 20px; }
+
+/* Franjas y títulos de la tienda */
+.t-band { padding: 2.75rem var(--gutter) 3.25rem; }
+.t-band--noche { background: var(--bg); }
+.t-band--oscura { background: var(--band); }
+.t-band--crema { background: var(--crema); color: var(--ink); }
+.t-band--papel { background: var(--papel); color: var(--ink); }
+.t-band--crema em, .t-band--papel em { color: var(--bordo); }
+.t-head { margin-bottom: 1.25rem; }
+.t-head > span { font-size: 0.88rem; font-weight: 600; color: var(--accent); }
+.t-band--crema .t-head > span, .t-band--papel .t-head > span { color: var(--bordo); }
+.t-head h2 { margin-top: 0.4rem; font-size: clamp(2.25rem, 8vw, 3.4rem); font-weight: 300; line-height: 1.04; }
+.t-head p { max-width: 58ch; margin-top: 0.75rem; color: var(--muted); }
+.t-band--crema .t-head p, .t-band--papel .t-head p { color: var(--ink-muted); }
+.t-reglas { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.9rem; }
+.t-reglas b { padding: 0.35rem 0.75rem; border: 1px solid currentColor; border-radius: 999px; font-size: 0.8rem; font-weight: 600; opacity: 0.85; }
+.t-nota { margin-top: 1.25rem; color: var(--ink-muted); font-size: 0.9rem; }
+.t-nota--clara { color: var(--muted); }
+.t-aviso-nota { display: flex; gap: 0.6rem; align-items: flex-start; margin: 0 0 1.1rem; padding: 0.75rem 0.9rem; border-radius: 12px; background: rgba(241, 231, 211, 0.07); color: var(--papel); font-size: 0.9rem; }
+.t-aviso-nota svg { flex: none; width: 18px; height: 18px; margin-top: 2px; }
+
+/* «Elegí cómo pedir» */
+.t-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.t-tile { position: relative; display: flex; flex-direction: column; justify-content: flex-end; aspect-ratio: 4 / 5; padding: 14px; overflow: hidden; border-radius: 16px; color: var(--crema); text-decoration: none; }
+.t-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+.t-tile:hover img { transform: scale(1.04); }
+.t-tile::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14, 21, 36, 0) 35%, rgba(14, 21, 36, 0.9)); }
+.t-tile > *:not(img) { position: relative; z-index: 1; }
+.t-tile i { position: absolute; top: 12px; left: 12px; padding: 4px 10px; border-radius: 999px; background: var(--crema); color: var(--ink); font-size: 0.78rem; font-style: normal; font-weight: 600; }
+.t-tile b { font-family: var(--f-display); font-size: clamp(1.3rem, 5.4vw, 1.75rem); font-weight: 400; line-height: 1.05; }
+.t-tile small { margin-top: 3px; color: rgba(241, 231, 211, 0.85); font-size: 0.84rem; }
+.t-tile--ancho { grid-column: 1 / -1; aspect-ratio: 2 / 1; }
+
+/* Cajas y dúos */
+.t-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.t-caja, .t-duo { display: flex; flex-direction: column; overflow: hidden; border-radius: 20px; }
+.t-caja { border: 1px solid var(--ink-line); background: var(--t-card); color: var(--ink); }
+.t-caja__fig { position: relative; aspect-ratio: 941 / 831; margin: 0; background: #10182A; }
+.t-caja__fig img { width: 100%; height: 100%; object-fit: contain; }
+.t-caja__q { display: grid; place-content: center; height: 100%; color: var(--crema); text-align: center; }
+.t-caja__q b { font-family: var(--f-display); font-size: 118px; font-weight: 300; line-height: 0.95; color: var(--accent); }
+.t-caja__q span { font-family: var(--f-hand); font-size: 1.6rem; }
+.t-sello { position: absolute; top: 14px; right: 14px; display: grid; place-content: center; width: 78px; height: 78px; border-radius: 50%; background: var(--accent); color: var(--ink); font-size: 0.75rem; font-weight: 600; text-align: center; transform: rotate(-10deg); }
+.t-sello strong { display: block; font-family: var(--f-display); font-size: 1.6rem; font-weight: 500; line-height: 1; }
+.t-soldout { position: absolute; top: 14px; left: 14px; padding: 0.35rem 0.75rem; background: var(--accent); color: var(--ink); font-size: 0.75rem; font-weight: 600; transform: rotate(-4deg); }
+.t-body { display: flex; flex: 1; flex-direction: column; gap: 0.5rem; padding: 18px 18px 20px; }
+.t-tag { align-self: flex-start; padding: 4px 11px; border-radius: 999px; background: var(--accent); color: var(--ink); font-size: 0.78rem; font-weight: 600; }
+.t-caja h3, .t-duo h3 { font-size: 1.9rem; font-weight: 400; }
+.t-precio { font-family: var(--f-display); font-size: 2.1rem; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.t-precio s { margin-right: 0.5rem; color: var(--ink-muted); font-size: 1.1rem; }
+.t-desc { color: var(--ink-muted); }
+.t-dato { color: var(--ink-muted); font-size: 0.88rem; }
+.t-body > .t-btn { margin-top: auto; }
+.t-vinos { display: grid; gap: 4px; margin: 2px 0 0; padding: 0; list-style: none; }
+.t-vinos li { display: flex; justify-content: space-between; gap: 10px; padding-top: 7px; border-top: 1px solid var(--line); }
+.t-vinos li span { color: var(--muted); font-size: 0.88rem; text-align: right; white-space: nowrap; }
+.t-caja .t-vinos li { border-top-color: var(--ink-line); }
+.t-caja .t-vinos li span { color: var(--ink-muted); }
+.t-caja .t-vinos li.t-sorp { color: var(--bordo); font-weight: 600; }
+.t-duo { border: 1px solid var(--line); background: var(--surface); }
+.t-duo__fig { position: relative; aspect-ratio: 4 / 3; margin: 0; }
+.t-duo__fig img { width: 100%; height: 100%; object-fit: cover; }
+.t-duo .t-desc { color: var(--muted); }
+.t-estados { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+.t-est { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; background: rgba(14, 21, 36, 0.86); color: var(--crema); font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+.t-est::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+.t-est--hoy::before { background: var(--accent); }
+.t-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 8px; }
+.t-duo .hand { font-size: 1.4rem; }
+
+/* Grillas de botellas: en stock, por encargue y espumantes */
+.t-filtros { display: flex; gap: 8px; overflow-x: auto; margin: 0 calc(-1 * var(--gutter)) 18px; padding: 0 var(--gutter); scrollbar-width: none; }
+.t-filtros::-webkit-scrollbar { display: none; }
+.t-filtros:empty { display: none; }
+.t-filtros button { flex: none; min-height: 40px; padding: 0 15px; border: 1px solid var(--ink-line); border-radius: 999px; background: transparent; font-size: 0.88rem; font-weight: 500; white-space: nowrap; }
+.t-filtros button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--crema); }
+.t-band--oscura .t-filtros button { border-color: var(--line); }
+.t-band--oscura .t-filtros button[aria-pressed="true"] { background: var(--crema); border-color: var(--crema); color: var(--ink); }
+.t-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.t-prod { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px solid var(--ink-line); border-radius: 16px; background: var(--t-card); color: var(--ink); }
+.t-prod__fig { position: relative; aspect-ratio: 1 / 1; margin: 0; overflow: hidden; background: var(--papel); }
+.t-prod__fig img { position: absolute; top: 6%; left: 50%; width: auto; max-width: 86%; height: 88%; object-fit: contain; transform: translateX(-50%); }
+.t-prod--dk { border-color: var(--line); background: var(--surface); color: var(--fg); }
+.t-prod--dk .t-prod__fig { aspect-ratio: 4 / 5; background: #141C2E; }
+.t-prod--dk .t-prod__fig > img, .t-prod--dk .t-prod__fig > svg { inset: 0; top: 0; left: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; transform: none; }
+.t-prod--dk .t-prod__fig > svg { position: absolute; }
+.t-chip { position: absolute; top: 8px; left: 8px; padding: 4px 9px; border-radius: 999px; background: var(--ink); color: var(--crema); font-size: 0.72rem; font-weight: 600; }
+.t-prod--dk .t-chip { background: var(--papel); color: var(--ink); }
+.t-chip--stock::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; background: var(--ok); }
+.t-prod .t-body { gap: 7px; padding: 12px 12px 14px; }
+.t-prod h3 { font-size: 1.1rem; font-weight: 400; line-height: 1.15; }
+.t-meta { color: var(--ink-muted); font-size: 0.8rem; }
+.t-prod--dk .t-meta { color: var(--muted); }
+.t-prod .hand { font-size: 1.2rem; line-height: 1.05; }
+.t-seg { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; border: 1px solid var(--ink-line); border-radius: 999px; }
+.t-prod--dk .t-seg { border-color: var(--line); }
+.t-seg button { min-height: 38px; padding: 0 4px; border: 0; border-radius: 999px; background: transparent; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+.t-seg button[aria-pressed="true"] { background: var(--ink); color: var(--crema); }
+.t-prod--dk .t-seg button[aria-pressed="true"] { background: var(--crema); color: var(--ink); }
+.t-pz { font-family: var(--f-display); font-size: 1.45rem; line-height: 1.1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.t-pz small { display: block; color: var(--ink-muted); font-family: var(--f-body); font-size: 0.78rem; line-height: 1.35; white-space: normal; }
+.t-prod--dk .t-pz small { color: var(--muted); }
+.t-pz--conf { font-size: 1.12rem; }
+.t-prod .t-btn { min-height: 44px; margin-top: auto; padding: 0 10px; font-size: 0.88rem; }
+.t-vacio { grid-column: 1 / -1; padding: 24px 18px; border: 1.5px dashed var(--ink-line); border-radius: 16px; color: var(--ink-muted); text-align: center; }
+.t-vacio p { margin-bottom: 14px; }
+.t-vacio .t-vacio__t { color: var(--fg); font-family: var(--f-display); font-size: 1.3rem; line-height: 1.2; }
+.t-band--oscura .t-vacio { border-color: var(--line); color: var(--muted); }
+
+/* Bodegas: logos que se deslizan */
+.t-bodegas { overflow: hidden; padding: 34px 0 38px; border-block: 1px solid var(--line); background: var(--surface); }
+.t-bodegas__hd { margin-bottom: 22px; padding: 0 var(--gutter); text-align: center; }
+.t-bodegas__hd span { font-size: 0.88rem; font-weight: 600; color: var(--accent); }
+.t-bodegas__hd h2 { margin-top: 6px; font-size: clamp(1.75rem, 6.4vw, 2.5rem); font-weight: 300; }
+.t-marquee { --base: 60px; display: flex; width: max-content; animation: tDesliza var(--dur, 45s) linear infinite; }
+.t-marquee:hover { animation-play-state: paused; }
+.t-marquee ul { display: flex; align-items: center; margin: 0; padding: 0; list-style: none; }
+.t-marquee li { flex: none; display: grid; justify-items: center; gap: 8px; margin: 0 24px; }
+.t-marquee img { width: auto; height: max(26px, min(62px, calc(var(--base) * var(--f, 0.6)))); opacity: 0.92; }
+.t-marquee small { color: var(--accent); font-size: 0.75rem; font-weight: 600; }
+@keyframes tDesliza { to { transform: translateX(-50%); } }
+
+/* Carrito: barra de abajo, aviso y botón de WhatsApp */
+.t-bar {
+  position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 70;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  width: calc(100% - 24px); max-width: 560px; margin: 0 auto; padding: 7px 7px 7px 20px;
+  border: 0; border-radius: 999px; background: var(--crema); color: var(--ink); text-align: left;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+.t-bar b { display: block; font-family: var(--f-display); font-size: 1.2rem; font-weight: 400; white-space: nowrap; }
+.t-bar small { display: block; color: var(--ink-muted); font-size: 0.78rem; }
+.t-bar .t-btn { min-height: 44px; }
+.t-toast {
+  position: fixed; top: calc(var(--hd) + 10px); left: 50%; z-index: 75;
+  display: flex; align-items: center; gap: 14px; width: max-content; max-width: calc(100% - 24px);
+  padding: 12px 14px 12px 16px; border-radius: 14px; background: var(--bordo); color: var(--crema); font-size: 0.9rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); opacity: 0; transform: translate(-50%, -16px); pointer-events: none; transition: 0.3s;
+}
+.t-toast.on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.t-toast button { flex: none; min-height: 36px; padding: 0; border: 0; background: none; color: inherit; font-weight: 600; text-decoration: underline; }
+.t-fab { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 69; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--ok); color: var(--band); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); transition: bottom 0.3s; }
+.t-fab svg { width: 30px; height: 30px; }
+.con-pedido .t-fab { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+.con-pedido .ft { padding-bottom: 96px; }
+
+/* El carrito dentro del panel del pedido */
+.t-linea { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.35rem 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--line); }
+.t-linea b { display: block; font-family: var(--f-display); font-size: 1.1rem; font-weight: 400; }
+.t-linea small { display: block; color: var(--muted); font-size: 0.8rem; }
+.t-linea__pr { align-self: center; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.t-linea .qty__ctl button { width: 2.3rem; height: 2.3rem; }
+.t-linea .qty__ctl output { min-width: 1.9rem; font-size: 1.15rem; }
+.t-linea__ctl { display: flex; align-items: center; gap: 0.9rem; }
+.t-linea__ctl .linkish { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
+
+@media (min-width: 700px) {
+  .t-band { padding: 3.5rem var(--gutter) 4rem; }
+  .t-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .t-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .t-tiles { grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); gap: 14px; }
+  .t-tile--ancho { grid-column: auto; aspect-ratio: 4 / 5; }
+  .t-marquee { --base: 74px; }
+  .t-marquee li { margin: 0 34px; }
+  .t-marquee img { height: max(30px, min(74px, calc(var(--base) * var(--f, 0.6)))); }
+}
+@media (min-width: 1000px) {
+  .t-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .t-band { padding: 4.5rem 32px 5rem; }
+}

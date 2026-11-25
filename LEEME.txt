@@ -17,7 +17,7 @@ Leela una vez de punta a punta; después usala como consulta.
   4 B. Adicionales y «Para regalo»
   5. Cómo cambiar los textos
   6. Todos los meses: combos, vinos, precios y fechas
-  6 B. Por encargue: tu catálogo de vinos a pedido
+  6 B. Por encargue, el carrito, En stock y Bodegas
   6 C. Espumantes destacados
   7. Cómo cambiar las fotos
   8. El perfil de tus clientes
@@ -488,107 +488,71 @@ Leela una vez de punta a punta; después usala como consulta.
 
 
 ---------------------------------------------------------------------
-6 B. POR ENCARGUE: TU CATÁLOGO DE VINOS A PEDIDO
+6 B. POR ENCARGUE: «¿TE GUSTÓ UN VINO DE UNA CAJA ANTERIOR?»
 ---------------------------------------------------------------------
 
-  «Por encargue» es una sección aparte, con su lugar en el menú (en
-  compu y en celular): un catálogo de los vinos que traés a pedido,
-  por fuera de las cajas y los dúos. En compu está al final de la
-  página, antes del pie (donde antes estaba «Abrí uno el jueves…»);
-  en el celular, justo después de los Dúos. Cada vino se ve en una tarjeta
-  con su foto, bodega, varietal, región, una frase a mano (si querés)
-  y el precio, y un botón «Encargar».
+  Desde noviembre de 2026 la página es una tienda, pensada primero
+  para el celular. De arriba hacia abajo: avisos que rotan, el
+  carrusel, la franja bordó, «Elegí cómo pedir» (fotos que llevan a
+  cada sección), Cajas del mes, Dúos, En stock, Por encargue,
+  Espumantes y Bodegas. Debajo del encabezado queda fijo un menú con
+  las secciones, y arriba a la derecha está el carrito.
 
-  Al tocar «Encargar», al cliente se le abre WhatsApp con el mensaje
-  ya escrito: «Hola! Quiero encargar Gran Reserva de Bodega Tal
-  (Malbec 2021). ¿Me confirman el precio y cuándo lo tienen?». Vos le
-  confirmás precio y entrega por WhatsApp; no hay pago online. Si
-  activaste los avisos (parte 3 B), además te llega un mail
-  «Encargue: ...» con el vino que tocó.
+  «Por encargue» muestra los vinos de cajas anteriores que se pueden
+  volver a pedir, por unidad o por caja de 6. Cada tarjeta tiene la
+  foto, el varietal, «estuvo en la Reserva de octubre» (a mano), un
+  botón Unidad / Caja x6 que cambia el precio y el botón «Encargar».
+  Arriba hay filtros por tintos, blancos y rosados.
 
-  HOY LA LISTA ESTÁ VACÍA: la sección muestra el cartel
-  «PRÓXIMAMENTE» con «Botellas Magnum y vinos especiales que traemos
-  a pedido. Muy pronto vas a poder elegirlos acá.», el dibujo de una
-  botella común al lado de una Magnum, la frase a mano «¿buscás una
-  botella en particular? preguntanos» y el botón «Consultar por
-  WhatsApp» (le abre WhatsApp con «Hola! Quiero consultar por un vino
-  por encargue.» y, con los avisos activados, te llega un mail
-  «Consulta por encargue»). Apenas cargues el primer vino, el cartel
-  y el dibujo se van y aparecen las tarjetas.
-  Esos textos se cambian en datos.js, parte 6, «Por encargue»:
-     encarguePronto      la etiqueta («Próximamente»)
-     encargueVacio       el texto grande (lo que va entre asteriscos
-                         sale en cursiva bordó, como *Magnum*)
-     encargueVacioNota   la frase a mano
-  Además, al terminar un pedido, donde antes decía «Abrí uno el
-  jueves, guardá otro para el domingo.», ahora hay un link
-  «Próximamente: vinos por encargue →» que lleva a esta sección (con
-  vinos cargados dice «¿Buscás algo especial? Mirá los vinos por
-  encargue →»).
+  EL CARRITO: «Encargar» (y «Agregar» en En stock) suma la botella o
+  la caja al pedido. Abajo aparece una barra «Ver pedido» con el
+  total. Al abrirlo, el cliente ve sus botellas (puede cambiar la
+  cantidad o quitarlas), carga zona, dirección, nombre y WhatsApp,
+  confirma que es mayor de 18 y toca «Enviar pedido por WhatsApp»: se
+  le abre WhatsApp con todo escrito y le aparece tu alias de Mercado
+  Pago. Si además reserva una caja o pide un dúo, las botellas van en
+  ese mismo pedido y mensaje. Te llega la copia al mail (parte 3 B),
+  cada botella o caja queda anotada en la planilla (parte 3 D, en las
+  pestañas de botellas y espumantes) y el píxel cuenta la compra.
 
-  CÓMO CARGAR UN VINO
-  En datos.js, parte 3 B (POR ENCARGUE), está la lista:
+  CÓMO CAMBIAR LOS VINOS: en datos.js, parte 3 B (POR ENCARGUE):
+     { nombre: "Chañarmuyo", varietal: "Malbec 2022", region: "La Rioja", tipo: "tinto", estuvo: "la Reserva de octubre", precio: "13700", precio6: "12700", foto: "enc-chanarmuyo-foto.webp" },
+     tipo       "tinto", "blanco" o "rosado" (arma los filtros)
+     estuvo     en qué caja estuvo (sale a mano: «estuvo en ...»)
+     precio     una botella, sin puntos ni $. Vacío = «Precio a confirmar»
+     precio6    cada botella llevando la caja de 6 (el total de la caja
+                sale solo). Hoy es $1.000 menos que la botella.
+     foto       la botella en assets/img (vacío = una botella dibujada)
+  Para sacar un vino, borrá su renglón. Si la lista queda vacía, se ve
+  el cartel «Próximamente» (textos encarguePronto y encargueVacio de
+  la parte 6). Los títulos de la sección son encargueEtiqueta,
+  encargueTitulo, encargueTexto y encargueNota.
 
-     encargue: [
-       // { nombre: "Nombre del vino", bodega: "Bodega", ... },
-     ],
+  EN STOCK: datos.js, parte 3 B bis, lista «stock», con el mismo
+  formato (sin «estuvo»). Son botellas que tenés en el loft, con
+  entrega en el día. Mientras la lista esté vacía, la sección, su foto
+  en «Elegí cómo pedir» y su botón en el menú no se ven.
 
-  1. Copiá la línea de ejemplo y pegala debajo, SIN las dos barras //
-     del principio (las barras hacen que la línea no cuente).
-  2. Completala. Por ejemplo:
-     { nombre: "Gran Reserva", bodega: "Bodega Tal", varietal: "Malbec 2021", region: "Mendoza", precio: "32000", foto: "gran-reserva.webp", nota: "Para una ocasión." },
-  3. Para sumar otro vino, otra línea igual debajo. Cada vino va entre
-     llaves { } y termina con una coma.
-
-  Qué va en cada lugar:
-     nombre     el nombre del vino (si está vacío, el vino no aparece)
-     bodega     la bodega
-     varietal   la uva y el año, por ejemplo "Cabernet Franc 2020"
-     region     de dónde es, por ejemplo "Valle de Uco"
-     precio     sin puntos ni $: "32000". Vacío ("") = dice
-                «Consultar precio».
-     foto       el nombre de la foto, guardada en assets/img. Vacío =
-                en lugar de foto aparece la inicial del vino.
-     nota       una frase corta que se ve escrita a mano (opcional).
-
-  La foto se ve siempre entera (no se corta). Queda mejor una botella
-  recortada, sin fondo, como las de los dúos (parte 6), o una foto
-  vertical de la botella. Para sacar un vino, borrá su línea o
-  ponele // adelante.
-
-  Ojo: el botón «Encargar» necesita tu WhatsApp en datos.js
-  (parte 3). Sin número, la tarjeta dice «Escribinos para
-  encargarlo.»
+  BODEGAS: datos.js, parte 3 D. Cada logo va en assets/img/bodegas,
+  en color crema y sin fondo (pedile a Claude que te lo prepare a
+  partir de la foto del logo). mes: "si" escribe «este mes» abajo.
 
 
 ---------------------------------------------------------------------
-6 C. ESPUMANTES DESTACADOS
+6 C. ESPUMANTES DESTACADOS (por encargue)
 ---------------------------------------------------------------------
 
-  Una sección con los espumantes de la casa, justo después de los
-  Dúos (en compu y en celular). Cada uno tiene su foto, el precio por
-  botella («Unidad») y el precio por 6 («Por 6»: lo que sale cada
-  botella llevando la caja de 6 del mismo espumante, y el total de la
-  caja, que se calcula solo).
-
-  Con tu WhatsApp cargado, cada tarjeta tiene dos botones: «Comprar 1»
-  y «Caja x 6». Le abren WhatsApp al cliente con el mensaje escrito,
-  por ejemplo: «Hola! Quiero comprar una caja de 6 de Keo Extra Brut
-  100% Pinot Noir ($117.600). ¿Me confirman la entrega?». Con los
-  avisos activados te llega también un mail «Espumante: ...».
-  Sin WhatsApp, en vez de los botones dice «Muy pronto lo vas a poder
-  comprar por WhatsApp.»
+  Sección aparte, después de «Por encargue». Cada espumante tiene su
+  foto, el botón Botella / Caja x6 (o x3) que cambia el precio y
+  «Encargar», que lo suma al carrito (ver 6 B).
 
   CÓMO CAMBIARLOS: en datos.js, parte 3 C (ESPUMANTES DESTACADOS):
-     { nombre: "Mastroeni Extra Brut", precio: "10800", precio6: "9800", foto: "esp-mastroeni.webp" },
+     { nombre: "Keo Extra Brut 100% Pinot Noir", precio: "20600", precio6: "19600", foto: "esp-keo.webp" },
      precio     una botella, sin puntos ni $
-     precio6    cada botella llevando la caja de 6 (vacío = sin
-                precio por caja ni botón «Caja x 6»)
+     precio6    cada botella llevando la caja de 6 (vacío = mismo precio)
+     caja       si la caja no es de 6, por ejemplo caja: "3"
      foto       la botella recortada, sin fondo, en assets/img
-  Para sumar uno, copiá una línea y cambiala; para sacarlo, borrala.
   Si la lista queda vacía, la sección y su link del menú no se ven.
-  Los títulos («Selección de la casa», «Espumantes destacados.» y la
-  aclaración de abajo) están en la parte 6, «Espumantes destacados».
 
 
 ---------------------------------------------------------------------

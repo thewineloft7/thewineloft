@@ -73,10 +73,11 @@ window.__BRAND__ = {
   pago: "hasta el 6",       // hasta qué día se puede pagar
   entregas: "7 al 10",      // días de entrega
 
-  // Después de entregar las cajas del mes: los vinos de las cajas se
-  // muestran como «?», aparece el aviso «Ya entregamos las cajas de…» y
-  // se reserva la caja del mes siguiente con descuento (sello en la foto).
-  // "si" = activado. "" = las cajas se ven normales, con sus vinos.
+  // Después de entregar las cajas del mes: aparece el aviso «Ya entregamos
+  // las cajas de…» y se reserva la caja del mes siguiente con descuento
+  // (sello en la foto). Si la caja todavía no tiene vinos cargados, se ve
+  // el «?»; cuando cargás los vinos y la foto nueva, se muestran.
+  // "si" = activado. "" = las cajas se ven normales, sin descuento.
   proximaCaja: "si",
   descuentoProxima: "10",   // % de descuento para la caja del mes siguiente ("" = sin descuento)
 
@@ -108,12 +109,12 @@ window.__BRAND__ = {
       destacado: "La más pedida",
       agotado: "",
       agotadoTexto: "Esta caja ya no se vende. La dejamos acá para que conozcas lo que trajo.",
-      foto: "caja-reserva-terruno-coordenada.webp",
-      fotoTexto: "Caja Reserva: Mi Terruño Limited Reserve Petit Verdot y Coordenada Cabernet Sauvignon, más dos botellas sorpresa",
+      foto: "caja-reserva-diciembre.webp",
+      fotoTexto: "Caja Reserva de diciembre: 13 Clés Reserva Cabernet Franc y CaliVista Blend, más dos botellas sorpresa",
       linkPago: "",
       vinos: [
-        { nombre: "Mi Terruño", varietal: "Petit Verdot 2018", region: "Mendoza", nota: "", foto: "" },
-        { nombre: "Coordenada", varietal: "Cabernet Sauvignon", region: "", nota: "", foto: "" }
+        { nombre: "13 Clés Reserva", varietal: "Cabernet Franc", region: "", nota: "", foto: "" },
+        { nombre: "CaliVista", varietal: "Blend", region: "Mendoza", nota: "", foto: "" }
       ]
     },
     {
@@ -125,12 +126,12 @@ window.__BRAND__ = {
       descripcion: "Cuatro vinos para todos los días, bien elegidos.",
       destacado: "",
       agotado: "",
-      foto: "caja-clasica-pala-abismal.webp",
-      fotoTexto: "Caja Clásica: Pala Corazón Malbec y Abismal Destino Malbec, más dos botellas sorpresa",
+      foto: "caja-clasica-diciembre.webp",
+      fotoTexto: "Caja Clásica de diciembre: Goyenechea Centenario Reserva Malbec y 13 Clés Reserva Bonarda, más dos botellas sorpresa",
       linkPago: "",
       vinos: [
-        { nombre: "Pala Corazón", varietal: "Malbec", region: "Mendoza", nota: "", foto: "" },
-        { nombre: "Abismal Destino", varietal: "Malbec", region: "Valle de Uco", nota: "", foto: "" }
+        { nombre: "Goyenechea Centenario Reserva", varietal: "Malbec", region: "", nota: "", foto: "" },
+        { nombre: "13 Clés Reserva", varietal: "Bonarda", region: "", nota: "", foto: "" }
       ]
     },
     {
@@ -188,22 +189,47 @@ window.__BRAND__ = {
   },
 
   /* ------------------------------------------------------------------
-     3 B. POR ENCARGUE
-     Los vinos que traemos a pedido. Cada uno va entre llaves { },
-     separado del siguiente por una coma. Copiá el ejemplo de abajo,
-     sacale las dos barras // del principio y completalo.
-     precio: sin puntos ni $. Vacío ("") = dice «Consultar precio».
-     foto: una foto de la carpeta assets/img (vacío = sin foto).
-     Mientras la lista esté vacía, se ve el cartel «Próximamente»
-     (sus textos están en la parte 6, «Por encargue»).
+     3 B. POR ENCARGUE · «¿Te gustó un vino de una caja anterior?»
+     Los vinos que traemos a pedido, por unidad o por caja de 6. Cada uno
+     va entre llaves { }, separado del siguiente por una coma.
+     tipo: "tinto", "blanco" o "rosado" (arma los filtros).
+     estuvo: en qué caja estuvo (sale a mano: «estuvo en la Reserva de octubre»).
+     precio: una botella, sin puntos ni $. Vacío ("") = «Precio a confirmar».
+     precio6: cada botella llevando la caja de 6 (el total de la caja se
+              calcula solo). Vacío = el mismo precio que una botella.
+     foto: la botella en assets/img (vacío = una botella dibujada).
+     Para sacar un vino, borrá su renglón. Lista vacía = se ve el cartel
+     «Próximamente» (sus textos están en la parte 6, «Por encargue»).
      ------------------------------------------------------------------ */
 
   encargue: [
-    // { nombre: "Nombre del vino", bodega: "Bodega", varietal: "Malbec 2022", region: "Mendoza", precio: "25000", foto: "", nota: "" },
+    { nombre: "Chañarmuyo", varietal: "Malbec 2022", region: "La Rioja", tipo: "tinto", estuvo: "la Reserva de octubre", precio: "13700", precio6: "12700", foto: "enc-chanarmuyo-foto.webp" },
+    { nombre: "Tükma Reserva", varietal: "Cabernet Sauvignon 2022", region: "Salta", tipo: "tinto", estuvo: "la Reserva de octubre", precio: "18000", precio6: "17000", foto: "enc-tukma-cs.webp" },
+    { nombre: "CaliVista", varietal: "Pinot Noir", region: "Mendoza", tipo: "tinto", estuvo: "la Reserva de octubre", precio: "18000", precio6: "17000", foto: "enc-calivista-pn.webp" },
+    { nombre: "Corazón Valiente", varietal: "Chardonnay", region: "", tipo: "blanco", estuvo: "la Reserva de octubre", precio: "", precio6: "", foto: "enc-cv-chardonnay.webp" },
+    { nombre: "Mi Terruño Limited Reserve", varietal: "Petit Verdot 2018", region: "Mendoza", tipo: "tinto", estuvo: "la Reserva de noviembre", precio: "", precio6: "", foto: "enc-mi-terruno.webp" },
+    { nombre: "Coordenada", varietal: "Cabernet Sauvignon", region: "", tipo: "tinto", estuvo: "la Reserva de noviembre", precio: "17000", precio6: "16000", foto: "enc-coordenada.webp" },
+    { nombre: "Corazón Valiente", varietal: "Traminer", region: "", tipo: "blanco", estuvo: "la Reserva de noviembre", precio: "17000", precio6: "16000", foto: "enc-cv-traminer.webp" },
+    { nombre: "Tükma Reserva", varietal: "Tannat", region: "Salta", tipo: "tinto", estuvo: "la Reserva de noviembre", precio: "18000", precio6: "17000", foto: "enc-tukma-tannat.webp" },
+    { nombre: "Pala Corazón", varietal: "Malbec", region: "Mendoza", tipo: "tinto", estuvo: "la Clásica de noviembre", precio: "16000", precio6: "15000", foto: "enc-pala-corazon.webp" },
+    { nombre: "Abismal Destino", varietal: "Malbec", region: "Valle de Uco", tipo: "tinto", estuvo: "la Clásica de noviembre", precio: "15500", precio6: "14500", foto: "enc-abismal.webp" },
+    { nombre: "Gata Flora Reserva", varietal: "Torrontés", region: "Cafayate, Salta", tipo: "blanco", estuvo: "la Clásica de noviembre", precio: "16000", precio6: "15000", foto: "enc-gata-flora.webp" },
+    { nombre: "Aquí Estamos Todos Locos", varietal: "Garnacha Negra", region: "Mendoza", tipo: "tinto", estuvo: "la Clásica de noviembre", precio: "", precio6: "", foto: "enc-garnacha.webp" }
   ],
 
   /* ------------------------------------------------------------------
-     3 C. ESPUMANTES DESTACADOS
+     3 B bis. INDIVIDUALES EN STOCK («En stock, para hoy»)
+     Las botellas que tienen en el loft, con entrega en el día. Mismo
+     formato que «encargue» (sin «estuvo»). Lista vacía = la sección
+     no se ve (ni su foto en «Elegí cómo pedir» ni su botón en el menú).
+     ------------------------------------------------------------------ */
+
+  stock: [
+    // { nombre: "Nombre del vino", varietal: "Malbec", region: "Mendoza", tipo: "tinto", precio: "15000", precio6: "14000", foto: "" },
+  ],
+
+  /* ------------------------------------------------------------------
+     3 C. ESPUMANTES DESTACADOS (por encargue)
      Se venden por botella o por caja de 6 del mismo espumante.
      precio: una botella. precio6: cada botella llevando la caja de 6
      (el total de la caja se calcula solo). Sin puntos ni $.
@@ -219,6 +245,26 @@ window.__BRAND__ = {
     { nombre: "Las Perdices Nuit Brut Nature", precio: "36000", precio6: "35000", caja: "3", foto: "esp-las-perdices-nuit.webp" },
     { nombre: "Chañarmuyo Champenoise Extra Brut Rosé", precio: "25000", precio6: "24000", foto: "esp-chamas-honnorat-rose.webp" },
     { nombre: "Criolla Argentina Pet Nat", precio: "15100", precio6: "14100", foto: "esp-criolla-petnat.webp" },
+  ],
+
+  /* ------------------------------------------------------------------
+     3 D. BODEGAS CON LAS QUE TRABAJAMOS (la franja de logos que se desliza)
+     logo: el logo en assets/img/bodegas, en color crema y sin fondo.
+     mes: "si" = abajo del logo dice «este mes». Lista vacía = no se ve.
+     ------------------------------------------------------------------ */
+
+  bodegas: [
+    { nombre: "Chañarmuyo", logo: "chanarmuyo.webp", mes: "" },
+    { nombre: "Casa Tükma", logo: "tukma.webp", mes: "" },
+    { nombre: "Gata Flora", logo: "gata-flora.webp", mes: "" },
+    { nombre: "Familia Goyenechea", logo: "goyenechea.webp", mes: "" },
+    { nombre: "Bodega Niven", logo: "niven.webp", mes: "" },
+    { nombre: "Viña Las Perdices", logo: "las-perdices.webp", mes: "" },
+    { nombre: "Mi Terruño", logo: "mi-terruno.webp", mes: "" },
+    { nombre: "Marioneta", logo: "marioneta.webp", mes: "" },
+    { nombre: "La Íride", logo: "la-iride.webp", mes: "" },
+    { nombre: "13 Clés", logo: "13-cles.webp", mes: "" },
+    { nombre: "CaliVista", logo: "calivista.webp", mes: "" }
   ],
 
   /* ------------------------------------------------------------------
@@ -260,6 +306,8 @@ window.__BRAND__ = {
      {direccion}, {nombre}, {telefono} y {proximoMes} se completan solos. \n = salto de línea.
      pedido = un solo combo. pedidoVarios = cuando suman más de un combo
      distinto ({detalle} es la lista de combos, uno por renglón).
+     botellas = el pedido del carrito (vinos por encargue, en stock y
+     espumantes), sin cajas ni dúos ({detalle} = una botella o caja por renglón).
      ------------------------------------------------------------------ */
 
   mensajes: {
@@ -269,7 +317,8 @@ window.__BRAND__ = {
     consulta: "Hola! Quiero saber más sobre The Wine Loft.",
     encargue: "Hola! Quiero encargar {vino}. ¿Me confirman el precio y cuándo lo tienen?",
     encargueConsulta: "Hola! Quiero consultar por un vino por encargue.",
-    espumante: "Hola! Quiero comprar {cantidad} de {vino} ({total}). ¿Me confirman la entrega?"
+    espumante: "Hola! Quiero comprar {cantidad} de {vino} ({total}). ¿Me confirman la entrega?",
+    botellas: "Hola! Quiero hacer este pedido ({total}):\n{detalle}\nEntrega: {direccion}.\nNombre: {nombre} · WhatsApp: {telefono}"
   },
 
   /* ------------------------------------------------------------------
@@ -295,27 +344,38 @@ window.__BRAND__ = {
     reglaTexto: "Reservás tu caja cuando quieras, hasta el 6 de cada mes, y la pagás con Mercado Pago hasta ese mismo día. Del 7 al 10 te la llevamos a casa.",
 
     // Dúos
-    duosTitulo: "Dúos.",
-    duosTexto: "Dos vinos elegidos por nosotros, para pedir cualquier día del mes. También cambian todos los meses.",
+    duosEtiqueta: "Diarios · sin reserva",
+    duosTitulo: "Dúos para *hoy.*",
+    duosTexto: "Dos vinos elegidos por nosotros, para pedir cualquier día del mes. Los tenemos en el loft: te los llevamos en el día.",
     duosAclaracion: "Los dúos van por fuera del club: no tienen fechas de reserva ni sorpresas, y no suman para el regalo sorpresa. Los pedís cualquier día del mes.",
 
     // Espumantes destacados (parte 3 C)
-    espumantesEtiqueta: "Selección de la casa",
+    espumantesEtiqueta: "Por encargue · selección de la casa",
     espumantesTitulo: "Espumantes *destacados.*",
-    espumantesNota: "«Por 6» o «Por 3» es el precio de cada botella llevando la caja completa del mismo espumante.",
+    espumantesNota: "Por botella o por caja del mismo espumante: llevando la caja, cada botella sale menos. Te confirmamos la demora por WhatsApp.",
 
     // Por encargue (el catálogo de vinos a pedido, parte 3 B).
     // En compu va al final de la página; en el celular, después de los Dúos.
     // Mientras no cargues vinos se ve el cartel «Próximamente» con
     // encargueVacio (el texto grande) y encargueVacioNota (la frase a mano).
-    encargueEtiqueta: "Catálogo",
-    encargueTitulo: "Por *encargue.*",
-    encargueTexto: "Vinos que traemos a pedido. Elegí el tuyo, escribinos y te confirmamos precio y entrega.",
+    encargueEtiqueta: "Por encargue · sin stock",
+    encargueTitulo: "¿Te gustó un vino de *una caja anterior?*",
+    encargueTexto: "Lo pedimos para vos, por unidad o por caja de 6. Te confirmamos la demora por WhatsApp antes de cobrarte.",
+    encargueNota: "Vinos de las cajas de octubre y noviembre que todavía se consiguen.",
     encarguePronto: "Próximamente",
     encargueVacio: "Botellas *Magnum* y vinos especiales que traemos a pedido. Muy pronto vas a poder elegirlos acá.",
     encargueVacioNota: "¿buscás una botella en particular? preguntanos",
 
-    // Vinos por estación. texto = cómo son los vinos de esa época;
+    // En stock (parte 3 B bis): botellas sueltas con entrega en el día
+    stockEtiqueta: "Individuales · con stock",
+    stockTitulo: "En stock, *para hoy.*",
+    stockTexto: "Las botellas que tenemos en el loft, por botella o por caja. Llevando la caja, cada botella sale menos.",
+
+    // Bodegas (parte 3 D)
+    bodegasEtiqueta: "En nuestras cajas y dúos",
+    bodegasTitulo: "Bodegas con las que *trabajamos.*",
+
+        // Vinos por estación. texto = cómo son los vinos de esa época;
     // uvas = las variedades de ejemplo, separadas por coma o por «y».
     estacionesTitulo: "Vinos por *estación.*",
     estacionesTexto: "Qué uvas acompañan mejor cada época del año.",
