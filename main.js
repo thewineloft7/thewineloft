@@ -2387,7 +2387,7 @@
       }, 4500);
     }
     var t = $("[data-t-slide-titulo]"), p = $("[data-t-slide-texto]");
-    if (t) t.innerHTML = "La caja de " + esc(MES) + (DESC ? ", <em>con " + DESC + "% off.</em>" : ", <em>dos sorpresas.</em>");
+    if (t) t.innerHTML = DESC ? "La caja de " + esc(MES) + ", <em>con " + DESC + "% off.</em>" : "Reservá la caja de <em>" + esc(MES) + ".</em>";
     if (p) p.textContent = (PAGO === RESERVAS ? "Reservás y pagás " + RESERVAS : "Reservás " + RESERVAS + " y pagás " + PAGO) + ". Te la llevamos del " + ENTREGAS + ".";
     var quitar = { caja: !CAJAS.length, duos: !DUOS.length, encargue: !B_ENC.length };
     Object.keys(quitar).forEach(function (k) { var s = $('[data-t-slide="' + k + '"]'); if (s && quitar[k]) s.parentNode.removeChild(s); });

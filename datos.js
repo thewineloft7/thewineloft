@@ -79,7 +79,7 @@ window.__BRAND__ = {
   // el «?»; cuando cargás los vinos y la foto nueva, se muestran.
   // "si" = activado. "" = las cajas se ven normales, sin descuento.
   proximaCaja: "si",
-  descuentoProxima: "10",   // % de descuento para la caja del mes siguiente ("" = sin descuento)
+  descuentoProxima: "",   // % de descuento para la caja del mes siguiente ("" = sin descuento)
 
   // Cada cuántas cajas del mes llega el regalo sorpresa.
   regaloCada: "5",
